@@ -15,6 +15,7 @@ type Props = {
   height: number;
   step: Step;
   shadowVisible?: boolean;
+  stepBasePosition: Position;
   onResizeHeight: (direction: boolean) => void;
   onUpdateResizeMode: (resizeMode: boolean) => void;
 };
@@ -27,6 +28,7 @@ export const ResizableBox: React.FC<Props> = ({
   height,
   step,
   shadowVisible = false,
+  stepBasePosition,
   onResizeHeight,
   onUpdateResizeMode,
 }) => {
@@ -70,6 +72,7 @@ export const ResizableBox: React.FC<Props> = ({
 
       const box: HTMLDivElement = boxRef.current;
       const rect = box.getBoundingClientRect();
+
       const newMousePosition = {
         x: e.clientX - rect.x,
         y: e.clientY - rect.y,

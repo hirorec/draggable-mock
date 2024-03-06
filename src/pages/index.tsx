@@ -52,7 +52,7 @@ export default function Page() {
           </div>
         </div>
         <div className={clsx(styles.boxContainer)}>
-          <BoxContainer width={200} step={{ x: STEP.X, y: STEP.Y }} />
+          <BoxContainer width={200} step={{ x: STEP.X, y: STEP.Y }} stepBasePosition={{ x: 1, y: 5 }} />
         </div>
 
         {/* <div ref={columnRef} className={clsx(styles.column)}>

@@ -2,6 +2,8 @@ import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { STEP } from '@/const';
+
 import styles from './index.module.scss';
 
 import type { Position, Step } from '@/types';
@@ -12,6 +14,7 @@ type Props = {
   step: Step;
   resizeMode: boolean;
   children: React.ReactNode;
+  stepBasePosition: Position;
   onUpdateDragging: (isDragging: boolean) => void;
   onUpdatePosition: (position: Position) => void;
   onDragEnd: (position: Position) => void;
@@ -24,16 +27,24 @@ type Transform = {
   scaleY: number;
 };
 
-const initialTransform = {
-  x: 0,
-  y: 0,
-  scaleX: 1,
-  scaleY: 1,
-};
-
-export const DraggableBox: React.FC<Props> = ({ width, height, step, resizeMode, children, onUpdateDragging, onUpdatePosition, onDragEnd }) => {
+export const DraggableBox: React.FC<Props> = ({
+  width,
+  height,
+  step,
+  resizeMode,
+  children,
+  stepBasePosition,
+  onUpdateDragging,
+  onUpdatePosition,
+  onDragEnd,
+}) => {
   const boxRef = useRef<HTMLDivElement>(null);
-  const [transform, setTransform] = useState<Transform>(initialTransform);
+  const [transform, setTransform] = useState<Transform>({
+    x: STEP.X * stepBasePosition.x,
+    y: STEP.Y * stepBasePosition.y,
+    scaleX: 1,
+    scaleY: 1,
+  });
   const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
   const [mouseMoveAmount, setMouseMoveAmount] = useState<Position>({ x: 0, y: 0 });
   const [isMouseDown, setIsMouseDown] = useState(false);

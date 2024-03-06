@@ -10,11 +10,12 @@ import styles from './index.module.scss';
 import { BoxOverlay } from '../BoxOverlay';
 
 type Props = {
+  stepBasePosition: Position;
   width: number;
   step: Step;
 };
 
-export const BoxContainer: React.FC<Props> = ({ step, width }) => {
+export const BoxContainer: React.FC<Props> = ({ step, width, stepBasePosition }) => {
   const [boxHeight, setBoxHeight] = useState(STEP.Y * 4);
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(STEP.Y * 4);
@@ -85,6 +86,7 @@ export const BoxContainer: React.FC<Props> = ({ step, width }) => {
         width={width}
         height={boxHeight}
         step={step}
+        stepBasePosition={stepBasePosition}
         resizeMode={resizeMode}
         onUpdateDragging={handleUpdateDragging}
         onUpdatePosition={handleUpdatePosition}
@@ -97,6 +99,7 @@ export const BoxContainer: React.FC<Props> = ({ step, width }) => {
           width={width}
           height={boxHeight}
           step={step}
+          stepBasePosition={stepBasePosition}
           shadowVisible={isDragging}
           onResizeHeight={handleResizeBox}
           onUpdateResizeMode={handleUpdateResizeMode}
