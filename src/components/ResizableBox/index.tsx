@@ -5,7 +5,7 @@ import { RESIZABLE_BOX_WRAPPER_OFFSET } from '@/const';
 
 import styles from './index.module.scss';
 
-import type { MousePosition } from '@/types';
+import type { Position } from '@/types';
 
 type Props = {
   text: string;
@@ -23,7 +23,7 @@ export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundCol
   const [isEdge, setIsEdge] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [resizeMode, setResizeMode] = useState(false);
-  const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
+  const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
 
   const wrapperStyle: React.CSSProperties = useMemo(() => {
     return {

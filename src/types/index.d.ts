@@ -1,4 +1,4 @@
-export type MousePosition = {
+export type Position = {
   x: number;
   y: number;
 };

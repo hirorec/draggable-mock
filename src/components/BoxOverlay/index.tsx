@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import React, { useMemo, useRef } from 'react';
 
 import { RESIZABLE_BOX_WRAPPER_OFFSET } from '@/const';
+import { Position } from '@/types';
 
 import styles from './index.module.scss';
 
@@ -12,18 +13,19 @@ type Props = {
   width: number;
   height: number;
   step: number;
+  position: Position;
 };
 
-export const BoxOverlay: React.FC<Props> = ({ text, borderColor, backgroundColor, width, height, step }) => {
+export const BoxOverlay: React.FC<Props> = ({ text, borderColor, backgroundColor, width, height, step, position }) => {
   const boxRef = useRef<HTMLDivElement>(null);
 
   const wrapperStyle: React.CSSProperties = useMemo(() => {
     return {
       width: `${width}px`,
       height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET * 2}px`,
-      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET}px`,
+      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET + position.y}px`,
     };
-  }, [width, height, step]);
+  }, [width, height, step, position]);
 
   const style: React.CSSProperties = useMemo(() => {
     return {
