@@ -10,14 +10,26 @@ import styles from './index.module.scss';
 import { BoxOverlay } from '../BoxOverlay';
 
 type Props = {
+  text: string;
+  borderColor: string;
+  backgroundColor: string;
+  step: Step;
   stepBasePosition: Position;
   stepBaseSize: Size;
   onUpdatePosition: (position: Position) => void;
   onUpdateSize: (size: Size) => void;
-  step: Step;
 };
 
-export const BoxContainer: React.FC<Props> = ({ step, stepBaseSize, stepBasePosition, onUpdatePosition, onUpdateSize }) => {
+export const BoxContainer: React.FC<Props> = ({
+  text,
+  borderColor,
+  backgroundColor,
+  step,
+  stepBaseSize,
+  stepBasePosition,
+  onUpdatePosition,
+  onUpdateSize,
+}) => {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(step.y * 4);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
@@ -82,12 +94,12 @@ export const BoxContainer: React.FC<Props> = ({ step, stepBaseSize, stepBasePosi
     <div className={clsx(styles.container)}>
       {overlayVisible && (
         <BoxOverlay
+          text={text}
+          backgroundColor={backgroundColor}
+          borderColor={borderColor}
           width={boxSize.width}
           height={overlayBoxHeight}
           position={overlayPosition}
-          backgroundColor='#E6F7DA'
-          borderColor='#93ED6F'
-          text={`Draggable\nBox`}
         />
       )}
 
@@ -102,9 +114,9 @@ export const BoxContainer: React.FC<Props> = ({ step, stepBaseSize, stepBasePosi
         onDragEnd={handleDragEnd}
       >
         <ResizableBox
-          text={`Draggable\nBox`}
-          backgroundColor='#E6F7DA'
-          borderColor='#93ED6F'
+          text={text}
+          backgroundColor={backgroundColor}
+          borderColor={borderColor}
           width={boxSize.width}
           height={boxSize.height}
           step={step}
