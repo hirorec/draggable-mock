@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { BoxContainer } from '@/components/BoxContainer';
 import { STEP } from '@/const';
-import { Position } from '@/types';
+import { Position, Size } from '@/types';
 
 import styles from './index.module.scss';
 
@@ -11,6 +11,7 @@ export default function Page() {
   const columnRef = useRef<HTMLDivElement>(null);
   const [columnDiv, setColumnDiv] = useState<number>(0);
   const [boxPosition, setBoxPosition] = useState<Position>({ x: 1, y: 5 });
+  const [boxSize, setBoxSize] = useState<Size>({ width: 1, height: 2 });
 
   const handleResize = () => {
     if (!columnRef.current) {
@@ -40,8 +41,11 @@ export default function Page() {
   };
 
   const handleUpdateBoxPosition = (position: Position) => {
-    // console.log(position);
     setBoxPosition(position);
+  };
+
+  const handleUpdateBoxSize = (size: Size) => {
+    setBoxSize(size);
   };
 
   return (
@@ -57,9 +61,18 @@ export default function Page() {
           <div ref={columnRef} className={clsx(styles.column)}>
             <div className={clsx(styles.columnBg)}>{borderNods()}</div>
           </div>
+          <div ref={columnRef} className={clsx(styles.column)}>
+            <div className={clsx(styles.columnBg)}>{borderNods()}</div>
+          </div>
         </div>
         <div className={clsx(styles.boxContainer)}>
-          <BoxContainer width={200} step={{ x: STEP.X, y: STEP.Y }} stepBasePosition={boxPosition} onUpdatePosition={handleUpdateBoxPosition} />
+          <BoxContainer
+            step={{ x: STEP.X, y: STEP.Y }}
+            stepBaseSize={boxSize}
+            stepBasePosition={boxPosition}
+            onUpdatePosition={handleUpdateBoxPosition}
+            onUpdateSize={handleUpdateBoxSize}
+          />
         </div>
 
         {/* <div ref={columnRef} className={clsx(styles.column)}>

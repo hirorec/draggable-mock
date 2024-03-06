@@ -2,8 +2,6 @@ import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { STEP } from '@/const';
-
 import styles from './index.module.scss';
 
 import type { Position, Step } from '@/types';
@@ -40,8 +38,8 @@ export const DraggableBox: React.FC<Props> = ({
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState<Transform>({
-    x: STEP.X * stepBasePosition.x,
-    y: STEP.Y * stepBasePosition.y,
+    x: step.x * stepBasePosition.x,
+    y: step.y * stepBasePosition.y,
     scaleX: 1,
     scaleY: 1,
   });
@@ -67,8 +65,8 @@ export const DraggableBox: React.FC<Props> = ({
 
   useEffect(() => {
     setTransform({
-      x: STEP.X * stepBasePosition.x,
-      y: STEP.Y * stepBasePosition.y,
+      x: step.x * stepBasePosition.x,
+      y: step.y * stepBasePosition.y,
       scaleX: 1,
       scaleY: 1,
     });

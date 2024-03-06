@@ -4,59 +4,62 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DraggableBox } from '@/components/DraggableBox';
 import { ResizableBox } from '@/components/ResizableBox';
 import { STEP } from '@/const';
-import { Position, Step } from '@/types';
+import { Position, Size, Step } from '@/types';
 
 import styles from './index.module.scss';
 import { BoxOverlay } from '../BoxOverlay';
 
 type Props = {
   stepBasePosition: Position;
+  stepBaseSize: Size;
   onUpdatePosition: (position: Position) => void;
-  width: number;
+  onUpdateSize: (size: Size) => void;
   step: Step;
 };
 
-export const BoxContainer: React.FC<Props> = ({ step, width, stepBasePosition, onUpdatePosition }) => {
-  const [boxHeight, setBoxHeight] = useState(STEP.Y * 4);
+export const BoxContainer: React.FC<Props> = ({ step, stepBaseSize, stepBasePosition, onUpdatePosition, onUpdateSize }) => {
   const [overlayVisible, setOverlayVisible] = useState(false);
-  const [overlayBoxHeight, setOverlayBoxHeight] = useState(STEP.Y * 4);
+  const [overlayBoxHeight, setOverlayBoxHeight] = useState(step.y * 4);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
-    x: stepBasePosition.x * STEP.X,
-    y: stepBasePosition.y * STEP.Y,
+    x: stepBasePosition.x * step.x,
+    y: stepBasePosition.y * step.y,
   });
   const [resizeMode, setResizeMode] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
-  const sizeMin = useMemo(() => {
-    return step.y;
-  }, [step]);
+  const boxSize: Size = useMemo(() => {
+    return {
+      width: stepBaseSize.width * STEP.X,
+      height: stepBaseSize.height * STEP.Y,
+    };
+  }, [stepBaseSize]);
 
   useEffect(() => {
     if (isDragging || resizeMode) {
-      setOverlayBoxHeight(boxHeight);
+      setOverlayBoxHeight(boxSize.height);
       setOverlayVisible(true);
     } else {
       setOverlayVisible(false);
     }
-  }, [isDragging, resizeMode]);
+  }, [isDragging, resizeMode, boxSize]);
 
   const handleResizeBox = useCallback(
     (direction: boolean) => {
-      let newBoxHeight = boxHeight;
+      const newBoxSize: Size = { ...stepBaseSize };
 
       if (direction) {
-        newBoxHeight = newBoxHeight + step.y;
+        newBoxSize.height = stepBaseSize.height + 1;
       } else {
-        newBoxHeight = newBoxHeight - step.y;
+        newBoxSize.height = stepBaseSize.height - 1;
       }
 
-      if (newBoxHeight <= sizeMin) {
-        newBoxHeight = sizeMin;
+      if (newBoxSize.height <= 1) {
+        newBoxSize.height = 1;
       }
 
-      setBoxHeight(newBoxHeight);
+      onUpdateSize(newBoxSize);
     },
-    [sizeMin, boxHeight]
+    [stepBaseSize]
   );
 
   const handleUpdateResizeMode = (resizeMode: boolean) => {
@@ -79,7 +82,7 @@ export const BoxContainer: React.FC<Props> = ({ step, width, stepBasePosition, o
     <div className={clsx(styles.container)}>
       {overlayVisible && (
         <BoxOverlay
-          width={width}
+          width={boxSize.width}
           height={overlayBoxHeight}
           position={overlayPosition}
           backgroundColor='#E6F7DA'
@@ -89,8 +92,8 @@ export const BoxContainer: React.FC<Props> = ({ step, width, stepBasePosition, o
       )}
 
       <DraggableBox
-        width={width}
-        height={boxHeight}
+        width={boxSize.width}
+        height={boxSize.height}
         step={step}
         stepBasePosition={stepBasePosition}
         resizeMode={resizeMode}
@@ -102,8 +105,8 @@ export const BoxContainer: React.FC<Props> = ({ step, width, stepBasePosition, o
           text={`Draggable\nBox`}
           backgroundColor='#E6F7DA'
           borderColor='#93ED6F'
-          width={width}
-          height={boxHeight}
+          width={boxSize.width}
+          height={boxSize.height}
           step={step}
           stepBasePosition={stepBasePosition}
           shadowVisible={isDragging}
