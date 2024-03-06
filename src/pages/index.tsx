@@ -1,8 +1,7 @@
-import { DndContext } from '@dnd-kit/core';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
-import { Draggable } from '@/components/Draggable';
+import { DraggableBox } from '@/components/DraggableBox';
 import { ResizableBox } from '@/components/ResizableBox';
 
 import styles from './index.module.scss';
@@ -31,19 +30,17 @@ export default function Page() {
 
   return (
     <div className={clsx(styles.container)}>
-      <DndContext>
-        <Draggable>
-          <ResizableBox
-            text={`Resizable\nBox`}
-            backgroundColor='#E6F7DA'
-            borderColor='#93ED6F'
-            width={200}
-            height={boxHeight}
-            step={BOX_HEIGHT_STEP}
-            onResizeHeight={handleResizeBox}
-          />
-        </Draggable>
-      </DndContext>
+      <DraggableBox width={200} height={boxHeight} step={BOX_HEIGHT_STEP}>
+        <ResizableBox
+          text={`Resizable\nBox`}
+          backgroundColor='#E6F7DA'
+          borderColor='#93ED6F'
+          width={200}
+          height={boxHeight}
+          step={BOX_HEIGHT_STEP}
+          onResizeHeight={handleResizeBox}
+        />
+      </DraggableBox>
     </div>
   );
 }

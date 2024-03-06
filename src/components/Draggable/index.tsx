@@ -1,4 +1,5 @@
 import { useDraggable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 import React from 'react';
 
 type Props = {
@@ -10,11 +11,9 @@ export const Draggable: React.FC<Props> = ({ children }) => {
     id: 'draggable',
   });
 
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
-    : undefined;
+  const style = {
+    transform: CSS.Translate.toString(transform),
+  };
 
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>

@@ -1,7 +1,11 @@
 import clsx from 'clsx';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
+import { RESIZABLE_BOX_WRAPPER_OFFSET } from '@/const';
+
 import styles from './index.module.scss';
+
+import type { MousePosition } from '@/types';
 
 type Props = {
   text: string;
@@ -13,13 +17,6 @@ type Props = {
   onResizeHeight: (direction: boolean) => void;
 };
 
-type MousePosition = {
-  x: number;
-  y: number;
-};
-
-const WRAPPER_OFFSET = 100;
-
 export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundColor, width, height, step, onResizeHeight }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const [isEdge, setIsEdge] = useState(false);
@@ -30,15 +27,15 @@ export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundCol
   const wrapperStyle: React.CSSProperties = useMemo(() => {
     return {
       width: `${width}px`,
-      height: `${height + step + WRAPPER_OFFSET}px`,
+      height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET}px`,
       cursor: isEdge || resizeMode ? 'ns-resize' : 'unset',
     };
   }, [width, height, step, isEdge, resizeMode]);
 
   const style: React.CSSProperties = useMemo(() => {
     return {
-      height: `calc(100% - ${step + WRAPPER_OFFSET}px)`,
-      cursor: isEdge ? 'unset' : 'grab',
+      height: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET}px)`,
+      // cursor: isEdge ? 'unset' : 'grab',
       backgroundColor,
       borderColor,
     };
@@ -97,6 +94,9 @@ export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundCol
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
+      onClick={() => {
+        console.log('click');
+      }}
     >
       <div ref={boxRef} className={clsx(styles.box)} style={style}>
         {text}
