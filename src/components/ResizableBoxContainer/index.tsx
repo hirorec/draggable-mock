@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import React, { useCallback, useMemo, useState } from 'react';
 
 import { ResizableBox } from '@/components/ResizableBox';
-import { BOX_HEIGHT_STEP } from '@/const';
+import { STEP } from '@/const';
 
 import styles from './index.module.scss';
 
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const ResizableBoxContainer: React.FC<Props> = ({ step, width }) => {
-  const [boxHeight, setBoxHeight] = useState(BOX_HEIGHT_STEP * 2);
+  const [boxHeight, setBoxHeight] = useState(STEP.Y * 2);
 
   const sizeMin = useMemo(() => {
     return step;

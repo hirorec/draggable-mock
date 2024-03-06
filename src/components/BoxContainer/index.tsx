@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { DraggableBox } from '@/components/DraggableBox';
 import { ResizableBox } from '@/components/ResizableBox';
-import { BOX_HEIGHT_STEP } from '@/const';
+import { STEP } from '@/const';
 import { Position } from '@/types';
 
 import styles from './index.module.scss';
@@ -15,9 +15,9 @@ type Props = {
 };
 
 export const BoxContainer: React.FC<Props> = ({ step, width }) => {
-  const [boxHeight, setBoxHeight] = useState(BOX_HEIGHT_STEP * 4);
+  const [boxHeight, setBoxHeight] = useState(STEP.Y * 4);
   const [overlayVisible, setOverlayVisible] = useState(false);
-  const [overlayBoxHeight, setOverlayBoxHeight] = useState(BOX_HEIGHT_STEP * 4);
+  const [overlayBoxHeight, setOverlayBoxHeight] = useState(STEP.Y * 4);
   const [overlayPosition, setOverlayPosition] = useState<Position>({ x: 0, y: 0 });
   const [resizeMode, setResizeMode] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
