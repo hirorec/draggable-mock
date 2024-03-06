@@ -98,6 +98,7 @@ export const BoxContainer: React.FC<Props> = ({ step, width }) => {
           width={width}
           height={boxHeight}
           step={step}
+          shadowVisible={isDragging}
           onResizeHeight={handleResizeBox}
           onUpdateResizeMode={handleUpdateResizeMode}
         />

@@ -14,11 +14,22 @@ type Props = {
   width: number;
   height: number;
   step: number;
+  shadowVisible?: boolean;
   onResizeHeight: (direction: boolean) => void;
   onUpdateResizeMode: (resizeMode: boolean) => void;
 };
 
-export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundColor, width, height, step, onResizeHeight, onUpdateResizeMode }) => {
+export const ResizableBox: React.FC<Props> = ({
+  text,
+  borderColor,
+  backgroundColor,
+  width,
+  height,
+  step,
+  shadowVisible = false,
+  onResizeHeight,
+  onUpdateResizeMode,
+}) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const [isEdge, setIsEdge] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -38,10 +49,11 @@ export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundCol
     return {
       top: `${RESIZABLE_BOX_WRAPPER_OFFSET}px`,
       height: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET * 2}px)`,
+      boxShadow: shadowVisible ? '0px 0px 10px rgba(0, 0, 0, 0.2)' : '',
       backgroundColor,
       borderColor,
     };
-  }, [borderColor, backgroundColor, step, isEdge]);
+  }, [borderColor, backgroundColor, step, isEdge, shadowVisible]);
 
   useEffect(() => {
     onUpdateResizeMode(resizeMode || isEdge);

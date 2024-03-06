@@ -39,13 +39,12 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, resizeMode,
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [cursor, setCursor] = useState<'unset' | 'grab' | 'grabbing'>('unset');
+  const [cursor, setCursor] = useState<'unset' | 'grab' | 'all-scroll'>('unset');
 
   const style = useMemo(() => {
     return {
       width: `${width}px`,
       height: `${height}px`,
-      boxShadow: isDragging ? '0px 0px 10px rgba(0, 0, 0, 0.3)' : '',
       transform: CSS.Translate.toString(transform),
       cursor,
     };
@@ -62,7 +61,7 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, resizeMode,
     }
 
     if (isMouseDown) {
-      setCursor('grabbing');
+      setCursor('all-scroll');
       setIsDragging(true);
     } else if (isMouseOver) {
       setCursor('grab');
