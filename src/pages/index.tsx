@@ -2,7 +2,6 @@ import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { BoxContainer } from '@/components/BoxContainer';
-import { ResizableBoxContainer } from '@/components/ResizableBoxContainer';
 import { STEP } from '@/const';
 
 import styles from './index.module.scss';
@@ -40,18 +39,25 @@ export default function Page() {
 
   return (
     <div className={clsx(styles.container)}>
-      <div ref={columnRef} className={clsx(styles.column)}>
+      <div className={clsx(styles.containerInner)}>
+        <div className={clsx(styles.columnContainer)}>
+          <div ref={columnRef} className={clsx(styles.column)}>
+            <div className={clsx(styles.columnBg)}>{borderNods()}</div>
+          </div>
+          <div ref={columnRef} className={clsx(styles.column)}>
+            <div className={clsx(styles.columnBg)}>{borderNods()}</div>
+          </div>
+          <div ref={columnRef} className={clsx(styles.column)}>
+            <div className={clsx(styles.columnBg)}>{borderNods()}</div>
+          </div>
+        </div>
+        <div className={clsx(styles.boxContainer)}>
+          <BoxContainer width={200} step={{ x: STEP.X, y: STEP.Y }} />
+        </div>
+
+        {/* <div ref={columnRef} className={clsx(styles.column)}>
         <ResizableBoxContainer width={200} step={STEP.Y} />
-      </div>
-      <div ref={columnRef} className={clsx(styles.column)}>
-        <div className={clsx(styles.columnBg)}>{borderNods()}</div>
-        <BoxContainer width={200} step={{ x: STEP.X, y: STEP.Y }} />
-      </div>
-      <div ref={columnRef} className={clsx(styles.column)}>
-        <div className={clsx(styles.columnBg)}>{borderNods()}</div>
-      </div>
-      <div ref={columnRef} className={clsx(styles.column)}>
-        <div className={clsx(styles.columnBg)}>{borderNods()}</div>
+      </div> */}
       </div>
     </div>
   );

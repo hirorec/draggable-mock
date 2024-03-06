@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React, { useMemo, useRef } from 'react';
 
-import { RESIZABLE_BOX_WRAPPER_OFFSET_Y } from '@/const';
+import { RESIZABLE_BOX_WRAPPER_OFFSET } from '@/const';
 import { Position } from '@/types';
 
 import styles from './index.module.scss';
@@ -21,15 +21,17 @@ export const BoxOverlay: React.FC<Props> = ({ text, borderColor, backgroundColor
   const wrapperStyle: React.CSSProperties = useMemo(() => {
     return {
       width: `${width}px`,
-      height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET_Y * 2}px`,
-      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET_Y + position.y}px`,
+      height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET.Y * 2}px`,
+      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET.Y + position.y}px`,
+      left: `${-RESIZABLE_BOX_WRAPPER_OFFSET.X + position.x}px`,
     };
   }, [width, height, position]);
 
   const style: React.CSSProperties = useMemo(() => {
     return {
-      top: `${RESIZABLE_BOX_WRAPPER_OFFSET_Y}px`,
-      height: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET_Y * 2}px)`,
+      top: `${RESIZABLE_BOX_WRAPPER_OFFSET.Y}px`,
+      left: `${RESIZABLE_BOX_WRAPPER_OFFSET.X}px`,
+      height: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET.Y * 2}px)`,
       backgroundColor,
       borderColor,
     };

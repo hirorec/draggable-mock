@@ -82,10 +82,6 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, resizeMode,
         return;
       }
 
-      if (resizeMode) {
-        console.log({ resizeMode });
-      }
-
       const box: HTMLDivElement = boxRef.current;
       const rect = box.getBoundingClientRect();
       const rectMousePosition = {
@@ -118,13 +114,12 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, resizeMode,
 
           onUpdatePosition({ x: newTransform.x, y: newTransform.y });
           resetMouseMoveAmount();
-        } else if (Math.abs(newMouseMoveAmount.x) >= step.x) {
-          if (newMouseMoveAmount.x > 0) {
-            newTransform.x = transform.x + step.x;
-          } else {
-            newTransform.x = transform.x - step.y;
-          }
-
+        } else if (rectMousePosition.x >= rect.width) {
+          newTransform.x = transform.x + step.x;
+          onUpdatePosition({ x: newTransform.x, y: newTransform.y });
+          resetMouseMoveAmount();
+        } else if (rectMousePosition.x < 0) {
+          newTransform.x = transform.x - step.x;
           onUpdatePosition({ x: newTransform.x, y: newTransform.y });
           resetMouseMoveAmount();
         } else {

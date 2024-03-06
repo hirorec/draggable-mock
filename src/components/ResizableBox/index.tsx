@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { RESIZABLE_BOX_WRAPPER_OFFSET_Y } from '@/const';
+import { RESIZABLE_BOX_WRAPPER_OFFSET } from '@/const';
 
 import styles from './index.module.scss';
 
@@ -38,18 +38,21 @@ export const ResizableBox: React.FC<Props> = ({
 
   const wrapperStyle: React.CSSProperties = useMemo(() => {
     return {
-      width: `${width}px`,
-      height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET_Y * 2}px`,
+      width: `${width + RESIZABLE_BOX_WRAPPER_OFFSET.X * 2}px`,
+      height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET.Y * 2}px`,
       cursor: isEdge || resizeMode ? 'ns-resize' : 'unset',
-      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET_Y}px`,
+      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET.Y}px`,
+      left: `${-RESIZABLE_BOX_WRAPPER_OFFSET.X}px`,
     };
   }, [width, height, step, isEdge, resizeMode]);
 
   const style: React.CSSProperties = useMemo(() => {
     return {
-      top: `${RESIZABLE_BOX_WRAPPER_OFFSET_Y}px`,
-      height: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET_Y * 2}px)`,
-      boxShadow: shadowVisible ? '0px 0px 10px rgba(0, 0, 0, 0.2)' : '',
+      top: `${RESIZABLE_BOX_WRAPPER_OFFSET.Y}px`,
+      left: `${RESIZABLE_BOX_WRAPPER_OFFSET.X}px`,
+      width: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET.X * 2}px)`,
+      height: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET.Y * 2}px)`,
+      // boxShadow: shadowVisible ? '0px 0px 10px rgba(0, 0, 0, 0.2)' : '',
       backgroundColor,
       borderColor,
     };
