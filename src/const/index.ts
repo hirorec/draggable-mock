@@ -1,1 +1,2 @@
+export const BOX_HEIGHT_STEP = 20;
 export const RESIZABLE_BOX_WRAPPER_OFFSET = 100;

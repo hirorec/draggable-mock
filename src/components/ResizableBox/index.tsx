@@ -27,15 +27,16 @@ export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundCol
   const wrapperStyle: React.CSSProperties = useMemo(() => {
     return {
       width: `${width}px`,
-      height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET}px`,
+      height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET * 2}px`,
       cursor: isEdge || resizeMode ? 'ns-resize' : 'unset',
+      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET}px`,
     };
   }, [width, height, step, isEdge, resizeMode]);
 
   const style: React.CSSProperties = useMemo(() => {
     return {
-      height: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET}px)`,
-      // cursor: isEdge ? 'unset' : 'grab',
+      top: `${RESIZABLE_BOX_WRAPPER_OFFSET}px`,
+      height: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET * 2}px)`,
       backgroundColor,
       borderColor,
     };

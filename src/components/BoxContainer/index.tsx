@@ -3,6 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import { DraggableBox } from '@/components/DraggableBox';
 import { ResizableBox } from '@/components/ResizableBox';
+import { BOX_HEIGHT_STEP } from '@/const';
 
 import styles from './index.module.scss';
 
@@ -12,7 +13,7 @@ type Props = {
 };
 
 export const BoxContainer: React.FC<Props> = ({ step, width }) => {
-  const [boxHeight, setBoxHeight] = useState(100);
+  const [boxHeight, setBoxHeight] = useState(BOX_HEIGHT_STEP * 4);
   const sizeMin = useMemo(() => {
     return step;
   }, [step]);

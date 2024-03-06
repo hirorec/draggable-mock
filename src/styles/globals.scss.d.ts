@@ -1,8 +1,5 @@
 export type Styles = {
-  column: string;
-  columnBg: string;
-  columnBgBorder: string;
-  container: string;
+  __next: string;
 };
 
 export type ClassNames = keyof Styles;
