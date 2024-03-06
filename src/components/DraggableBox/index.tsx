@@ -108,11 +108,12 @@ export const DraggableBox: React.FC<Props> = ({
       };
 
       const newMousePosition = {
-        x: e.pageX || e.clientX + document.documentElement.scrollLeft,
-        y: e.pageY || e.clientY + document.documentElement.scrollTop,
+        x: e.clientX,
+        y: e.clientY,
       };
 
-      const isMouseOver = rectMousePosition.y <= rect.height;
+      const isMouseOver =
+        rectMousePosition.x > 0 && rectMousePosition.x <= rect.width && rectMousePosition.y <= rect.height && rectMousePosition.y > 0;
 
       if (isDragging) {
         const dx = newMousePosition.x - mousePosition.x;

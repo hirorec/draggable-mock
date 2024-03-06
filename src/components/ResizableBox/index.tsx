@@ -119,11 +119,15 @@ export const ResizableBox: React.FC<Props> = ({
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
-      onClick={() => {
-        console.log('click');
-      }}
     >
-      <div ref={boxRef} className={clsx(styles.box)} style={style}>
+      <div
+        ref={boxRef}
+        className={clsx(styles.box)}
+        style={style}
+        onClick={() => {
+          // console.log('click');
+        }}
+      >
         {text}
       </div>
     </div>

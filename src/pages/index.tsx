@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import _ from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { BoxContainer } from '@/components/BoxContainer';
@@ -14,32 +15,32 @@ export default function Page() {
 
   useEffect(() => {
     const boxList: Box[] = [
-      {
-        backgroundColor: '#E6F7DA',
-        borderColor: '#93ED6F',
-        text: `Draggable\nBox1`,
-        position: {
-          x: 1,
-          y: 0,
-        },
-        size: {
-          width: 1,
-          height: 2,
-        },
-      },
-      {
-        backgroundColor: '#E6F7DA',
-        borderColor: '#93ED6F',
-        text: `Draggable\nBox2`,
-        position: {
-          x: 1,
-          y: 2,
-        },
-        size: {
-          width: 1,
-          height: 3,
-        },
-      },
+      // {
+      //   backgroundColor: '#E6F7DA',
+      //   borderColor: '#93ED6F',
+      //   text: `Draggable\nBox1`,
+      //   position: {
+      //     x: 1,
+      //     y: 0,
+      //   },
+      //   size: {
+      //     width: 1,
+      //     height: 2,
+      //   },
+      // },
+      // {
+      //   backgroundColor: '#E6F7DA',
+      //   borderColor: '#93ED6F',
+      //   text: `Draggable\nBox2`,
+      //   position: {
+      //     x: 1,
+      //     y: 2,
+      //   },
+      //   size: {
+      //     width: 1,
+      //     height: 3,
+      //   },
+      // },
       {
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
@@ -87,7 +88,7 @@ export default function Page() {
 
   const handleUpdateBoxPosition = useCallback(
     (index: number, position: Position) => {
-      const newBoxList = [...boxList];
+      const newBoxList = _.cloneDeep(boxList);
       const box = { ...newBoxList[index] };
 
       if (box) {
@@ -102,10 +103,11 @@ export default function Page() {
 
   const handleUpdateBoxSize = useCallback(
     (index: number, size: Size) => {
-      const newBoxList = [...boxList];
+      const newBoxList = _.cloneDeep(boxList);
       const box = { ...newBoxList[index] };
 
       if (box) {
+        console.log(box.position);
         box.size = size;
         newBoxList[index] = box;
       }
