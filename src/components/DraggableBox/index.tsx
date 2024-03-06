@@ -31,8 +31,10 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, children })
   const boxRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState<Transform>(initialTransform);
   const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
+  const [mouseMoveAmount, setMouseMoveAmount] = useState<MousePosition>({ x: 0, y: 0 });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [cursor, setCursor] = useState<'unset' | 'grab' | 'grabbing'>('unset');
 
   const style = useMemo(() => {
@@ -44,13 +46,20 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, children })
     };
   }, [transform, cursor]);
 
+  const resetMouseMoveAmount = () => {
+    setMouseMoveAmount({ x: 0, y: 0 });
+  };
+
   useEffect(() => {
     if (isMouseDown) {
       setCursor('grabbing');
+      setIsDragging(true);
     } else if (isMouseOver) {
       setCursor('grab');
+      setIsDragging(false);
     } else {
       setCursor('unset');
+      setIsDragging(false);
     }
   }, [isMouseDown, isMouseOver]);
 
@@ -62,15 +71,46 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, children })
 
       const box: HTMLDivElement = boxRef.current;
       const rect = box.getBoundingClientRect();
-      const newMousePosition = {
+      const rectMousePosition = {
         x: e.clientX - rect.x,
         y: e.clientY - rect.y,
       };
 
-      setIsMouseOver(newMousePosition.y <= rect.height);
+      const newMousePosition = {
+        x: e.pageX || e.clientX + document.documentElement.scrollLeft,
+        y: e.pageY || e.clientY + document.documentElement.scrollTop,
+      };
+
+      const isMouseOver = rectMousePosition.y <= rect.height;
+
+      if (isDragging) {
+        const dx = newMousePosition.x - mousePosition.x;
+        const dy = newMousePosition.y - mousePosition.y;
+        const newTransform = { ...transform };
+        const newMouseMoveAmount = { ...mouseMoveAmount };
+
+        newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
+        newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
+
+        if (Math.abs(newMouseMoveAmount.y) >= step) {
+          if (newMouseMoveAmount.y > 0) {
+            newTransform.y = transform.y + step;
+          } else {
+            newTransform.y = transform.y - step;
+          }
+
+          resetMouseMoveAmount();
+        } else {
+          setMouseMoveAmount(newMouseMoveAmount);
+        }
+
+        setTransform(newTransform);
+      }
+
+      setIsMouseOver(isMouseOver);
       setMousePosition(newMousePosition);
     },
-    [boxRef.current]
+    [boxRef.current, isDragging, transform, mousePosition, mouseMoveAmount]
   );
 
   const handleMouseDown = useCallback(() => {
@@ -81,10 +121,12 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, children })
 
   const handleMouseUp = useCallback(() => {
     setIsMouseDown(false);
+    resetMouseMoveAmount();
   }, []);
 
   const handleMouseLeave = useCallback(() => {
     setIsMouseDown(false);
+    resetMouseMoveAmount();
   }, []);
 
   return (
