@@ -12,8 +12,7 @@ type Props = {
 };
 
 export const ResizableBoxContainer: React.FC<Props> = ({ step, width }) => {
-  const [boxHeight, setBoxHeight] = useState(BOX_HEIGHT_STEP * 4);
-  const [resizeMode, setResizeMode] = useState(false);
+  const [boxHeight, setBoxHeight] = useState(BOX_HEIGHT_STEP * 2);
 
   const sizeMin = useMemo(() => {
     return step;
@@ -35,12 +34,8 @@ export const ResizableBoxContainer: React.FC<Props> = ({ step, width }) => {
 
       setBoxHeight(newBoxHeight);
     },
-    [sizeMin]
+    [sizeMin, boxHeight]
   );
-
-  const handleUpdateResizeMode = (resizeMode: boolean) => {
-    setResizeMode(resizeMode);
-  };
 
   return (
     <div className={clsx(styles.container)}>
@@ -52,7 +47,7 @@ export const ResizableBoxContainer: React.FC<Props> = ({ step, width }) => {
         height={boxHeight}
         step={step}
         onResizeHeight={handleResizeBox}
-        onUpdateResizeMode={handleUpdateResizeMode}
+        onUpdateResizeMode={() => {}}
       />
     </div>
   );

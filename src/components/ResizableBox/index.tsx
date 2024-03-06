@@ -66,14 +66,14 @@ export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundCol
       setMousePosition(newMousePosition);
 
       if (resizeMode) {
-        if (newMousePosition.y >= rect.height + offset) {
+        if (newMousePosition.y >= rect.height + step) {
           onResizeHeight(true);
-        } else if (newMousePosition.y <= rect.height - offset) {
+        } else if (newMousePosition.y <= rect.height - step) {
           onResizeHeight(false);
         }
       }
     },
-    [boxRef.current, mousePosition, isMouseDown, resizeMode]
+    [boxRef.current, mousePosition, isMouseDown, resizeMode, step]
   );
 
   const handleMouseDown = useCallback(() => {

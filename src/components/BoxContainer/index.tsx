@@ -36,7 +36,7 @@ export const BoxContainer: React.FC<Props> = ({ step, width }) => {
 
       setBoxHeight(newBoxHeight);
     },
-    [sizeMin]
+    [sizeMin, boxHeight]
   );
 
   const handleUpdateResizeMode = (resizeMode: boolean) => {
@@ -47,7 +47,7 @@ export const BoxContainer: React.FC<Props> = ({ step, width }) => {
     <div className={clsx(styles.container)}>
       <DraggableBox width={width} height={boxHeight} step={step} resizeMode={resizeMode}>
         <ResizableBox
-          text={`Resizable\nBox`}
+          text={`Draggable\nBox`}
           backgroundColor='#E6F7DA'
           borderColor='#93ED6F'
           width={width}
