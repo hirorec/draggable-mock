@@ -3,6 +3,6 @@ export const STEP = {
   Y: 30,
 };
 export const RESIZABLE_BOX_WRAPPER_OFFSET = {
-  X: 50,
-  Y: 100,
+  X: 10,
+  Y: 50,
 };

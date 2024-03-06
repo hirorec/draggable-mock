@@ -19,7 +19,7 @@ export default function Page() {
         borderColor: '#93ED6F',
         text: `Draggable\nBox1`,
         position: {
-          x: 0,
+          x: 1,
           y: 0,
         },
         size: {
@@ -32,7 +32,7 @@ export default function Page() {
         borderColor: '#93ED6F',
         text: `Draggable\nBox2`,
         position: {
-          x: 0,
+          x: 1,
           y: 2,
         },
         size: {
@@ -45,7 +45,7 @@ export default function Page() {
         borderColor: '#93ED6F',
         text: `Draggable\nBox2`,
         position: {
-          x: 0,
+          x: 1,
           y: 5,
         },
         size: {
