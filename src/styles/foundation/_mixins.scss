@@ -1,0 +1,99 @@
+// min-width
+@mixin min($_width) {
+  @media screen and (min-width: #{$_width}px) {
+    @content;
+  }
+}
+// max-width
+@mixin max($_width) {
+  @media screen and (max-width: #{$_width}px) {
+    @content;
+  }
+}
+
+// min-width and max-width
+@mixin and($_min-width, $_max-width) {
+  @media screen and (min-width: #{$_min-width}px) and (max-width: #{$_max-width}px) {
+    @content;
+  }
+}
+
+// SP用レイアウト
+@mixin sp() {
+  @include max($break-point) {
+    @content;
+  }
+}
+
+// PC用レイアウト
+@mixin pc() {
+  @include min($break-point + 1) {
+    @content;
+  }
+}
+
+// PC maxレイアウト
+@mixin pcmax() {
+  @include min($max-width) {
+    @content;
+  }
+}
+
+@mixin line-clamp($max-row) {
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: $max-row;
+  overflow: hidden;
+}
+
+@mixin sidePadding() {
+  @include pc {
+    padding-left: vw($padding-side-pc);
+    padding-right: vw($padding-side-pc);
+  }
+
+  @include pcmax {
+    padding-left: vwmax($padding-side-pc);
+    padding-right: vwmax($padding-side-pc);
+  }
+
+  @include sp {
+    padding-left: vwsp($padding-side-sp);
+    padding-right: vwsp($padding-side-sp);
+  }
+}
+
+@mixin leftPadding() {
+  @include pc {
+    padding-left: vw($padding-side-pc);
+  }
+
+  @include pcmax {
+    padding-left: vwmax($padding-side-pc);
+  }
+
+  @include sp {
+    padding-left: vwsp($padding-side-sp);
+  }
+}
+
+@mixin rightPadding() {
+  @include pc {
+    padding-right: vw($padding-side-pc);
+  }
+
+  @include pcmax {
+    padding-right: vwmax($padding-side-pc);
+  }
+
+  @include sp {
+    padding-right: vwsp($padding-side-sp);
+  }
+}
+
+@mixin pcCenterBox() {
+  @include pc {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}

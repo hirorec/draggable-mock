@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://koto-bamu.com
+
+# Sitemaps
+Sitemap: https://koto-bamu.com/sitemap.xml

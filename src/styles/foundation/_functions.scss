@@ -1,0 +1,21 @@
+@function ease($name) {
+  @return map-get($ease-map, $name);
+}
+
+@function rem($size) {
+  @return #{$size * 0.01}rem;
+}
+
+@function vw($size, $viewport: $base-width-pc) {
+  $rate: calc(100 / $viewport);
+  @return $rate * $size * 1vw;
+}
+
+@function vwsp($size) {
+  @return vw($size, $base-width-sp);
+}
+
+@function vwmax($size) {
+  $rate: calc($max-width / $base-width-pc);
+  @return $rate * $size * 1px;
+}
