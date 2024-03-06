@@ -2,7 +2,7 @@
   "resolutions": {
     "jackspeak": "2.1.1"
   },
-  "name": "resizable-object",
+  "name": "draggable-mock",
   "version": "0.1.0",
   "private": true,
   "scripts": {
