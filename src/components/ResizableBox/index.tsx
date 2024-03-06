@@ -5,7 +5,7 @@ import { RESIZABLE_BOX_WRAPPER_OFFSET_Y } from '@/const';
 
 import styles from './index.module.scss';
 
-import type { Position } from '@/types';
+import type { Position, Step } from '@/types';
 
 type Props = {
   text: string;
@@ -13,7 +13,7 @@ type Props = {
   backgroundColor: string;
   width: number;
   height: number;
-  step: number;
+  step: Step;
   shadowVisible?: boolean;
   onResizeHeight: (direction: boolean) => void;
   onUpdateResizeMode: (resizeMode: boolean) => void;
@@ -78,9 +78,9 @@ export const ResizableBox: React.FC<Props> = ({
       setMousePosition(newMousePosition);
 
       if (resizeMode) {
-        if (newMousePosition.y >= rect.height + step) {
+        if (newMousePosition.y >= rect.height + step.y) {
           onResizeHeight(true);
-        } else if (newMousePosition.y <= rect.height - step) {
+        } else if (newMousePosition.y <= rect.height - step.y) {
           onResizeHeight(false);
         }
       }

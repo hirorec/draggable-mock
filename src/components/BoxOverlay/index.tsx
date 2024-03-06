@@ -12,11 +12,10 @@ type Props = {
   backgroundColor: string;
   width: number;
   height: number;
-  step: number;
   position: Position;
 };
 
-export const BoxOverlay: React.FC<Props> = ({ text, borderColor, backgroundColor, width, height, step, position }) => {
+export const BoxOverlay: React.FC<Props> = ({ text, borderColor, backgroundColor, width, height, position }) => {
   const boxRef = useRef<HTMLDivElement>(null);
 
   const wrapperStyle: React.CSSProperties = useMemo(() => {
@@ -25,7 +24,7 @@ export const BoxOverlay: React.FC<Props> = ({ text, borderColor, backgroundColor
       height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET_Y * 2}px`,
       top: `${-RESIZABLE_BOX_WRAPPER_OFFSET_Y + position.y}px`,
     };
-  }, [width, height, step, position]);
+  }, [width, height, position]);
 
   const style: React.CSSProperties = useMemo(() => {
     return {
@@ -34,7 +33,7 @@ export const BoxOverlay: React.FC<Props> = ({ text, borderColor, backgroundColor
       backgroundColor,
       borderColor,
     };
-  }, [borderColor, backgroundColor, step]);
+  }, [borderColor, backgroundColor]);
 
   return (
     <div style={wrapperStyle} className={clsx(styles.boxWrapper)}>

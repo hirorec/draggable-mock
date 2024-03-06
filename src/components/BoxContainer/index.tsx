@@ -4,14 +4,14 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DraggableBox } from '@/components/DraggableBox';
 import { ResizableBox } from '@/components/ResizableBox';
 import { STEP } from '@/const';
-import { Position } from '@/types';
+import { Position, Step } from '@/types';
 
 import styles from './index.module.scss';
 import { BoxOverlay } from '../BoxOverlay';
 
 type Props = {
   width: number;
-  step: number;
+  step: Step;
 };
 
 export const BoxContainer: React.FC<Props> = ({ step, width }) => {
@@ -23,7 +23,7 @@ export const BoxContainer: React.FC<Props> = ({ step, width }) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const sizeMin = useMemo(() => {
-    return step;
+    return step.y;
   }, [step]);
 
   useEffect(() => {
@@ -40,9 +40,9 @@ export const BoxContainer: React.FC<Props> = ({ step, width }) => {
       let newBoxHeight = boxHeight;
 
       if (direction) {
-        newBoxHeight = newBoxHeight + step;
+        newBoxHeight = newBoxHeight + step.y;
       } else {
-        newBoxHeight = newBoxHeight - step;
+        newBoxHeight = newBoxHeight - step.y;
       }
 
       if (newBoxHeight <= sizeMin) {
@@ -72,7 +72,6 @@ export const BoxContainer: React.FC<Props> = ({ step, width }) => {
     <div className={clsx(styles.container)}>
       {overlayVisible && (
         <BoxOverlay
-          step={step}
           width={width}
           height={overlayBoxHeight}
           position={overlayPosition}

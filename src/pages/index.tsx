@@ -45,7 +45,7 @@ export default function Page() {
       </div>
       <div ref={columnRef} className={clsx(styles.column)}>
         <div className={clsx(styles.columnBg)}>{borderNods()}</div>
-        <BoxContainer width={200} step={STEP.Y} />
+        <BoxContainer width={200} step={{ x: STEP.X, y: STEP.Y }} />
       </div>
       <div ref={columnRef} className={clsx(styles.column)}>
         <div className={clsx(styles.columnBg)}>{borderNods()}</div>

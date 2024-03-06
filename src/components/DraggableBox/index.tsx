@@ -4,12 +4,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import styles from './index.module.scss';
 
-import type { Position } from '@/types';
+import type { Position, Step } from '@/types';
 
 type Props = {
   width: number;
   height: number;
-  step: number;
+  step: Step;
   resizeMode: boolean;
   children: React.ReactNode;
   onUpdateDragging: (isDragging: boolean) => void;
@@ -109,11 +109,20 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, resizeMode,
         newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
         newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
 
-        if (Math.abs(newMouseMoveAmount.y) >= step) {
+        if (Math.abs(newMouseMoveAmount.y) >= step.y) {
           if (newMouseMoveAmount.y > 0) {
-            newTransform.y = transform.y + step;
+            newTransform.y = transform.y + step.y;
           } else {
-            newTransform.y = transform.y - step;
+            newTransform.y = transform.y - step.y;
+          }
+
+          onUpdatePosition({ x: newTransform.x, y: newTransform.y });
+          resetMouseMoveAmount();
+        } else if (Math.abs(newMouseMoveAmount.x) >= step.x) {
+          if (newMouseMoveAmount.x > 0) {
+            newTransform.x = transform.x + step.x;
+          } else {
+            newTransform.x = transform.x - step.y;
           }
 
           onUpdatePosition({ x: newTransform.x, y: newTransform.y });
