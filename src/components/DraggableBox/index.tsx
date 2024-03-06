@@ -10,6 +10,7 @@ type Props = {
   width: number;
   height: number;
   step: number;
+  resizeMode: boolean;
   children: React.ReactNode;
 };
 
@@ -27,7 +28,7 @@ const initialTransform = {
   scaleY: 1,
 };
 
-export const DraggableBox: React.FC<Props> = ({ width, height, step, children }) => {
+export const DraggableBox: React.FC<Props> = ({ width, height, step, resizeMode, children }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState<Transform>(initialTransform);
   const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
@@ -51,6 +52,11 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, children })
   };
 
   useEffect(() => {
+    if (resizeMode) {
+      setCursor('unset');
+      return;
+    }
+
     if (isMouseDown) {
       setCursor('grabbing');
       setIsDragging(true);
@@ -61,12 +67,16 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, children })
       setCursor('unset');
       setIsDragging(false);
     }
-  }, [isMouseDown, isMouseOver]);
+  }, [isMouseDown, isMouseOver, resizeMode]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!boxRef.current) {
+      if (!boxRef.current || resizeMode) {
         return;
+      }
+
+      if (resizeMode) {
+        console.log({ resizeMode });
       }
 
       const box: HTMLDivElement = boxRef.current;
@@ -110,7 +120,7 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, children })
       setIsMouseOver(isMouseOver);
       setMousePosition(newMousePosition);
     },
-    [boxRef.current, isDragging, transform, mousePosition, mouseMoveAmount]
+    [boxRef.current, isDragging, transform, mousePosition, mouseMoveAmount, resizeMode]
   );
 
   const handleMouseDown = useCallback(() => {

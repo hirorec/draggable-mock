@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { BoxContainer } from '@/components/BoxContainer';
+import { ResizableBoxContainer } from '@/components/ResizableBoxContainer';
 import { BOX_HEIGHT_STEP } from '@/const';
 
 import styles from './index.module.scss';
@@ -39,6 +40,9 @@ export default function Page() {
 
   return (
     <div className={clsx(styles.container)}>
+      <div ref={columnRef} className={clsx(styles.column)}>
+        <ResizableBoxContainer width={200} step={BOX_HEIGHT_STEP} />
+      </div>
       <div ref={columnRef} className={clsx(styles.column)}>
         <div className={clsx(styles.columnBg)}>{borderNods()}</div>
         <BoxContainer width={200} step={BOX_HEIGHT_STEP} />

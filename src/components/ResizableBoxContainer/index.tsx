@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { DraggableBox } from '@/components/DraggableBox';
 import { ResizableBox } from '@/components/ResizableBox';
 import { BOX_HEIGHT_STEP } from '@/const';
 
@@ -12,7 +11,7 @@ type Props = {
   step: number;
 };
 
-export const BoxContainer: React.FC<Props> = ({ step, width }) => {
+export const ResizableBoxContainer: React.FC<Props> = ({ step, width }) => {
   const [boxHeight, setBoxHeight] = useState(BOX_HEIGHT_STEP * 4);
   const [resizeMode, setResizeMode] = useState(false);
 
@@ -45,18 +44,16 @@ export const BoxContainer: React.FC<Props> = ({ step, width }) => {
 
   return (
     <div className={clsx(styles.container)}>
-      <DraggableBox width={width} height={boxHeight} step={step} resizeMode={resizeMode}>
-        <ResizableBox
-          text={`Resizable\nBox`}
-          backgroundColor='#E6F7DA'
-          borderColor='#93ED6F'
-          width={width}
-          height={boxHeight}
-          step={step}
-          onResizeHeight={handleResizeBox}
-          onUpdateResizeMode={handleUpdateResizeMode}
-        />
-      </DraggableBox>
+      <ResizableBox
+        text={`Resizable\nBox`}
+        backgroundColor='#E6F7DA'
+        borderColor='#93ED6F'
+        width={width}
+        height={boxHeight}
+        step={step}
+        onResizeHeight={handleResizeBox}
+        onUpdateResizeMode={handleUpdateResizeMode}
+      />
     </div>
   );
 };

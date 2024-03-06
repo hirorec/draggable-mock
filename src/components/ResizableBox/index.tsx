@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { RESIZABLE_BOX_WRAPPER_OFFSET } from '@/const';
 
@@ -15,9 +15,10 @@ type Props = {
   height: number;
   step: number;
   onResizeHeight: (direction: boolean) => void;
+  onUpdateResizeMode: (resizeMode: boolean) => void;
 };
 
-export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundColor, width, height, step, onResizeHeight }) => {
+export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundColor, width, height, step, onResizeHeight, onUpdateResizeMode }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const [isEdge, setIsEdge] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -42,6 +43,10 @@ export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundCol
     };
   }, [borderColor, backgroundColor, step, isEdge]);
 
+  useEffect(() => {
+    onUpdateResizeMode(resizeMode || isEdge);
+  }, [resizeMode, isEdge]);
+
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (!boxRef.current) {
@@ -55,14 +60,15 @@ export const ResizableBox: React.FC<Props> = ({ text, borderColor, backgroundCol
         y: e.clientY - rect.y,
       };
 
-      const isEdge = newMousePosition.y >= rect.height - step && newMousePosition.y < rect.height;
+      const offset = 10;
+      const isEdge = newMousePosition.y >= rect.height - offset && newMousePosition.y < rect.height;
       setIsEdge(isEdge);
       setMousePosition(newMousePosition);
 
       if (resizeMode) {
-        if (newMousePosition.y >= rect.height + step) {
+        if (newMousePosition.y >= rect.height + offset) {
           onResizeHeight(true);
-        } else if (newMousePosition.y <= rect.height - step) {
+        } else if (newMousePosition.y <= rect.height - offset) {
           onResizeHeight(false);
         }
       }
