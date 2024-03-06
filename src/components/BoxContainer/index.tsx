@@ -11,15 +11,19 @@ import { BoxOverlay } from '../BoxOverlay';
 
 type Props = {
   stepBasePosition: Position;
+  onUpdatePosition: (position: Position) => void;
   width: number;
   step: Step;
 };
 
-export const BoxContainer: React.FC<Props> = ({ step, width, stepBasePosition }) => {
+export const BoxContainer: React.FC<Props> = ({ step, width, stepBasePosition, onUpdatePosition }) => {
   const [boxHeight, setBoxHeight] = useState(STEP.Y * 4);
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(STEP.Y * 4);
-  const [overlayPosition, setOverlayPosition] = useState<Position>({ x: 0, y: 0 });
+  const [overlayPosition, setOverlayPosition] = useState<Position>({
+    x: stepBasePosition.x * STEP.X,
+    y: stepBasePosition.y * STEP.Y,
+  });
   const [resizeMode, setResizeMode] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -63,9 +67,11 @@ export const BoxContainer: React.FC<Props> = ({ step, width, stepBasePosition })
     setIsDragging(isDragging);
   };
 
-  const handleUpdatePosition = (position: Position) => {};
-
-  const handleDragEnd = (position: Position) => {
+  const handleDragEnd = (stepBasePosition: Position) => {
+    const position = {
+      x: stepBasePosition.x * STEP.X,
+      y: stepBasePosition.y * STEP.Y,
+    };
     setOverlayPosition(position);
   };
 
@@ -89,7 +95,7 @@ export const BoxContainer: React.FC<Props> = ({ step, width, stepBasePosition })
         stepBasePosition={stepBasePosition}
         resizeMode={resizeMode}
         onUpdateDragging={handleUpdateDragging}
-        onUpdatePosition={handleUpdatePosition}
+        onUpdatePosition={onUpdatePosition}
         onDragEnd={handleDragEnd}
       >
         <ResizableBox

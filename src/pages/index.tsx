@@ -3,12 +3,14 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { BoxContainer } from '@/components/BoxContainer';
 import { STEP } from '@/const';
+import { Position } from '@/types';
 
 import styles from './index.module.scss';
 
 export default function Page() {
   const columnRef = useRef<HTMLDivElement>(null);
   const [columnDiv, setColumnDiv] = useState<number>(0);
+  const [boxPosition, setBoxPosition] = useState<Position>({ x: 1, y: 5 });
 
   const handleResize = () => {
     if (!columnRef.current) {
@@ -37,6 +39,11 @@ export default function Page() {
     }
   };
 
+  const handleUpdateBoxPosition = (position: Position) => {
+    // console.log(position);
+    setBoxPosition(position);
+  };
+
   return (
     <div className={clsx(styles.container)}>
       <div className={clsx(styles.containerInner)}>
@@ -52,7 +59,7 @@ export default function Page() {
           </div>
         </div>
         <div className={clsx(styles.boxContainer)}>
-          <BoxContainer width={200} step={{ x: STEP.X, y: STEP.Y }} stepBasePosition={{ x: 1, y: 5 }} />
+          <BoxContainer width={200} step={{ x: STEP.X, y: STEP.Y }} stepBasePosition={boxPosition} onUpdatePosition={handleUpdateBoxPosition} />
         </div>
 
         {/* <div ref={columnRef} className={clsx(styles.column)}>
