@@ -12,6 +12,7 @@ type Props = {
   step: number;
   resizeMode: boolean;
   children: React.ReactNode;
+  onUpdateDragging: (isDragging: boolean) => void;
 };
 
 type Transform = {
@@ -28,7 +29,7 @@ const initialTransform = {
   scaleY: 1,
 };
 
-export const DraggableBox: React.FC<Props> = ({ width, height, step, resizeMode, children }) => {
+export const DraggableBox: React.FC<Props> = ({ width, height, step, resizeMode, children, onUpdateDragging }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState<Transform>(initialTransform);
   const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
@@ -68,6 +69,10 @@ export const DraggableBox: React.FC<Props> = ({ width, height, step, resizeMode,
       setIsDragging(false);
     }
   }, [isMouseDown, isMouseOver, resizeMode]);
+
+  useEffect(() => {
+    onUpdateDragging(isDragging);
+  }, [isDragging]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
