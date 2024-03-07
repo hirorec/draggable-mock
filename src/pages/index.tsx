@@ -2,8 +2,6 @@ import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 
 import { BoxApplication } from '@/components/BoxApplication';
-import { BoxContainer } from '@/components/BoxContainer';
-import { Column } from '@/components/Column';
 import { BoxProps } from '@/types';
 
 import styles from './index.module.scss';
@@ -65,16 +63,7 @@ export default function Page() {
 
   return (
     <div className={clsx(styles.container)}>
-      <BoxApplication>
-        <div className={clsx(styles.columnContainer)}>
-          <Column />
-          <Column />
-          <Column />
-          <Column />
-          <Column />
-        </div>
-        <BoxContainer boxList={boxList} onUpdateBox={handleUpdateBox} />
-      </BoxApplication>
+      <BoxApplication boxList={boxList} onUpdateBox={handleUpdateBox} />
     </div>
   );
 }
