@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 
 import { BoxApplication } from '@/components/BoxApplication';
@@ -105,7 +106,7 @@ export default function Page() {
   }, []);
 
   const handleUpdateBox = (box: BoxProps, index: number) => {
-    const newBoxList = [...boxList];
+    const newBoxList = _.cloneDeep(boxList);
     newBoxList[index] = box;
     setBoxList(newBoxList);
   };

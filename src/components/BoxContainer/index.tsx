@@ -105,18 +105,6 @@ export const BoxContainer: React.FC<Props> = ({
     [boxList, maxWidth, maxHeight]
   );
 
-  const handleDropBox = useCallback(
-    (index: number, position: Position) => {
-      const box = _.cloneDeep(boxList[index]);
-
-      if (box) {
-        box.position = position;
-        onDropBox(box, index);
-      }
-    },
-    [boxList, maxHeight]
-  );
-
   const handleUpdateBoxSize = useCallback(
     (index: number, size: Size) => {
       const box = _.cloneDeep(boxList[index]);
@@ -127,6 +115,18 @@ export const BoxContainer: React.FC<Props> = ({
       }
     },
     [boxList]
+  );
+
+  const handleDropBox = useCallback(
+    (index: number, position: Position) => {
+      const box = _.cloneDeep(boxList[index]);
+
+      if (box) {
+        box.position = position;
+        onDropBox(box, index);
+      }
+    },
+    [boxList, maxHeight]
   );
 
   const handleMouseMove = useCallback(
@@ -163,18 +163,6 @@ export const BoxContainer: React.FC<Props> = ({
     [containerRef.current, boxList, isMouseDown]
   );
 
-  // const handleMouseDown = () => {
-  //   setIsMouseDown(true);
-  // };
-
-  // const handleMouseUp = () => {
-  //   setIsMouseDown(false);
-  // };
-
-  // const handleMouseLeave = () => {
-  //   setIsMouseDown(false);
-  // };
-
   const handleClickBox = (index: number) => {
     // console.log('click', index);
   };
@@ -201,14 +189,7 @@ export const BoxContainer: React.FC<Props> = ({
   // );
 
   return (
-    <div
-      ref={containerRef}
-      className={clsx(styles.container)}
-      onMouseMove={handleMouseMove}
-      // onMouseDown={handleMouseDown}
-      // onMouseUp={handleMouseUp}
-      // onMouseLeave={handleMouseLeave}
-    >
+    <div ref={containerRef} className={clsx(styles.container)} onMouseMove={handleMouseMove}>
       {boxList.map((box, index) => {
         return (
           <Box
