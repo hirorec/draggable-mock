@@ -99,12 +99,12 @@ export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
 
   const handleDropBox = useCallback(
     (index: number, position: Position) => {
-      const currentBox: BoxProps = _.cloneDeep(boxList[index]);
-      currentBox.position = { ...position };
+      const droppedBox: BoxProps = _.cloneDeep(boxList[index]);
+      droppedBox.position = { ...position };
 
       boxList.forEach((box) => {
-        if (box.id !== currentBox.id) {
-          console.log('overlap', overlapBox(currentBox, box));
+        if (box.id !== droppedBox.id) {
+          console.log('overlap', overlapBox(droppedBox, box));
         }
       });
     },
