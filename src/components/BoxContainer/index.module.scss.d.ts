@@ -1,6 +1,4 @@
 export type Styles = {
-  boxContainer: string;
-  columnContainer: string;
   container: string;
 };
 

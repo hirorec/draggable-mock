@@ -3,6 +3,8 @@ import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Box } from '@/components/Box';
+import { BoxApplication } from '@/components/BoxApplication';
+import { BoxContainer } from '@/components/BoxContainer';
 import { Column } from '@/components/Column';
 import { STEP } from '@/const';
 import { BoxProps, Position, Size } from '@/types';
@@ -90,7 +92,7 @@ export default function Page() {
 
   return (
     <div className={clsx(styles.container)}>
-      <div className={clsx(styles.containerInner)}>
+      <BoxApplication>
         <div className={clsx(styles.columnContainer)}>
           <Column />
           <Column />
@@ -98,7 +100,7 @@ export default function Page() {
           <Column />
           <Column />
         </div>
-        <div className={clsx(styles.boxContainer)}>
+        <BoxContainer>
           {boxList.map((box, index) => {
             return (
               <Box
@@ -114,12 +116,8 @@ export default function Page() {
               />
             );
           })}
-        </div>
-
-        {/* <div ref={columnRef} className={clsx(styles.column)}>
-        <ResizableBoxContainer width={200} step={STEP.Y} />
-      </div> */}
-      </div>
+        </BoxContainer>
+      </BoxApplication>
     </div>
   );
 }
