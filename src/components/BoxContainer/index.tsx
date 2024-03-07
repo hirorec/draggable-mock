@@ -13,6 +13,7 @@ type Props = {
   columnList: ColumnProps[];
   maxWidth: number;
   maxHeight: number;
+  isMouseDown: boolean;
   onUpdateBox: (box: BoxProps, index: number) => void;
   onDropBox: (box: BoxProps, index: number) => void;
   onUpdateBoxList: (boxList: BoxProps[]) => void;
@@ -24,6 +25,7 @@ export const BoxContainer: React.FC<Props> = ({
   columnList,
   maxWidth,
   maxHeight,
+  isMouseDown,
   onUpdateBox,
   onDropBox,
   onUpdateBoxList,
@@ -31,7 +33,7 @@ export const BoxContainer: React.FC<Props> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
-  const [isMouseDown, setIsMouseDown] = useState(false);
+  // const [isMouseDown, setIsMouseDown] = useState(false);
   // const [modifiedBoxList, setModifiedBoxList] = useState<BoxProps[]>(boxList);
 
   // const _modifiedBoxList = useMemo((): BoxProps[] => {
@@ -156,17 +158,17 @@ export const BoxContainer: React.FC<Props> = ({
     [containerRef.current, boxList, isMouseDown]
   );
 
-  const handleMouseDown = () => {
-    setIsMouseDown(true);
-  };
+  // const handleMouseDown = () => {
+  //   setIsMouseDown(true);
+  // };
 
-  const handleMouseUp = () => {
-    setIsMouseDown(false);
-  };
+  // const handleMouseUp = () => {
+  //   setIsMouseDown(false);
+  // };
 
-  const handleMouseLeave = () => {
-    setIsMouseDown(false);
-  };
+  // const handleMouseLeave = () => {
+  //   setIsMouseDown(false);
+  // };
 
   const handleClickBox = (index: number) => {
     // console.log('click', index);
@@ -198,9 +200,9 @@ export const BoxContainer: React.FC<Props> = ({
       ref={containerRef}
       className={clsx(styles.container)}
       onMouseMove={handleMouseMove}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
+      // onMouseDown={handleMouseDown}
+      // onMouseUp={handleMouseUp}
+      // onMouseLeave={handleMouseLeave}
     >
       {boxList.map((box, index) => {
         return (
@@ -214,6 +216,7 @@ export const BoxContainer: React.FC<Props> = ({
             stepBasePosition={box.position}
             localPosition={box.localPosition}
             zIndex={getZIndex(index)}
+            isMouseDown={isMouseDown}
             onUpdatePosition={(position: Position) => handleUpdateBoxPosition(index, position)}
             onUpdateSize={(size: Size) => handleUpdateBoxSize(index, size)}
             onDrop={(position: Position) => handleDropBox(index, position)}

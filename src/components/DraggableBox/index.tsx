@@ -13,6 +13,7 @@ type Props = {
   height: number;
   step: Step;
   resizeMode: boolean;
+  isMouseDown: boolean;
   children: React.ReactNode;
   stepBasePosition: Position;
   localPosition: Position;
@@ -34,6 +35,7 @@ export const DraggableBox: React.FC<Props> = ({
   height,
   step,
   resizeMode,
+  isMouseDown: isAppMouseDown,
   children,
   stepBasePosition,
   localPosition,
@@ -91,7 +93,7 @@ export const DraggableBox: React.FC<Props> = ({
       return;
     }
 
-    if (isMouseDown) {
+    if (isMouseDown || isAppMouseDown) {
       setCursor('all-scroll');
       setIsDragging(true);
     } else if (isMouseOver) {
@@ -101,7 +103,7 @@ export const DraggableBox: React.FC<Props> = ({
       setCursor('unset');
       setIsDragging(false);
     }
-  }, [isMouseDown, isMouseOver, resizeMode]);
+  }, [isAppMouseDown, isMouseOver, resizeMode]);
 
   useEffect(() => {
     onUpdateDragging(isDragging);
@@ -132,36 +134,11 @@ export const DraggableBox: React.FC<Props> = ({
         const dx = newMousePosition.x - mousePosition.x;
         const dy = newMousePosition.y - mousePosition.y;
         const newStepBasePosition = { ...stepBasePosition };
-
         const x = newStepBasePosition.x + dx / STEP.X;
         const y = newStepBasePosition.y + dy / STEP.Y;
-        // newStepBasePosition.x = Math.round(x);
-        // newStepBasePosition.y = Math.round(y);
 
         newStepBasePosition.x = x;
         newStepBasePosition.y = y;
-
-        // const newMouseMoveAmount = { ...mouseMoveAmount };
-
-        // newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
-        // newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
-
-        // if (Math.abs(newMouseMoveAmount.y) >= step.y) {
-        //   if (newMouseMoveAmount.y > 0) {
-        //     newStepBasePosition.y = newStepBasePosition.y + 1;
-        //   } else {
-        //     newStepBasePosition.y = newStepBasePosition.y - 1;
-        //   }
-        //   resetMouseMoveAmount();
-        // } else if (rectMousePosition.x >= rect.width) {
-        //   newStepBasePosition.x = newStepBasePosition.x + 1;
-        //   resetMouseMoveAmount();
-        // } else if (rectMousePosition.x < 0) {
-        //   newStepBasePosition.x = newStepBasePosition.x - 1;
-        //   resetMouseMoveAmount();
-        // } else {
-        //   setMouseMoveAmount(newMouseMoveAmount);
-        // }
 
         onUpdatePosition(newStepBasePosition);
       }
@@ -169,7 +146,6 @@ export const DraggableBox: React.FC<Props> = ({
       setIsMouseOver(isMouseOver);
       setMousePosition(newMousePosition);
     },
-    // [boxRef.current, isDragging, transform, mousePosition, mouseMoveAmount, resizeMode]
     [boxRef.current, isDragging, transform, mousePosition, resizeMode]
   );
 
@@ -181,13 +157,11 @@ export const DraggableBox: React.FC<Props> = ({
 
   const handleMouseUp = useCallback(() => {
     setIsMouseDown(false);
-    // resetMouseMoveAmount();
     onDragEnd(modifiedPosition);
   }, [modifiedPosition]);
 
   const handleMouseLeave = useCallback(() => {
-    // setIsMouseDown(false);
-    // // resetMouseMoveAmount();
+    setIsMouseDown(false);
     // onDragLeave(modifiedPosition);
   }, [modifiedPosition]);
 

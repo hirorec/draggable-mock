@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { BoxProps, ColumnProps } from '@/types';
 import { overlapBox } from '@/utils';
@@ -19,11 +19,34 @@ type Props = {
 };
 
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
+  const [isMouseDown, setIsMouseDown] = useState(false);
+
   const maxWidth = useMemo((): number => {
     return columnList.reduce((prev, current) => {
       return prev + current.colDiv;
     }, 0);
   }, [columnList]);
+
+  useEffect(() => {
+    const onMouseDown = () => {
+      setIsMouseDown(true);
+    };
+    const onMouseUp = () => {
+      setIsMouseDown(false);
+    };
+
+    window.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mouseup', onMouseUp);
+
+    return () => {
+      window.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log({ isMouseDown });
+  }, [isMouseDown]);
 
   const handleOverlapBox = useCallback(
     (box: BoxProps) => {
@@ -159,6 +182,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
           columnList={columnList}
           maxWidth={maxWidth}
           maxHeight={maxHeight}
+          isMouseDown={isMouseDown}
           onUpdateBox={onUpdateBox}
           onDropBox={handleDropBox}
           onUpdateBoxList={onUpdateBoxList}

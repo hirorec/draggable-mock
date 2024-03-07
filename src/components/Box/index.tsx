@@ -18,6 +18,7 @@ type Props = {
   localPosition: Position;
   stepBaseSize: Size;
   zIndex: number;
+  isMouseDown: boolean;
   onUpdatePosition: (position: Position) => void;
   onUpdateSize: (size: Size) => void;
   onDrop: (position: Position) => void;
@@ -33,6 +34,7 @@ export const Box: React.FC<Props> = ({
   stepBasePosition,
   localPosition,
   zIndex,
+  isMouseDown,
   onUpdatePosition,
   onUpdateSize,
   onDrop,
@@ -129,6 +131,7 @@ export const Box: React.FC<Props> = ({
         stepBasePosition={stepBasePosition}
         localPosition={localPosition}
         resizeMode={resizeMode}
+        isMouseDown={isMouseDown}
         onUpdateDragging={handleUpdateDragging}
         onUpdatePosition={onUpdatePosition}
         onDragEnd={handleDragEnd}
