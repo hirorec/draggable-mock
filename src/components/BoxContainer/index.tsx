@@ -30,7 +30,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, maxHeight, onUpdateBox 
 
   const handleUpdateBoxPosition = useCallback(
     (index: number, position: Position) => {
-      if (position.y < 0) {
+      if (position.x < 0 || position.y < 0) {
         return;
       }
 
