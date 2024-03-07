@@ -25,5 +25,6 @@ export type BoxProps = {
 export type ColumnProps = {
   id: string;
   label: string;
+  colDiv: number;
   rowDiv: number;
 };

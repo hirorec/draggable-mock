@@ -8,10 +8,11 @@ import styles from './index.module.scss';
 type Props = {
   id: string;
   label: string;
+  colDiv: number;
   rowDiv: number;
 };
 
-export const Column: React.FC<Props> = ({ id, label, rowDiv }) => {
+export const Column: React.FC<Props> = ({ id, label, colDiv, rowDiv }) => {
   const borderNods = () => {
     if (rowDiv > 0) {
       return new Array(rowDiv - 1).fill({}).map((_, index) => {
@@ -21,7 +22,7 @@ export const Column: React.FC<Props> = ({ id, label, rowDiv }) => {
   };
 
   return (
-    <div className={clsx(styles.column)} style={{ height: `${rowDiv * STEP.Y}px` }}>
+    <div className={clsx(styles.column)} style={{ width: `${colDiv * STEP.X}px`, height: `${rowDiv * STEP.Y}px` }}>
       <div className={clsx(styles.columnBg)}>{borderNods()}</div>
     </div>
   );
