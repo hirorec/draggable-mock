@@ -1,0 +1,24 @@
+.column {
+  flex-shrink: 0;
+  position: relative;
+  width: 150px;
+  height: 100%;
+  background-color: #f6f6f6;
+  border: solid 1px #e1e1e1;
+}
+
+.columnBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.columnBgBorder {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #e1e1e1;
+}

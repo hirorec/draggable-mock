@@ -1,8 +1,7 @@
 export type Styles = {
-  boxContainer: string;
-  columnContainer: string;
-  container: string;
-  containerInner: string;
+  column: string;
+  columnBg: string;
+  columnBgBorder: string;
 };
 
 export type ClassNames = keyof Styles;
