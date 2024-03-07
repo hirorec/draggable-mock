@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { BoxProps, ColumnProps } from '@/types';
 import { overlapBox } from '@/utils';
@@ -19,6 +19,12 @@ type Props = {
 };
 
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
+  const maxWidth = useMemo((): number => {
+    return columnList.reduce((prev, current) => {
+      return prev + current.colDiv;
+    }, 0);
+  }, [columnList]);
+
   const handleOverlapBox = useCallback(
     (box: BoxProps) => {
       let newBoxList = _.cloneDeep(boxList);
@@ -151,6 +157,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         <BoxContainer
           boxList={boxList}
           columnList={columnList}
+          maxWidth={maxWidth}
           maxHeight={maxHeight}
           onUpdateBox={onUpdateBox}
           onDropBox={handleDropBox}

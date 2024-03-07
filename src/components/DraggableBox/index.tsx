@@ -137,6 +137,7 @@ export const DraggableBox: React.FC<Props> = ({
         const y = newStepBasePosition.y + dy / STEP.Y;
         // newStepBasePosition.x = Math.round(x);
         // newStepBasePosition.y = Math.round(y);
+
         newStepBasePosition.x = x;
         newStepBasePosition.y = y;
 

@@ -11,6 +11,7 @@ import { Box } from '../Box';
 type Props = {
   boxList: BoxProps[];
   columnList: ColumnProps[];
+  maxWidth: number;
   maxHeight: number;
   onUpdateBox: (box: BoxProps, index: number) => void;
   onDropBox: (box: BoxProps, index: number) => void;
@@ -18,7 +19,16 @@ type Props = {
   onOverlapBox: (box: BoxProps) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onDropBox, onUpdateBoxList, onOverlapBox }) => {
+export const BoxContainer: React.FC<Props> = ({
+  boxList,
+  columnList,
+  maxWidth,
+  maxHeight,
+  onUpdateBox,
+  onDropBox,
+  onUpdateBoxList,
+  onOverlapBox,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -76,12 +86,16 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxHeight, 
         return;
       }
 
+      if (position.x + box.size.width > maxWidth) {
+        return;
+      }
+
       if (box) {
         box.position = position;
         onUpdateBox(box, index);
       }
     },
-    [boxList, maxHeight]
+    [boxList, maxWidth, maxHeight]
   );
 
   const handleDropBox = useCallback(
