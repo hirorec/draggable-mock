@@ -4,6 +4,7 @@ import React, { useCallback, useRef, useState } from 'react';
 
 import { STEP } from '@/const';
 import { BoxProps, Position, Size } from '@/types';
+import { overlapBox } from '@/utils';
 
 import styles from './index.module.scss';
 import { Box } from '../Box';
@@ -96,9 +97,19 @@ export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
     // console.log('click', index);
   };
 
-  const handleDropBox = useCallback((index: number, position: Position) => {
-    console.log({ index, position });
-  }, []);
+  const handleDropBox = useCallback(
+    (index: number, position: Position) => {
+      const currentBox: BoxProps = _.cloneDeep(boxList[index]);
+      currentBox.position = { ...position };
+
+      boxList.forEach((box) => {
+        if (box.id !== currentBox.id) {
+          console.log('overlap', overlapBox(currentBox, box));
+        }
+      });
+    },
+    [boxList]
+  );
 
   return (
     <div
