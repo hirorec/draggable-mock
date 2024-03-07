@@ -10,15 +10,16 @@ import { ColumnContainer } from '../ColumnContainer';
 type Props = {
   boxList: BoxProps[];
   columnList: ColumnProps[];
+  maxHeight: number;
   onUpdateBox: (box: BoxProps, index: number) => void;
 };
 
-export const BoxApplication: React.FC<Props> = ({ boxList, onUpdateBox, columnList }) => {
+export const BoxApplication: React.FC<Props> = ({ boxList, onUpdateBox, columnList, maxHeight }) => {
   return (
     <div className={clsx(styles.application)}>
       <div className={clsx(styles.applicationInner)}>
         <ColumnContainer columnList={columnList} />
-        <BoxContainer boxList={boxList} onUpdateBox={onUpdateBox} />
+        <BoxContainer boxList={boxList} onUpdateBox={onUpdateBox} maxHeight={maxHeight} />
       </div>
     </div>
   );

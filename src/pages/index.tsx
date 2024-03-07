@@ -9,6 +9,7 @@ import styles from './index.module.scss';
 export default function Page() {
   const [boxList, setBoxList] = useState<BoxProps[]>([]);
   const [columnList, setColumnList] = useState<ColumnProps[]>([]);
+  const rowDiv = 15;
 
   useEffect(() => {
     const boxList: BoxProps[] = [
@@ -59,7 +60,6 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    const rowDiv = 30;
     const columnList: ColumnProps[] = [
       { id: '1', label: 'column 1', rowDiv, colDiv: 1 },
       { id: '2', label: 'column 2', rowDiv, colDiv: 2 },
@@ -78,7 +78,7 @@ export default function Page() {
 
   return (
     <div className={clsx(styles.container)}>
-      <BoxApplication boxList={boxList} columnList={columnList} onUpdateBox={handleUpdateBox} />
+      <BoxApplication boxList={boxList} columnList={columnList} onUpdateBox={handleUpdateBox} maxHeight={rowDiv} />
     </div>
   );
 }

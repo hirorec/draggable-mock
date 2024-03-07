@@ -11,10 +11,11 @@ import { Box } from '../Box';
 
 type Props = {
   boxList: BoxProps[];
+  maxHeight: number;
   onUpdateBox: (box: BoxProps, index: number) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
+export const BoxContainer: React.FC<Props> = ({ boxList, maxHeight, onUpdateBox }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -29,14 +30,22 @@ export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
 
   const handleUpdateBoxPosition = useCallback(
     (index: number, position: Position) => {
+      if (position.y < 0) {
+        return;
+      }
+
       const box = _.cloneDeep(boxList[index]);
+
+      if (position.y + box.size.height > maxHeight) {
+        return;
+      }
 
       if (box) {
         box.position = position;
         onUpdateBox(box, index);
       }
     },
-    [boxList]
+    [boxList, maxHeight]
   );
 
   const handleUpdateBoxSize = useCallback(
