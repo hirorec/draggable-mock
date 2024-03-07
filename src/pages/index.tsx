@@ -47,7 +47,7 @@ export default function Page() {
         borderColor: '#93ED6F',
         label: `Draggable\nBox3`,
         position: {
-          x: 3,
+          x: 2,
           y: 7,
         },
         size: {
@@ -62,7 +62,7 @@ export default function Page() {
   useEffect(() => {
     const columnList: ColumnProps[] = [
       { id: '1', label: 'column 1', rowDiv, colDiv: 1 },
-      { id: '2', label: 'column 2', rowDiv, colDiv: 2 },
+      { id: '2', label: 'column 2', rowDiv, colDiv: 1 },
       { id: '3', label: 'column 3', rowDiv, colDiv: 1 },
       { id: '4', label: 'column 4', rowDiv, colDiv: 1 },
       { id: '5', label: 'column 5', rowDiv, colDiv: 1 },
@@ -76,9 +76,24 @@ export default function Page() {
     setBoxList(newBoxList);
   };
 
+  const handleUpdateBoxList = (boxList: BoxProps[]) => {
+    setBoxList(boxList);
+  };
+
+  const handleUpdateColumnList = (columnList: ColumnProps[]) => {
+    setColumnList(columnList);
+  };
+
   return (
     <div className={clsx(styles.container)}>
-      <BoxApplication boxList={boxList} columnList={columnList} onUpdateBox={handleUpdateBox} maxHeight={rowDiv} />
+      <BoxApplication
+        boxList={boxList}
+        columnList={columnList}
+        maxHeight={rowDiv}
+        onUpdateBox={handleUpdateBox}
+        onUpdateBoxList={handleUpdateBoxList}
+        onUpdateColumnList={handleUpdateColumnList}
+      />
     </div>
   );
 }

@@ -13,9 +13,10 @@ type Props = {
   boxList: BoxProps[];
   maxHeight: number;
   onUpdateBox: (box: BoxProps, index: number) => void;
+  onOverlapBox: (box: BoxProps) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({ boxList, maxHeight, onUpdateBox }) => {
+export const BoxContainer: React.FC<Props> = ({ boxList, maxHeight, onUpdateBox, onOverlapBox }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -113,7 +114,11 @@ export const BoxContainer: React.FC<Props> = ({ boxList, maxHeight, onUpdateBox 
 
       boxList.forEach((box) => {
         if (box.id !== droppedBox.id) {
-          console.log('overlap', overlapBox(droppedBox, box));
+          const isOverlap = overlapBox(droppedBox, box);
+
+          if (isOverlap) {
+            onOverlapBox(droppedBox);
+          }
         }
       });
     },
