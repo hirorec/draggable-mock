@@ -19,6 +19,7 @@ type Props = {
   stepBaseSize: Size;
   zIndex: number;
   isMouseDown: boolean;
+  maxHeight: number;
   onUpdatePosition: (position: Position) => void;
   onUpdateSize: (size: Size) => void;
   onDrop: (position: Position) => void;
@@ -35,6 +36,7 @@ export const Box: React.FC<Props> = ({
   localPosition,
   zIndex,
   isMouseDown,
+  maxHeight,
   onUpdatePosition,
   onUpdateSize,
   onDrop,
@@ -70,7 +72,9 @@ export const Box: React.FC<Props> = ({
       const newBoxSize: Size = { ...stepBaseSize };
 
       if (direction) {
-        newBoxSize.height = stepBaseSize.height + 1;
+        if (stepBasePosition.y + newBoxSize.height < maxHeight) {
+          newBoxSize.height = stepBaseSize.height + 1;
+        }
       } else {
         newBoxSize.height = stepBaseSize.height - 1;
       }
@@ -81,7 +85,7 @@ export const Box: React.FC<Props> = ({
 
       onUpdateSize(newBoxSize);
     },
-    [stepBaseSize]
+    [stepBaseSize, maxHeight, stepBasePosition]
   );
 
   const handleUpdateResizeMode = (resizeMode: boolean) => {

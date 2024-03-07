@@ -222,6 +222,7 @@ export const BoxContainer: React.FC<Props> = ({
             localPosition={box.localPosition}
             zIndex={getZIndex(index)}
             isMouseDown={isMouseDown}
+            maxHeight={maxHeight}
             onUpdatePosition={(position: Position) => handleUpdateBoxPosition(index, position)}
             onUpdateSize={(size: Size) => handleUpdateBoxSize(index, size)}
             onDrop={(position: Position) => handleDropBox(index, position)}
