@@ -12,20 +12,20 @@ export default function Page() {
 
   useEffect(() => {
     const boxList: BoxProps[] = [
-      // {
-      //   id: '1',
-      //   backgroundColor: '#FFE4BF',
-      //   borderColor: '#F2A455',
-      //   text: `Draggable\nBox1`,
-      //   position: {
-      //     x: 0,
-      //     y: 0,
-      //   },
-      //   size: {
-      //     width: 1,
-      //     height: 2,
-      //   },
-      // },
+      {
+        id: '1',
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox1`,
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 2,
+        },
+      },
       {
         id: '2',
         backgroundColor: '#E6F7DA',

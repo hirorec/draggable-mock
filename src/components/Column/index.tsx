@@ -21,8 +21,17 @@ export const Column: React.FC<Props> = ({ id, label, colDiv, rowDiv }) => {
     }
   };
 
+  const contentNodes = () => {
+    if (colDiv > 0) {
+      return new Array(colDiv).fill({}).map((_, index) => {
+        return <div className={clsx(styles.columnContent)} key={index} style={{ width: `${STEP.X}px` }} />;
+      });
+    }
+  };
+
   return (
     <div className={clsx(styles.column)} style={{ width: `${colDiv * STEP.X}px`, height: `${rowDiv * STEP.Y}px` }}>
+      {contentNodes()}
       <div className={clsx(styles.columnBg)}>{borderNods()}</div>
     </div>
   );

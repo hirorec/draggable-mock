@@ -1,10 +1,20 @@
 .column {
+  display: flex;
   flex-shrink: 0;
   position: relative;
   width: 150px;
   height: 100%;
-  background-color: #f6f6f6;
   border: solid 1px #e1e1e1;
+}
+
+.columnContent {
+  position: relative;
+  height: 100%;
+  background-color: #f6f6f6;
+
+  &:not(:first-child) {
+    border-left: 1px dashed #d1d1d1;
+  }
 }
 
 .columnBg {
