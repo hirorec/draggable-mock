@@ -16,6 +16,7 @@ type Props = {
   step: Step;
   stepBasePosition: Position;
   stepBaseSize: Size;
+  zIndex: number;
   onUpdatePosition: (position: Position) => void;
   onUpdateSize: (size: Size) => void;
 };
@@ -27,6 +28,7 @@ export const Box: React.FC<Props> = ({
   step,
   stepBaseSize,
   stepBasePosition,
+  zIndex,
   onUpdatePosition,
   onUpdateSize,
 }) => {
@@ -91,7 +93,7 @@ export const Box: React.FC<Props> = ({
   };
 
   return (
-    <div className={clsx(styles.container)}>
+    <div className={clsx(styles.box)} style={{ zIndex }}>
       {overlayVisible && (
         <BoxOverlay
           text={text}

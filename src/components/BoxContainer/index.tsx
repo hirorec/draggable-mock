@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { STEP } from '@/const';
 import { BoxProps, Position, Size } from '@/types';
@@ -14,6 +14,22 @@ type Props = {
 };
 
 export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [selectedBoxIndex, setSelectedBoxIndex] = useState<number | null>(null);
+  const [isMouseDown, setIsMouseDown] = useState(false);
+
+  useEffect(() => {
+    console.log({ selectedBoxIndex });
+  }, [selectedBoxIndex]);
+
+  const getZIndex = (index: number) => {
+    if (index === selectedBoxIndex) {
+      return 100;
+    } else {
+      return 0;
+    }
+  };
+
   const handleUpdateBoxPosition = useCallback(
     (index: number, position: Position) => {
       const box = _.cloneDeep(boxList[index]);
@@ -38,8 +54,57 @@ export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
     [boxList]
   );
 
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!containerRef.current || isMouseDown) {
+        return;
+      }
+
+      const container: HTMLDivElement = containerRef.current;
+      const rect = container.getBoundingClientRect();
+      const rectMousePosition: Position = {
+        x: e.clientX - rect.x,
+        y: e.clientY - rect.y,
+      };
+      const stepBasePosition: Position = {
+        x: rectMousePosition.x / STEP.X,
+        y: rectMousePosition.y / STEP.Y,
+      };
+
+      boxList.forEach((box, index) => {
+        const { x, y } = box.position;
+        const xMax = x + box.size.width;
+        const yMax = y + box.size.height;
+
+        if (stepBasePosition.x >= x && stepBasePosition.x <= xMax && stepBasePosition.y >= y && stepBasePosition.y <= yMax) {
+          setSelectedBoxIndex(index);
+        }
+      });
+    },
+    [containerRef.current, boxList, isMouseDown]
+  );
+
+  const handleMouseDown = useCallback(() => {
+    setIsMouseDown(true);
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    setIsMouseDown(false);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsMouseDown(false);
+  }, []);
+
   return (
-    <div className={clsx(styles.container)}>
+    <div
+      ref={containerRef}
+      className={clsx(styles.container)}
+      onMouseMove={handleMouseMove}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+    >
       {boxList.map((box, index) => {
         return (
           <Box
@@ -50,6 +115,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
             step={{ x: STEP.X, y: STEP.Y }}
             stepBaseSize={box.size}
             stepBasePosition={box.position}
+            zIndex={getZIndex(index)}
             onUpdatePosition={(position: Position) => handleUpdateBoxPosition(index, position)}
             onUpdateSize={(size: Size) => handleUpdateBoxSize(index, size)}
           />

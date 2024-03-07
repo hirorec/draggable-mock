@@ -11,19 +11,19 @@ export default function Page() {
 
   useEffect(() => {
     const boxList: BoxProps[] = [
-      // {
-      //   backgroundColor: '#E6F7DA',
-      //   borderColor: '#93ED6F',
-      //   text: `Draggable\nBox1`,
-      //   position: {
-      //     x: 1,
-      //     y: 0,
-      //   },
-      //   size: {
-      //     width: 1,
-      //     height: 2,
-      //   },
-      // },
+      {
+        backgroundColor: '#E6F7DA',
+        borderColor: '#93ED6F',
+        text: `Draggable\nBox1`,
+        position: {
+          x: 1,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 2,
+        },
+      },
       {
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
@@ -40,7 +40,7 @@ export default function Page() {
       {
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
-        text: `Draggable\nBox2`,
+        text: `Draggable\nBox3`,
         position: {
           x: 2,
           y: 6,
