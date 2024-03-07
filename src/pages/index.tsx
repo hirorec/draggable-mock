@@ -1,13 +1,10 @@
 import clsx from 'clsx';
-import _ from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Box } from '@/components/Box';
 import { BoxApplication } from '@/components/BoxApplication';
 import { BoxContainer } from '@/components/BoxContainer';
 import { Column } from '@/components/Column';
-import { STEP } from '@/const';
-import { BoxProps, Position, Size } from '@/types';
+import { BoxProps } from '@/types';
 
 import styles from './index.module.scss';
 
@@ -60,35 +57,11 @@ export default function Page() {
     setBoxList(boxList);
   }, []);
 
-  const handleUpdateBoxPosition = useCallback(
-    (index: number, position: Position) => {
-      const newBoxList = _.cloneDeep(boxList);
-      const box = { ...newBoxList[index] };
-
-      if (box) {
-        box.position = position;
-        newBoxList[index] = box;
-      }
-
-      setBoxList(newBoxList);
-    },
-    [boxList]
-  );
-
-  const handleUpdateBoxSize = useCallback(
-    (index: number, size: Size) => {
-      const newBoxList = _.cloneDeep(boxList);
-      const box = { ...newBoxList[index] };
-
-      if (box) {
-        box.size = size;
-        newBoxList[index] = box;
-      }
-
-      setBoxList(newBoxList);
-    },
-    [boxList]
-  );
+  const handleUpdateBox = (box: BoxProps, index: number) => {
+    const newBoxList = [...boxList];
+    newBoxList[index] = box;
+    setBoxList(newBoxList);
+  };
 
   return (
     <div className={clsx(styles.container)}>
@@ -100,23 +73,7 @@ export default function Page() {
           <Column />
           <Column />
         </div>
-        <BoxContainer>
-          {boxList.map((box, index) => {
-            return (
-              <Box
-                key={index}
-                text={box.text}
-                backgroundColor={box.backgroundColor}
-                borderColor={box.borderColor}
-                step={{ x: STEP.X, y: STEP.Y }}
-                stepBaseSize={box.size}
-                stepBasePosition={box.position}
-                onUpdatePosition={(position: Position) => handleUpdateBoxPosition(index, position)}
-                onUpdateSize={(size: Size) => handleUpdateBoxSize(index, size)}
-              />
-            );
-          })}
-        </BoxContainer>
+        <BoxContainer boxList={boxList} onUpdateBox={handleUpdateBox} />
       </BoxApplication>
     </div>
   );
