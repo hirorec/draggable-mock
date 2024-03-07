@@ -2,18 +2,18 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { BoxContainer } from '@/components/BoxContainer';
+import { Box } from '@/components/Box';
 import { Column } from '@/components/Column';
 import { STEP } from '@/const';
-import { Box, Position, Size } from '@/types';
+import { BoxProps, Position, Size } from '@/types';
 
 import styles from './index.module.scss';
 
 export default function Page() {
-  const [boxList, setBoxList] = useState<Box[]>([]);
+  const [boxList, setBoxList] = useState<BoxProps[]>([]);
 
   useEffect(() => {
-    const boxList: Box[] = [
+    const boxList: BoxProps[] = [
       // {
       //   backgroundColor: '#E6F7DA',
       //   borderColor: '#93ED6F',
@@ -101,7 +101,7 @@ export default function Page() {
         <div className={clsx(styles.boxContainer)}>
           {boxList.map((box, index) => {
             return (
-              <BoxContainer
+              <Box
                 key={index}
                 text={box.text}
                 backgroundColor={box.backgroundColor}

@@ -13,7 +13,7 @@ export type Size = {
   height: number;
 };
 
-export type Box = {
+export type BoxProps = {
   text: string;
   borderColor: string;
   backgroundColor: string;

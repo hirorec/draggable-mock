@@ -20,7 +20,7 @@ type Props = {
   onUpdateSize: (size: Size) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({
+export const Box: React.FC<Props> = ({
   text,
   borderColor,
   backgroundColor,
