@@ -25,8 +25,5 @@ export type BoxProps = {
 export type ColumnProps = {
   id: string;
   label: string;
-  borderColor: string;
-  backgroundColor: string;
-  position: Position;
-  size: Size;
+  div: number;
 };

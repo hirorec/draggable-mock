@@ -2,12 +2,13 @@ import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 
 import { BoxApplication } from '@/components/BoxApplication';
-import { BoxProps } from '@/types';
+import { BoxProps, ColumnProps } from '@/types';
 
 import styles from './index.module.scss';
 
 export default function Page() {
   const [boxList, setBoxList] = useState<BoxProps[]>([]);
+  const [columnList, setColumnList] = useState<ColumnProps[]>([]);
 
   useEffect(() => {
     const boxList: BoxProps[] = [
@@ -54,8 +55,18 @@ export default function Page() {
         },
       },
     ];
-
     setBoxList(boxList);
+  }, []);
+
+  useEffect(() => {
+    const columnList: ColumnProps[] = [
+      { id: '1', label: '', div: 0 },
+      { id: '2', label: '', div: 0 },
+      { id: '3', label: '', div: 0 },
+      { id: '4', label: '', div: 0 },
+      { id: '5', label: '', div: 0 },
+    ];
+    setColumnList(columnList);
   }, []);
 
   const handleUpdateBox = (box: BoxProps, index: number) => {
@@ -66,7 +77,7 @@ export default function Page() {
 
   return (
     <div className={clsx(styles.container)}>
-      <BoxApplication boxList={boxList} onUpdateBox={handleUpdateBox} />
+      <BoxApplication boxList={boxList} columnList={columnList} onUpdateBox={handleUpdateBox} />
     </div>
   );
 }
