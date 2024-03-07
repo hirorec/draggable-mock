@@ -19,6 +19,7 @@ type Props = {
   zIndex: number;
   onUpdatePosition: (position: Position) => void;
   onUpdateSize: (size: Size) => void;
+  onDrop: (position: Position) => void;
   onClick: () => void;
 };
 
@@ -32,13 +33,14 @@ export const Box: React.FC<Props> = ({
   zIndex,
   onUpdatePosition,
   onUpdateSize,
+  onDrop,
   onClick,
 }) => {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(step.y * 4);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
-    x: stepBasePosition.x * step.x,
-    y: stepBasePosition.y * step.y,
+    x: stepBasePosition.x,
+    y: stepBasePosition.y,
   });
   const [resizeMode, setResizeMode] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -86,13 +88,23 @@ export const Box: React.FC<Props> = ({
     setIsDragging(isDragging);
   };
 
-  const handleDragEnd = (stepBasePosition: Position) => {
-    const position = {
-      x: stepBasePosition.x * STEP.X,
-      y: stepBasePosition.y * STEP.Y,
-    };
-    setOverlayPosition(position);
-  };
+  const handleDragEnd = useCallback(
+    (newStepBasePosition: Position) => {
+      setOverlayPosition({ ...newStepBasePosition });
+
+      if (overlayPosition.x !== newStepBasePosition.x || overlayPosition.y !== newStepBasePosition.y) {
+        onDrop(newStepBasePosition);
+      }
+    },
+    [overlayPosition]
+  );
+
+  const handleDragLeave = useCallback(
+    (newStepBasePosition: Position) => {
+      setOverlayPosition({ ...newStepBasePosition });
+    },
+    [overlayPosition]
+  );
 
   return (
     <div className={clsx(styles.box)} style={{ zIndex }}>
@@ -116,6 +128,7 @@ export const Box: React.FC<Props> = ({
         onUpdateDragging={handleUpdateDragging}
         onUpdatePosition={onUpdatePosition}
         onDragEnd={handleDragEnd}
+        onDragLeave={handleDragLeave}
       >
         <ResizableBox
           text={text}
@@ -124,7 +137,6 @@ export const Box: React.FC<Props> = ({
           width={boxSize.width}
           height={boxSize.height}
           step={step}
-          stepBasePosition={stepBasePosition}
           shadowVisible={isDragging}
           onResizeHeight={handleResizeBox}
           onUpdateResizeMode={handleUpdateResizeMode}

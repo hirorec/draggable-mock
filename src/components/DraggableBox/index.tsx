@@ -16,6 +16,7 @@ type Props = {
   onUpdateDragging: (isDragging: boolean) => void;
   onUpdatePosition: (position: Position) => void;
   onDragEnd: (position: Position) => void;
+  onDragLeave: (position: Position) => void;
 };
 
 type Transform = {
@@ -35,6 +36,7 @@ export const DraggableBox: React.FC<Props> = ({
   onUpdateDragging,
   onUpdatePosition,
   onDragEnd,
+  onDragLeave,
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState<Transform>({
@@ -165,7 +167,8 @@ export const DraggableBox: React.FC<Props> = ({
   const handleMouseLeave = useCallback(() => {
     setIsMouseDown(false);
     resetMouseMoveAmount();
-  }, []);
+    onDragLeave(stepBasePosition);
+  }, [stepBasePosition]);
 
   return (
     <div

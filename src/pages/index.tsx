@@ -16,7 +16,7 @@ export default function Page() {
         borderColor: '#F2A455',
         text: `Draggable\nBox1`,
         position: {
-          x: 1,
+          x: 0,
           y: 0,
         },
         size: {

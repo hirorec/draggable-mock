@@ -1,10 +1,11 @@
 import clsx from 'clsx';
 import React, { useMemo, useRef } from 'react';
 
-import { RESIZABLE_BOX_WRAPPER_OFFSET } from '@/const';
-import { Position } from '@/types';
+import { RESIZABLE_BOX_WRAPPER_OFFSET, STEP } from '@/const';
 
 import styles from './index.module.scss';
+
+import type { Position } from '@/types';
 
 type Props = {
   text: string;
@@ -22,8 +23,8 @@ export const BoxOverlay: React.FC<Props> = ({ text, borderColor, backgroundColor
     return {
       width: `${width}px`,
       height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET.Y * 2}px`,
-      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET.Y + position.y}px`,
-      left: `${-RESIZABLE_BOX_WRAPPER_OFFSET.X + position.x}px`,
+      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET.Y + position.y * STEP.Y}px`,
+      left: `${-RESIZABLE_BOX_WRAPPER_OFFSET.X + position.x * STEP.X}px`,
     };
   }, [width, height, position]);
 

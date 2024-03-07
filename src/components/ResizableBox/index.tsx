@@ -15,7 +15,6 @@ type Props = {
   height: number;
   step: Step;
   shadowVisible?: boolean;
-  stepBasePosition: Position;
   onResizeHeight: (direction: boolean) => void;
   onUpdateResizeMode: (resizeMode: boolean) => void;
   onClick: () => void;
@@ -29,7 +28,6 @@ export const ResizableBox: React.FC<Props> = ({
   height,
   step,
   shadowVisible = false,
-  stepBasePosition,
   onResizeHeight,
   onUpdateResizeMode,
   onClick,

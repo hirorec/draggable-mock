@@ -93,8 +93,12 @@ export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
   };
 
   const handleClickBox = (index: number) => {
-    console.log('click', index);
+    // console.log('click', index);
   };
+
+  const handleDropBox = useCallback((index: number, position: Position) => {
+    console.log({ index, position });
+  }, []);
 
   return (
     <div
@@ -118,6 +122,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
             zIndex={getZIndex(index)}
             onUpdatePosition={(position: Position) => handleUpdateBoxPosition(index, position)}
             onUpdateSize={(size: Size) => handleUpdateBoxSize(index, size)}
+            onDrop={(position: Position) => handleDropBox(index, position)}
             onClick={() => handleClickBox(index)}
           />
         );
