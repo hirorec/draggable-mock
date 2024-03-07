@@ -24,26 +24,26 @@ export default function Page() {
       //     height: 2,
       //   },
       // },
-      // {
-      //   backgroundColor: '#E6F7DA',
-      //   borderColor: '#93ED6F',
-      //   text: `Draggable\nBox2`,
-      //   position: {
-      //     x: 1,
-      //     y: 2,
-      //   },
-      //   size: {
-      //     width: 1,
-      //     height: 3,
-      //   },
-      // },
       {
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
         text: `Draggable\nBox2`,
         position: {
-          x: 1,
-          y: 5,
+          x: 2,
+          y: 3,
+        },
+        size: {
+          width: 1,
+          height: 3,
+        },
+      },
+      {
+        backgroundColor: '#E6F7DA',
+        borderColor: '#93ED6F',
+        text: `Draggable\nBox2`,
+        position: {
+          x: 2,
+          y: 6,
         },
         size: {
           width: 1,
