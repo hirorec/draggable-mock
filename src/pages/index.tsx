@@ -59,12 +59,13 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
+    const rowDiv = 50;
     const columnList: ColumnProps[] = [
-      { id: '1', label: '', div: 0 },
-      { id: '2', label: '', div: 0 },
-      { id: '3', label: '', div: 0 },
-      { id: '4', label: '', div: 0 },
-      { id: '5', label: '', div: 0 },
+      { id: '1', label: 'column 1', rowDiv },
+      { id: '2', label: 'column 2', rowDiv },
+      { id: '3', label: 'column 3', rowDiv },
+      { id: '4', label: 'column 4', rowDiv },
+      { id: '5', label: 'column 5', rowDiv },
     ];
     setColumnList(columnList);
   }, []);

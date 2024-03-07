@@ -1,6 +1,6 @@
 export type Styles = {
   application: string;
-  columnContainer: string;
+  applicationInner: string;
 };
 
 export type ClassNames = keyof Styles;

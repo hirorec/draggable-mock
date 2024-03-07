@@ -21,7 +21,7 @@ export const Column: React.FC<Props> = ({ id, label, rowDiv }) => {
   };
 
   return (
-    <div className={clsx(styles.column)}>
+    <div className={clsx(styles.column)} style={{ height: `${rowDiv * STEP.Y}px` }}>
       <div className={clsx(styles.columnBg)}>{borderNods()}</div>
     </div>
   );

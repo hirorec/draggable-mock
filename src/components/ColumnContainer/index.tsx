@@ -1,7 +1,6 @@
 import clsx from 'clsx';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
-import { STEP } from '@/const';
 import { ColumnProps } from '@/types';
 
 import styles from './index.module.scss';
@@ -13,31 +12,31 @@ type Props = {
 
 export const ColumnContainer: React.FC<Props> = ({ columnList }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [columnRowDiv, setColumnRowDiv] = useState<number>(0);
+  // const [rowDiv, setRowDiv] = useState<number>(0);
 
-  useEffect(() => {
-    handleResize();
-    window.addEventListener('resize', handleResize);
+  // useEffect(() => {
+  //   handleResize();
+  //   window.addEventListener('resize', handleResize);
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [containerRef.current]);
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, [containerRef.current]);
 
-  const handleResize = () => {
-    if (!containerRef.current) {
-      return;
-    }
+  // const handleResize = () => {
+  //   if (!containerRef.current) {
+  //     return;
+  //   }
 
-    const rect = containerRef.current.getBoundingClientRect();
-    const div = Math.floor(rect.height / STEP.Y);
-    setColumnRowDiv(div);
-  };
+  //   const rect = containerRef.current.getBoundingClientRect();
+  //   const rowDiv = Math.ceil(rect.height / STEP.Y);
+  //   setRowDiv(rowDiv);
+  // };
 
   return (
     <div ref={containerRef} className={clsx(styles.container)}>
       {columnList.map((column, index) => {
-        return <Column key={index} id='' rowDiv={columnRowDiv} label='' />;
+        return <Column key={index} id='' rowDiv={column.rowDiv} label='' />;
       })}
     </div>
   );

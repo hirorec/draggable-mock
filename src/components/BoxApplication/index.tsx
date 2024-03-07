@@ -16,8 +16,10 @@ type Props = {
 export const BoxApplication: React.FC<Props> = ({ boxList, onUpdateBox, columnList }) => {
   return (
     <div className={clsx(styles.application)}>
-      <ColumnContainer columnList={columnList} />
-      <BoxContainer boxList={boxList} onUpdateBox={onUpdateBox} />
+      <div className={clsx(styles.applicationInner)}>
+        <ColumnContainer columnList={columnList} />
+        <BoxContainer boxList={boxList} onUpdateBox={onUpdateBox} />
+      </div>
     </div>
   );
 };
