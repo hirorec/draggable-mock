@@ -78,6 +78,10 @@ export const DraggableBox: React.FC<Props> = ({
     return position;
   }, [stepBasePosition]);
 
+  // useEffect(() => {
+  //   onUpdatePosition(modifiedPosition);
+  // }, [modifiedPosition]);
+
   useEffect(() => {
     setTransform({
       x: step.x * (modifiedPosition.x + localPosition.x),

@@ -78,22 +78,27 @@ export const BoxContainer: React.FC<Props> = ({
 
   const handleUpdateBoxPosition = useCallback(
     (index: number, position: Position) => {
-      if (position.x < 0 || position.y < 0) {
-        return;
-      }
-
+      const newPosition = { ...position };
       const box = _.cloneDeep(boxList[index]);
 
-      if (position.y + box.size.height > maxHeight) {
-        return;
+      if (newPosition.x < 0) {
+        newPosition.x = 0;
+      }
+
+      if (newPosition.y < 0) {
+        newPosition.y = 0;
+      }
+
+      if (newPosition.y + box.size.height > maxHeight) {
+        newPosition.y = maxHeight - box.size.height;
       }
 
       if (position.x + box.size.width > maxWidth) {
-        return;
+        newPosition.x = maxWidth - box.size.width;
       }
 
       if (box) {
-        box.position = position;
+        box.position = { ...newPosition };
         onUpdateBox(box, index);
       }
     },

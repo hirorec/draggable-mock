@@ -137,7 +137,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         return box;
       });
 
-      onUpdateBoxList(newBoxList);
+      // onUpdateBoxList(newBoxList);
 
       // const newColumnList = _.cloneDeep(columnList);
 
