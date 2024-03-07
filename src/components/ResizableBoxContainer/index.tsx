@@ -40,7 +40,7 @@ export const ResizableBoxContainer: React.FC<Props> = ({ step, width }) => {
   return (
     <div className={clsx(styles.container)}>
       <ResizableBox
-        text={`Resizable\nBox`}
+        label={`Resizable\nBox`}
         backgroundColor='#E6F7DA'
         borderColor='#93ED6F'
         width={width}

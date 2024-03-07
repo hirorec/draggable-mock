@@ -8,7 +8,7 @@ import styles from './index.module.scss';
 import type { Position, Step } from '@/types';
 
 type Props = {
-  text: string;
+  label: string;
   borderColor: string;
   backgroundColor: string;
   width: number;
@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const ResizableBox: React.FC<Props> = ({
-  text,
+  label,
   borderColor,
   backgroundColor,
   width,
@@ -121,7 +121,7 @@ export const ResizableBox: React.FC<Props> = ({
       onMouseLeave={handleMouseLeave}
     >
       <div ref={boxRef} className={clsx(styles.box)} style={style} onClick={onClick}>
-        {text}
+        {label}
       </div>
     </div>
   );

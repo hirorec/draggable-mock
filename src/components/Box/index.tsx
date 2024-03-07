@@ -10,7 +10,7 @@ import styles from './index.module.scss';
 import { BoxOverlay } from '../BoxOverlay';
 
 type Props = {
-  text: string;
+  label: string;
   borderColor: string;
   backgroundColor: string;
   step: Step;
@@ -24,7 +24,7 @@ type Props = {
 };
 
 export const Box: React.FC<Props> = ({
-  text,
+  label,
   borderColor,
   backgroundColor,
   step,
@@ -110,7 +110,7 @@ export const Box: React.FC<Props> = ({
     <div className={clsx(styles.box)} style={{ zIndex }}>
       {overlayVisible && (
         <BoxOverlay
-          text={text}
+          text={label}
           backgroundColor={backgroundColor}
           borderColor={borderColor}
           width={boxSize.width}
@@ -131,7 +131,7 @@ export const Box: React.FC<Props> = ({
         onDragLeave={handleDragLeave}
       >
         <ResizableBox
-          text={text}
+          label={label}
           backgroundColor={backgroundColor}
           borderColor={borderColor}
           width={boxSize.width}

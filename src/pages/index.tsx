@@ -29,7 +29,7 @@ export default function Page() {
         id: '2',
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
-        text: `Draggable\nBox2`,
+        label: `Draggable\nBox2`,
         position: {
           x: 2,
           y: 3,
@@ -43,7 +43,7 @@ export default function Page() {
         id: '3',
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
-        text: `Draggable\nBox3`,
+        label: `Draggable\nBox3`,
         position: {
           x: 3,
           y: 7,

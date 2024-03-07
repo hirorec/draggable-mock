@@ -124,7 +124,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
         return (
           <Box
             key={index}
-            text={box.text}
+            label={box.label}
             backgroundColor={box.backgroundColor}
             borderColor={box.borderColor}
             step={{ x: STEP.X, y: STEP.Y }}
