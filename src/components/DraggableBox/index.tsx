@@ -52,7 +52,6 @@ export const DraggableBox: React.FC<Props> = ({
     scaleY: 1,
   });
   const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
-  // const [mouseMoveAmount, setMouseMoveAmount] = useState<Position>({ x: 0, y: 0 });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -67,20 +66,12 @@ export const DraggableBox: React.FC<Props> = ({
     };
   }, [transform, cursor, isDragging]);
 
-  // const resetMouseMoveAmount = () => {
-  //   setMouseMoveAmount({ x: 0, y: 0 });
-  // };
-
   const modifiedPosition = useMemo((): Position => {
     const position = { ...stepBasePosition };
     position.x = Math.round(position.x);
     position.y = Math.round(position.y);
     return position;
   }, [stepBasePosition]);
-
-  // useEffect(() => {
-  //   onUpdatePosition(modifiedPosition);
-  // }, [modifiedPosition]);
 
   useEffect(() => {
     setTransform({
@@ -161,13 +152,17 @@ export const DraggableBox: React.FC<Props> = ({
 
   const handleMouseUp = useCallback(() => {
     setIsMouseDown(false);
-    onDragEnd(modifiedPosition);
-  }, [modifiedPosition]);
+  }, []);
 
   const handleMouseLeave = useCallback(() => {
     setIsMouseDown(false);
-    // onDragLeave(modifiedPosition);
-  }, [modifiedPosition]);
+  }, []);
+
+  useEffect(() => {
+    if (!isAppMouseDown) {
+      onDragLeave(modifiedPosition);
+    }
+  }, [isAppMouseDown, modifiedPosition]);
 
   return (
     <div

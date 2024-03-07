@@ -44,10 +44,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     };
   }, []);
 
-  useEffect(() => {
-    console.log({ isMouseDown });
-  }, [isMouseDown]);
-
   const handleOverlapBox = useCallback(
     (box: BoxProps) => {
       let newBoxList = _.cloneDeep(boxList);

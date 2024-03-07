@@ -16,7 +16,7 @@ export const Column: React.FC<Props> = ({ id, label, colDiv, rowDiv }) => {
   const borderNods = () => {
     if (rowDiv > 0) {
       return new Array(rowDiv - 1).fill({}).map((_, index) => {
-        return <div className={clsx(styles.columnBgBorder)} key={index} style={{ top: `${STEP.Y * (index + 1)}px` }} />;
+        return <div className={clsx(styles.columnBgBorder)} key={index} style={{ top: `${STEP.Y * (index + 1) - 2}px` }} />;
       });
     }
   };

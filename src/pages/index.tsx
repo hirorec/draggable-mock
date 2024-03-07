@@ -77,8 +77,8 @@ export default function Page() {
         borderColor: '#F2A455',
         label: `Draggable\nBox4`,
         position: {
-          x: 3,
-          y: 7,
+          x: 4,
+          y: 1,
         },
         localPosition: {
           x: 0,
@@ -86,7 +86,7 @@ export default function Page() {
         },
         size: {
           width: 1,
-          height: 4,
+          height: 14,
         },
       },
     ];
