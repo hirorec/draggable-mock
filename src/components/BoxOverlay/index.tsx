@@ -14,17 +14,18 @@ type Props = {
   width: number;
   height: number;
   position: Position;
+  localPosition: Position;
 };
 
-export const BoxOverlay: React.FC<Props> = ({ text, borderColor, backgroundColor, width, height, position }) => {
+export const BoxOverlay: React.FC<Props> = ({ text, borderColor, backgroundColor, width, height, position, localPosition }) => {
   const boxRef = useRef<HTMLDivElement>(null);
 
   const wrapperStyle: React.CSSProperties = useMemo(() => {
     return {
       width: `${width}px`,
       height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET.Y * 2}px`,
-      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET.Y + position.y * STEP.Y}px`,
-      left: `${-RESIZABLE_BOX_WRAPPER_OFFSET.X + position.x * STEP.X}px`,
+      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET.Y + (position.y + localPosition.y) * STEP.Y}px`,
+      left: `${-RESIZABLE_BOX_WRAPPER_OFFSET.X + (position.x + localPosition.x) * STEP.X}px`,
     };
   }, [width, height, position]);
 

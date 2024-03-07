@@ -15,10 +15,15 @@ export default function Page() {
     const boxList: BoxProps[] = [
       {
         id: '1',
+        colIndex: 0,
         backgroundColor: '#FFE4BF',
         borderColor: '#F2A455',
         label: `Draggable\nBox1`,
         position: {
+          x: 0,
+          y: 0,
+        },
+        localPosition: {
           x: 0,
           y: 0,
         },
@@ -29,12 +34,17 @@ export default function Page() {
       },
       {
         id: '2',
+        colIndex: 0,
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
         label: `Draggable\nBox2`,
         position: {
-          x: 2,
+          x: 1,
           y: 3,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
         },
         size: {
           width: 1,
@@ -43,12 +53,36 @@ export default function Page() {
       },
       {
         id: '3',
+        colIndex: 0,
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
         label: `Draggable\nBox3`,
         position: {
-          x: 2,
+          x: 1,
           y: 7,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 4,
+        },
+      },
+      {
+        id: '4',
+        colIndex: 0,
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox4`,
+        position: {
+          x: 3,
+          y: 7,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
         },
         size: {
           width: 1,

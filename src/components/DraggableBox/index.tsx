@@ -13,6 +13,7 @@ type Props = {
   resizeMode: boolean;
   children: React.ReactNode;
   stepBasePosition: Position;
+  localPosition: Position;
   onUpdateDragging: (isDragging: boolean) => void;
   onUpdatePosition: (position: Position) => void;
   onDragEnd: (position: Position) => void;
@@ -33,6 +34,7 @@ export const DraggableBox: React.FC<Props> = ({
   resizeMode,
   children,
   stepBasePosition,
+  localPosition,
   onUpdateDragging,
   onUpdatePosition,
   onDragEnd,
@@ -40,8 +42,8 @@ export const DraggableBox: React.FC<Props> = ({
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState<Transform>({
-    x: step.x * stepBasePosition.x,
-    y: step.y * stepBasePosition.y,
+    x: step.x * (stepBasePosition.x + localPosition.x),
+    y: step.y * (stepBasePosition.y + localPosition.y),
     scaleX: 1,
     scaleY: 1,
   });
@@ -67,12 +69,12 @@ export const DraggableBox: React.FC<Props> = ({
 
   useEffect(() => {
     setTransform({
-      x: step.x * stepBasePosition.x,
-      y: step.y * stepBasePosition.y,
+      x: step.x * (stepBasePosition.x + localPosition.x),
+      y: step.y * (stepBasePosition.y + localPosition.y),
       scaleX: 1,
       scaleY: 1,
     });
-  }, [stepBasePosition]);
+  }, [stepBasePosition, localPosition]);
 
   useEffect(() => {
     if (resizeMode) {

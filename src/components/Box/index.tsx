@@ -15,6 +15,7 @@ type Props = {
   backgroundColor: string;
   step: Step;
   stepBasePosition: Position;
+  localPosition: Position;
   stepBaseSize: Size;
   zIndex: number;
   onUpdatePosition: (position: Position) => void;
@@ -30,6 +31,7 @@ export const Box: React.FC<Props> = ({
   step,
   stepBaseSize,
   stepBasePosition,
+  localPosition,
   zIndex,
   onUpdatePosition,
   onUpdateSize,
@@ -116,6 +118,7 @@ export const Box: React.FC<Props> = ({
           width={boxSize.width}
           height={overlayBoxHeight}
           position={overlayPosition}
+          localPosition={localPosition}
         />
       )}
 
@@ -124,6 +127,7 @@ export const Box: React.FC<Props> = ({
         height={boxSize.height}
         step={step}
         stepBasePosition={stepBasePosition}
+        localPosition={localPosition}
         resizeMode={resizeMode}
         onUpdateDragging={handleUpdateDragging}
         onUpdatePosition={onUpdatePosition}

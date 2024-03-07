@@ -15,10 +15,12 @@ export type Size = {
 
 export type BoxProps = {
   id: string;
+  colIndex: number;
   label: string;
   borderColor: string;
   backgroundColor: string;
   position: Position;
+  localPosition: Position;
   size: Size;
 };
 

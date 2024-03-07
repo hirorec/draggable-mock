@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import { STEP } from '@/const';
-import { BoxProps, Position, Size } from '@/types';
+import { BoxProps, ColumnProps, Position, Size } from '@/types';
 import { overlapBox } from '@/utils';
 
 import styles from './index.module.scss';
@@ -11,15 +11,50 @@ import { Box } from '../Box';
 
 type Props = {
   boxList: BoxProps[];
+  columnList: ColumnProps[];
   maxHeight: number;
   onUpdateBox: (box: BoxProps, index: number) => void;
+  onUpdateBoxList: (boxList: BoxProps[]) => void;
   onOverlapBox: (box: BoxProps) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({ boxList, maxHeight, onUpdateBox, onOverlapBox }) => {
+export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onOverlapBox }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [modifiedBoxList, setModifiedBoxList] = useState<BoxProps[]>(boxList);
+
+  const _modifiedBoxList = useMemo((): BoxProps[] => {
+    return boxList.map((box) => {
+      const modifiedBox = _.cloneDeep(box);
+
+      let tmp = 0;
+
+      columnList.forEach((col, index) => {
+        const newTmp = tmp + col.colDiv;
+        const res = modifiedBox.position.x >= tmp && modifiedBox.position.x <= newTmp;
+
+        if (res) {
+          modifiedBox.colIndex = index;
+        }
+
+        tmp = tmp + col.colDiv;
+      });
+
+      // boxList.forEach((box2) => {
+      //   if (box2.id !== box.id) {
+      //     const idOverlap = overlapBox(box2, box);
+
+      //     if (idOverlap) {
+      //       console.log(idOverlap);
+      //       box2.localPosition.x = box2.localPosition.x + 1;
+      //     }
+      //   }
+      // });
+
+      return modifiedBox;
+    });
+  }, [boxList, columnList]);
 
   const getZIndex = (index: number) => {
     if (index === hoveredBoxIndex) {
@@ -79,7 +114,11 @@ export const BoxContainer: React.FC<Props> = ({ boxList, maxHeight, onUpdateBox,
       };
 
       boxList.forEach((box, index) => {
-        const { x, y } = box.position;
+        const boxPosition: Position = {
+          x: box.position.x + box.localPosition.x,
+          y: box.position.y + box.localPosition.y,
+        };
+        const { x, y } = boxPosition;
         const xMax = x + box.size.width;
         const yMax = y + box.size.height;
 
@@ -109,20 +148,25 @@ export const BoxContainer: React.FC<Props> = ({ boxList, maxHeight, onUpdateBox,
 
   const handleDropBox = useCallback(
     (index: number, position: Position) => {
-      const droppedBox: BoxProps = _.cloneDeep(boxList[index]);
+      const newBoxList = _.cloneDeep(boxList);
+      const droppedBox: BoxProps = newBoxList[index];
       droppedBox.position = { ...position };
 
-      boxList.forEach((box) => {
+      newBoxList.forEach((box) => {
         if (box.id !== droppedBox.id) {
           const isOverlap = overlapBox(droppedBox, box);
 
-          if (isOverlap) {
-            onOverlapBox(droppedBox);
-          }
+          // if (isOverlap) {
+          //   box.localPosition.x = box.localPosition.x + 1;
+          //   onUpdateBoxList(newBoxList);
+          // } else if (box.localPosition.x > 0) {
+          //   box.localPosition.x = box.localPosition.x - 1;
+          //   onUpdateBoxList(newBoxList);
+          // }
         }
       });
     },
-    [boxList]
+    [boxList, columnList]
   );
 
   return (
@@ -144,6 +188,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, maxHeight, onUpdateBox,
             step={{ x: STEP.X, y: STEP.Y }}
             stepBaseSize={box.size}
             stepBasePosition={box.position}
+            localPosition={box.localPosition}
             zIndex={getZIndex(index)}
             onUpdatePosition={(position: Position) => handleUpdateBoxPosition(index, position)}
             onUpdateSize={(size: Size) => handleUpdateBoxSize(index, size)}

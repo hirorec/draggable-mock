@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import _ from 'lodash';
 import React, { useCallback } from 'react';
 
 import { BoxProps, ColumnProps } from '@/types';
@@ -19,10 +20,13 @@ type Props = {
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
   const handleOverlapBox = useCallback(
     (box: BoxProps) => {
+      let newBoxList = _.cloneDeep(boxList);
+      const newColumnList = _.cloneDeep(columnList);
+
       let tmp = 0;
       let colIndex = -1;
 
-      columnList.forEach((col, index) => {
+      newColumnList.forEach((col, index) => {
         const newTmp = tmp + col.colDiv;
         const res = box.position.x >= tmp && box.position.x <= newTmp;
 
@@ -34,7 +38,21 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       });
 
       if (colIndex >= 0) {
-        console.log({ colIndex });
+        newBoxList = newBoxList.map((b) => {
+          if (b.id === box.id) {
+            b.position = { ...box.position };
+          } else if (b.position.x >= box.position.x) {
+            b.position.x = b.position.x + 1;
+          }
+
+          return b;
+        });
+
+        onUpdateBoxList(newBoxList);
+
+        const col = newColumnList[colIndex];
+        col.colDiv = col.colDiv + 1;
+        onUpdateColumnList(newColumnList);
       }
     },
     [columnList, boxList]
@@ -44,7 +62,14 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     <div className={clsx(styles.application)}>
       <div className={clsx(styles.applicationInner)}>
         <ColumnContainer columnList={columnList} />
-        <BoxContainer boxList={boxList} maxHeight={maxHeight} onUpdateBox={onUpdateBox} onOverlapBox={handleOverlapBox} />
+        <BoxContainer
+          boxList={boxList}
+          columnList={columnList}
+          maxHeight={maxHeight}
+          onUpdateBox={onUpdateBox}
+          onUpdateBoxList={onUpdateBoxList}
+          onOverlapBox={handleOverlapBox}
+        />
       </div>
     </div>
   );
