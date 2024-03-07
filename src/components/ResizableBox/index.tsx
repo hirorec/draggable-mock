@@ -18,6 +18,7 @@ type Props = {
   stepBasePosition: Position;
   onResizeHeight: (direction: boolean) => void;
   onUpdateResizeMode: (resizeMode: boolean) => void;
+  onClick: () => void;
 };
 
 export const ResizableBox: React.FC<Props> = ({
@@ -31,6 +32,7 @@ export const ResizableBox: React.FC<Props> = ({
   stepBasePosition,
   onResizeHeight,
   onUpdateResizeMode,
+  onClick,
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const [isEdge, setIsEdge] = useState(false);
@@ -120,14 +122,7 @@ export const ResizableBox: React.FC<Props> = ({
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
     >
-      <div
-        ref={boxRef}
-        className={clsx(styles.box)}
-        style={style}
-        onClick={() => {
-          // console.log('click');
-        }}
-      >
+      <div ref={boxRef} className={clsx(styles.box)} style={style} onClick={onClick}>
         {text}
       </div>
     </div>

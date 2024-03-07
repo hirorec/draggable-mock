@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import { STEP } from '@/const';
 import { BoxProps, Position, Size } from '@/types';
@@ -15,15 +15,11 @@ type Props = {
 
 export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [selectedBoxIndex, setSelectedBoxIndex] = useState<number | null>(null);
+  const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
 
-  useEffect(() => {
-    console.log({ selectedBoxIndex });
-  }, [selectedBoxIndex]);
-
   const getZIndex = (index: number) => {
-    if (index === selectedBoxIndex) {
+    if (index === hoveredBoxIndex) {
       return 100;
     } else {
       return 0;
@@ -77,24 +73,28 @@ export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
         const yMax = y + box.size.height;
 
         if (stepBasePosition.x >= x && stepBasePosition.x <= xMax && stepBasePosition.y >= y && stepBasePosition.y <= yMax) {
-          setSelectedBoxIndex(index);
+          setHoveredBoxIndex(index);
         }
       });
     },
     [containerRef.current, boxList, isMouseDown]
   );
 
-  const handleMouseDown = useCallback(() => {
+  const handleMouseDown = () => {
     setIsMouseDown(true);
-  }, []);
+  };
 
-  const handleMouseUp = useCallback(() => {
+  const handleMouseUp = () => {
     setIsMouseDown(false);
-  }, []);
+  };
 
-  const handleMouseLeave = useCallback(() => {
+  const handleMouseLeave = () => {
     setIsMouseDown(false);
-  }, []);
+  };
+
+  const handleClickBox = (index: number) => {
+    console.log('click', index);
+  };
 
   return (
     <div
@@ -118,6 +118,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, onUpdateBox }) => {
             zIndex={getZIndex(index)}
             onUpdatePosition={(position: Position) => handleUpdateBoxPosition(index, position)}
             onUpdateSize={(size: Size) => handleUpdateBoxSize(index, size)}
+            onClick={() => handleClickBox(index)}
           />
         );
       })}

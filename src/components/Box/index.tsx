@@ -19,6 +19,7 @@ type Props = {
   zIndex: number;
   onUpdatePosition: (position: Position) => void;
   onUpdateSize: (size: Size) => void;
+  onClick: () => void;
 };
 
 export const Box: React.FC<Props> = ({
@@ -31,6 +32,7 @@ export const Box: React.FC<Props> = ({
   zIndex,
   onUpdatePosition,
   onUpdateSize,
+  onClick,
 }) => {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(step.y * 4);
@@ -126,6 +128,7 @@ export const Box: React.FC<Props> = ({
           shadowVisible={isDragging}
           onResizeHeight={handleResizeBox}
           onUpdateResizeMode={handleUpdateResizeMode}
+          onClick={onClick}
         />
       </DraggableBox>
     </div>
