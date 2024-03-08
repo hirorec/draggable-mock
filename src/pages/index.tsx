@@ -90,6 +90,25 @@ export default function Page() {
           height: 14,
         },
       },
+      {
+        id: '5',
+        colIndex: 0,
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox4`,
+        position: {
+          x: 5,
+          y: 1,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 5,
+        },
+      },
     ];
     setBoxList(boxList);
   }, []);
@@ -101,6 +120,7 @@ export default function Page() {
       { id: '3', label: 'column 3', rowDiv, colDiv: 1 },
       { id: '4', label: 'column 4', rowDiv, colDiv: 1 },
       { id: '5', label: 'column 5', rowDiv, colDiv: 1 },
+      { id: '6', label: 'column 6', rowDiv, colDiv: 1 },
     ];
     setColumnList(columnList);
   }, []);

@@ -94,8 +94,8 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
   const handleDropBox = useCallback(
     (droppedBox: BoxProps, index: number) => {
-      const newBoxList = _.cloneDeep(boxList);
-      const tempBox = _.cloneDeep(newBoxList[index]);
+      console.log('handleDropBox');
+      let newBoxList = _.cloneDeep(boxList);
 
       const getColIndex = (x: number) => {
         let count = 0;
@@ -113,9 +113,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         return colIndex;
       };
 
-      // const boxColIndex = getColIndex(droppedBox.position.x);
-      // console.log({ boxColIndex });
-
       newBoxList[index].position = {
         x: droppedBox.position.x,
         y: droppedBox.position.y,
@@ -129,8 +126,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         const boxInColList = newBoxList.filter((box) => {
           return box.position.x === index;
         });
-
-        // console.log({ boxInColList });
 
         boxInColList.forEach((boxA) => {
           boxInColList.forEach((boxB) => {
@@ -159,105 +154,74 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
           });
         });
 
-        // console.log({ overLapCount });
         newColumnList[index].colDiv = overLapCount + 1;
-
-        // for (let i = 0; i < newColumnList[index].colDiv; i++) {
-        //   console.log(index, i);
-        // }
-
-        // for (let i = 0; i < col.colDiv; i++) {
-        //   const boxInColDivList = newBoxList.filter((box) => {
-        //     return box.position.x === index && box.localPosition.x === i;
-        //   });
-        //   // console.log({ boxInColDivList }, i);
-
-        //   boxInColDivList.forEach((boxA) => {
-        //     boxInColDivList.forEach((boxB) => {
-        //       if (boxB.id !== boxA.id && boxA.id !== droppedBox.id) {
-        //         const isOverlap = overlapBox(boxA, boxB);
-
-        //         if (isOverlap) {
-        //           overLapCount += 1;
-        //           const boxIndex = newBoxList.findIndex((box) => {
-        //             return box.id === boxA.id;
-        //           });
-        //           newBoxList[boxIndex].localPosition.x += overLapCount;
-        //         }
-        //       }
-        //     });
-
-        //     if (overLapCount <= 0) {
-        //       // const boxIndex = newBoxList.findIndex((box) => {
-        //       //   return box.id === boxA.id;
-        //       // });
-        //       // const tmpBox = _.cloneDeep(newBoxList[boxIndex]);
-        //       // tmpBox.localPosition.x = 0;
-        //       // console.log(tmpBox);
-        //       // const isOverlap = overlapBox(boxA, tmpBox);
-        //       // if (!isOverlap) {
-        //       //   newBoxList[boxIndex].localPosition.x = 0;
-        //       // }
-        //     }
-        //   });
-
-        //   newColumnList[index].colDiv = overLapCount + 1;
-        // }
 
         return col;
       });
 
-      newBoxList.forEach((box, index) => {
-        const boxColIndex = getColIndex(box.position.x);
-        const col = newColumnList[boxColIndex];
+      // newBoxList.forEach((box, index) => {
+      //   const boxColIndex = getColIndex(box.position.x);
+      //   const col = newColumnList[boxColIndex];
 
-        if (box.id === droppedBox.id) {
-          if (boxColIndex !== droppedBox.position.x) {
-            newBoxList[index].position = {
-              x: boxColIndex,
-              y: droppedBox.position.y,
-            };
-          }
-        } else {
-          if (col.colDiv <= 1 && box.localPosition.x > 0) {
-            newBoxList[index].localPosition = {
-              x: 0,
-              y: box.localPosition.y,
-            };
-          }
+      //   if (box.id === droppedBox.id) {
+      //     if (boxColIndex !== droppedBox.position.x) {
+      //       newBoxList[index].position = {
+      //         x: boxColIndex,
+      //         y: droppedBox.position.y,
+      //       };
+      //     }
+      //   } else {
+      //     if (col.colDiv <= 1 && box.localPosition.x > 0) {
+      //       newBoxList[index].localPosition = {
+      //         x: 0,
+      //         y: box.localPosition.y,
+      //       };
+      //     }
+      //   }
+      // });
 
-          // let x = 0;
-
-          // newColumnList.forEach((col2, i) => {
-          //   for (let j = 0; j < col2.colDiv; j++) {
-          //     if (i === boxColIndex) {
-          //       newBoxList[index].position = {
-          //         x,
-          //         y: box.position.y,
-          //       };
-          //     }
-
-          //     x += 1;
-          //   }
-
-          //   x += 1;
-          // });
-
-          //   // if (boxColIndex !== box.position.x) {
-          //   //   newBoxList[index].position = {
-          //   //     x: boxColIndex,
-          //   //     y: droppedBox.position.y,
-          //   //   };
-          //   // }
-          // }
-        }
-      });
-
-      onUpdateBoxList(newBoxList);
+      //
       onUpdateColumnList(newColumnList);
+      newBoxList = updateBoxPositionToGlobal(newBoxList, columnList, newColumnList);
+      onUpdateBoxList(newBoxList);
     },
     [boxList, columnList]
   );
+
+  const updateBoxPositionToGlobal = (boxList: BoxProps[], columnList: ColumnProps[], newColumnList: ColumnProps[]) => {
+    console.log('updateBoxPositionToGlobal');
+    const newBoxList = _.cloneDeep(boxList);
+
+    const getColIndex = (x: number, columnList: ColumnProps[]) => {
+      let count = 0;
+      let colIndex = -1;
+
+      columnList.forEach((col, i) => {
+        for (let j = 0; j < col.colDiv; j++) {
+          if (count === x) {
+            colIndex = i;
+          }
+          count++;
+        }
+      });
+
+      return colIndex;
+    };
+
+    newBoxList.forEach((box, index) => {
+      let globalX = box.position.x;
+
+      const dx = getColIndex(box.position.x, columnList) - getColIndex(box.position.x, newColumnList);
+      globalX += dx;
+
+      newBoxList[index].position = {
+        x: globalX,
+        y: box.position.y,
+      };
+    });
+
+    return newBoxList;
+  };
 
   return (
     <div className={clsx(styles.application)}>
