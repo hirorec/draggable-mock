@@ -262,19 +262,20 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   return (
     <div className={clsx(styles.application)}>
       <div className={clsx(styles.applicationInner)}>
-        <ColumnContainer columnList={columnList} />
-        <BoxContainer
-          boxList={boxList}
-          columnList={columnList}
-          maxWidth={maxWidth}
-          maxHeight={maxHeight}
-          isMouseDown={isMouseDown}
-          onUpdateBox={onUpdateBox}
-          onUpdateBoxSize={onUpdateBoxSize}
-          onDropBox={handleDropBox}
-          onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
-          onUpdateBoxList={onUpdateBoxList}
-        />
+        <ColumnContainer columnList={columnList}>
+          <BoxContainer
+            boxList={boxList}
+            columnList={columnList}
+            maxWidth={maxWidth}
+            maxHeight={maxHeight}
+            isMouseDown={isMouseDown}
+            onUpdateBox={onUpdateBox}
+            onUpdateBoxSize={onUpdateBoxSize}
+            onDropBox={handleDropBox}
+            onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
+            onUpdateBoxList={onUpdateBoxList}
+          />
+        </ColumnContainer>
       </div>
     </div>
   );

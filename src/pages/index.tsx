@@ -10,7 +10,7 @@ import styles from './index.module.scss';
 export default function Page() {
   const [boxList, setBoxList] = useState<BoxProps[]>([]);
   const [columnList, setColumnList] = useState<ColumnProps[]>([]);
-  const rowDiv = 15;
+  const rowDiv = 30;
 
   useEffect(() => {
     const boxList: BoxProps[] = [
@@ -126,6 +126,9 @@ export default function Page() {
       { id: '4', label: 'column 4', rowDiv, colDiv: 1 },
       { id: '5', label: 'column 5', rowDiv, colDiv: 1 },
       { id: '6', label: 'column 6', rowDiv, colDiv: 1 },
+      { id: '7', label: 'column 7', rowDiv, colDiv: 1 },
+      { id: '8', label: 'column 8', rowDiv, colDiv: 1 },
+      { id: '9', label: 'column 9', rowDiv, colDiv: 1 },
     ];
     setColumnList(columnList);
   }, []);

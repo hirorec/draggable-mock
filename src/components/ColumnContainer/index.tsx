@@ -8,9 +8,10 @@ import { Column } from '../Column';
 
 type Props = {
   columnList: ColumnProps[];
+  children: React.ReactNode;
 };
 
-export const ColumnContainer: React.FC<Props> = ({ columnList }) => {
+export const ColumnContainer: React.FC<Props> = ({ columnList, children }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -18,6 +19,8 @@ export const ColumnContainer: React.FC<Props> = ({ columnList }) => {
       {columnList.map((column, index) => {
         return <Column key={index} id='' colDiv={column.colDiv} rowDiv={column.rowDiv} label='' />;
       })}
+
+      {children}
     </div>
   );
 };
