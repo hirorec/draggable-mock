@@ -22,6 +22,7 @@ type Props = {
   maxHeight: number;
   onUpdatePosition: (position: Position) => void;
   onUpdateSize: (size: Size) => void;
+  onUpdateSizeEnd: (size: Size) => void;
   onDrop: (position: Position) => void;
   onClick: () => void;
 };
@@ -39,6 +40,7 @@ export const Box: React.FC<Props> = ({
   maxHeight,
   onUpdatePosition,
   onUpdateSize,
+  onUpdateSizeEnd,
   onDrop,
   onClick,
 }) => {
@@ -114,6 +116,10 @@ export const Box: React.FC<Props> = ({
     [overlayPosition]
   );
 
+  const handleResizeBoxEnd = useCallback(() => {
+    onUpdateSizeEnd(stepBaseSize);
+  }, [stepBaseSize]);
+
   return (
     <div className={clsx(styles.box)} style={{ zIndex }}>
       {overlayVisible && (
@@ -150,6 +156,7 @@ export const Box: React.FC<Props> = ({
           step={step}
           shadowVisible={isDragging}
           onResizeHeight={handleResizeBox}
+          onResizeHeightEnd={handleResizeBoxEnd}
           onUpdateResizeMode={handleUpdateResizeMode}
           onClick={onClick}
         />

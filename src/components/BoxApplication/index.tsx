@@ -44,53 +44,17 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     };
   }, []);
 
-  // const handleOverlapBox = useCallback(
-  //   (box: BoxProps) => {
-  //     let newBoxList = _.cloneDeep(boxList);
-  //     const newColumnList = _.cloneDeep(columnList);
-
-  //     let tmp = 0;
-  //     let colIndex = -1;
-
-  //     newColumnList.forEach((col, index) => {
-  //       const newTmp = tmp + col.colDiv;
-  //       const res = box.position.x >= tmp && box.position.x <= newTmp;
-
-  //       if (res) {
-  //         colIndex = index;
-  //       }
-
-  //       tmp = tmp + col.colDiv;
-  //     });
-
-  //     if (colIndex >= 0) {
-  //       newBoxList = newBoxList.map((b) => {
-  //         if (b.id === box.id) {
-  //           b.position = { ...box.position };
-  //         } else if (b.position.x >= box.position.x) {
-  //           b.position.x = b.position.x + 1;
-  //         }
-
-  //         return b;
-  //       });
-
-  //       onUpdateBoxList(newBoxList);
-
-  //       const col = newColumnList[colIndex];
-  //       col.colDiv = col.colDiv + 1;
-  //       onUpdateColumnList(newColumnList);
-  //     }
-  //   },
-  //   [boxList, columnList]
-  // );
-
-  // useEffect(() => {
-  //   console.log(boxList.filter((box) => box.id === '3')[0]?.position);
-  // }, [boxList]);
-
-  useEffect(() => {
-    // console.log('---');
-  }, [columnList]);
+  const handleUpdateBoxSizeEnd = useCallback(
+    (resizedBox: BoxProps) => {
+      console.log('handleUpdateBoxSizeEnd');
+      const newBoxList = _.cloneDeep(boxList);
+      const newColumnList = _.cloneDeep(columnList);
+      const { boxList: modifiedBoxData, columnList: modifiedColumnList } = modifyData(newBoxList, newColumnList, resizedBox);
+      onUpdateBoxList(modifiedBoxData);
+      onUpdateColumnList(modifiedColumnList);
+    },
+    [boxList, columnList]
+  );
 
   const handleDropBox = useCallback(
     (droppedBox: BoxProps, index: number) => {
@@ -169,6 +133,17 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       //
       //
       const { boxList: modifiedBoxData, columnList: modifiedColumnList } = modifyData(newBoxList, newColumnList, droppedBox);
+      onUpdateBoxList(modifiedBoxData);
+      onUpdateColumnList(modifiedColumnList);
+    },
+    [boxList, columnList]
+  );
+
+  const onUpdateBoxSize = useCallback(
+    (resizedBox: BoxProps, index: number) => {
+      const newBoxList = _.cloneDeep(boxList);
+      const newColumnList = _.cloneDeep(columnList);
+      const { boxList: modifiedBoxData, columnList: modifiedColumnList } = modifyData(newBoxList, newColumnList, resizedBox);
       onUpdateBoxList(modifiedBoxData);
       onUpdateColumnList(modifiedColumnList);
     },
@@ -295,7 +270,9 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
           maxHeight={maxHeight}
           isMouseDown={isMouseDown}
           onUpdateBox={onUpdateBox}
+          onUpdateBoxSize={onUpdateBoxSize}
           onDropBox={handleDropBox}
+          onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
           onUpdateBoxList={onUpdateBoxList}
         />
       </div>

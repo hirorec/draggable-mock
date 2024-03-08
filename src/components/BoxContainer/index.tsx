@@ -16,10 +16,23 @@ type Props = {
   isMouseDown: boolean;
   onUpdateBox: (box: BoxProps, index: number) => void;
   onDropBox: (box: BoxProps, index: number) => void;
+  onUpdateBoxSize: (box: BoxProps, index: number) => void;
+  onUpdateBoxSizeEnd: (box: BoxProps, index: number) => void;
   onUpdateBoxList: (boxList: BoxProps[]) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, maxHeight, isMouseDown, onUpdateBox, onDropBox, onUpdateBoxList }) => {
+export const BoxContainer: React.FC<Props> = ({
+  boxList,
+  columnList,
+  maxWidth,
+  maxHeight,
+  isMouseDown,
+  onUpdateBox,
+  onDropBox,
+  onUpdateBoxSize,
+  onUpdateBoxSizeEnd,
+  onUpdateBoxList,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
 
@@ -67,10 +80,15 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
       if (box) {
         box.size = size;
         onUpdateBox(box, index);
+        // onUpdateBoxSize(box, index);
       }
     },
     [boxList]
   );
+
+  const handleClickBox = (index: number) => {
+    // console.log('click', index);
+  };
 
   const handleDropBox = useCallback(
     (index: number, position: Position) => {
@@ -81,7 +99,19 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
         onDropBox(box, index);
       }
     },
-    [boxList, maxHeight]
+    [boxList]
+  );
+
+  const handleUpdateBoxSizeEnd = useCallback(
+    (index: number, size: Size) => {
+      const box = _.cloneDeep(boxList[index]);
+
+      if (box) {
+        box.size = size;
+        onUpdateBoxSizeEnd(box, index);
+      }
+    },
+    [boxList]
   );
 
   const handleMouseMove = useCallback(
@@ -118,10 +148,6 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
     [containerRef.current, boxList, isMouseDown]
   );
 
-  const handleClickBox = (index: number) => {
-    // console.log('click', index);
-  };
-
   return (
     <div ref={containerRef} className={clsx(styles.container)} onMouseMove={handleMouseMove}>
       {boxList.map((box, index) => {
@@ -140,6 +166,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
             maxHeight={maxHeight}
             onUpdatePosition={(position: Position) => handleUpdateBoxPosition(index, position)}
             onUpdateSize={(size: Size) => handleUpdateBoxSize(index, size)}
+            onUpdateSizeEnd={(size: Size) => handleUpdateBoxSizeEnd(index, size)}
             onDrop={(position: Position) => handleDropBox(index, position)}
             onClick={() => handleClickBox(index)}
           />

@@ -56,6 +56,6 @@ export const overlapBox = (boxA: BoxProps, boxB: BoxProps): boolean => {
 
 const positionInBox = (position: Position, box: BoxProps): boolean => {
   const resX = position.x >= box.position.x && position.x <= box.position.x + box.size.width;
-  const resY = position.y >= box.position.y && position.y <= box.position.y + box.size.height;
+  const resY = position.y > box.position.y && position.y < box.position.y + box.size.height;
   return resX && resY;
 };

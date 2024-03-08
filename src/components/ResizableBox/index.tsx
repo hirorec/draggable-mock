@@ -16,6 +16,7 @@ type Props = {
   step: Step;
   shadowVisible?: boolean;
   onResizeHeight: (direction: boolean) => void;
+  onResizeHeightEnd: () => void;
   onUpdateResizeMode: (resizeMode: boolean) => void;
   onClick: () => void;
 };
@@ -29,6 +30,7 @@ export const ResizableBox: React.FC<Props> = ({
   step,
   shadowVisible = false,
   onResizeHeight,
+  onResizeHeightEnd,
   onUpdateResizeMode,
   onClick,
 }) => {
@@ -105,7 +107,11 @@ export const ResizableBox: React.FC<Props> = ({
   const handleMouseUp = useCallback(() => {
     setIsMouseDown(false);
     setResizeMode(false);
-  }, []);
+
+    if (resizeMode) {
+      onResizeHeightEnd();
+    }
+  }, [height, resizeMode]);
 
   const handleMouseLeave = useCallback(() => {
     setIsMouseDown(false);
