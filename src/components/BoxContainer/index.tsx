@@ -17,56 +17,11 @@ type Props = {
   onUpdateBox: (box: BoxProps, index: number) => void;
   onDropBox: (box: BoxProps, index: number) => void;
   onUpdateBoxList: (boxList: BoxProps[]) => void;
-  // onOverlapBox: (box: BoxProps) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({
-  boxList,
-  columnList,
-  maxWidth,
-  maxHeight,
-  isMouseDown,
-  onUpdateBox,
-  onDropBox,
-  onUpdateBoxList,
-  // onOverlapBox,
-}) => {
+export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, maxHeight, isMouseDown, onUpdateBox, onDropBox, onUpdateBoxList }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
-  // const [isMouseDown, setIsMouseDown] = useState(false);
-  // const [modifiedBoxList, setModifiedBoxList] = useState<BoxProps[]>(boxList);
-
-  // const _modifiedBoxList = useMemo((): BoxProps[] => {
-  //   return boxList.map((box) => {
-  //     const modifiedBox = _.cloneDeep(box);
-
-  //     let tmp = 0;
-
-  //     columnList.forEach((col, index) => {
-  //       const newTmp = tmp + col.colDiv;
-  //       const res = modifiedBox.position.x >= tmp && modifiedBox.position.x <= newTmp;
-
-  //       if (res) {
-  //         modifiedBox.colIndex = index;
-  //       }
-
-  //       tmp = tmp + col.colDiv;
-  //     });
-
-  //     // boxList.forEach((box2) => {
-  //     //   if (box2.id !== box.id) {
-  //     //     const idOverlap = overlapBox(box2, box);
-
-  //     //     if (idOverlap) {
-  //     //       console.log(idOverlap);
-  //     //       box2.localPosition.x = box2.localPosition.x + 1;
-  //     //     }
-  //     //   }
-  //     // });
-
-  //     return modifiedBox;
-  //   });
-  // }, [boxList, columnList]);
 
   const getZIndex = (index: number) => {
     if (index === hoveredBoxIndex) {
@@ -166,27 +121,6 @@ export const BoxContainer: React.FC<Props> = ({
   const handleClickBox = (index: number) => {
     // console.log('click', index);
   };
-
-  // const handleDropBox = useCallback(
-  //   (index: number, position: Position) => {
-  //     // const newBoxList = _.cloneDeep(boxList);
-  //     // const droppedBox: BoxProps = newBoxList[index];
-  //     // droppedBox.position = { ...position };
-  //     // newBoxList.forEach((box) => {
-  //     //   if (box.id !== droppedBox.id) {
-  //     //     // const isOverlap = overlapBox(droppedBox, box);
-  //     //     // if (isOverlap) {
-  //     //     //   box.localPosition.x = box.localPosition.x + 1;
-  //     //     //   onUpdateBoxList(newBoxList);
-  //     //     // } else if (box.localPosition.x > 0) {
-  //     //     //   box.localPosition.x = box.localPosition.x - 1;
-  //     //     //   onUpdateBoxList(newBoxList);
-  //     //     // }
-  //     //   }
-  //     // });
-  //   },
-  //   [boxList, columnList]
-  // );
 
   return (
     <div ref={containerRef} className={clsx(styles.container)} onMouseMove={handleMouseMove}>

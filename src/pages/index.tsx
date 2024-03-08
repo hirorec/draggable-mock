@@ -71,25 +71,25 @@ export default function Page() {
           height: 4,
         },
       },
-      // {
-      //   id: '4',
-      //   colIndex: 0,
-      //   backgroundColor: '#FFE4BF',
-      //   borderColor: '#F2A455',
-      //   label: `Draggable\nBox4`,
-      //   position: {
-      //     x: 4,
-      //     y: 1,
-      //   },
-      //   localPosition: {
-      //     x: 0,
-      //     y: 0,
-      //   },
-      //   size: {
-      //     width: 1,
-      //     height: 14,
-      //   },
-      // },
+      {
+        id: '4',
+        colIndex: 0,
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox4`,
+        position: {
+          x: 4,
+          y: 1,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 14,
+        },
+      },
     ];
     setBoxList(boxList);
   }, []);
