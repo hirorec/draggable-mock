@@ -67,83 +67,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         y: droppedBox.position.y,
       };
 
-      // const newColumnList = _.cloneDeep(columnList);
-
-      // columnList.forEach((col, index) => {
-      //   let overLapCount = 0;
-
-      //   const boxInColList = newBoxList.filter((box) => {
-      //     return box.position.x === index;
-      //   });
-
-      //   boxInColList.forEach((boxA) => {
-      //     boxInColList.forEach((boxB) => {
-      //       if (boxB.id !== boxA.id && boxA.id !== droppedBox.id) {
-      //         const isOverlap = overlapBox(boxA, boxB);
-
-      //         if (isOverlap) {
-      //           overLapCount += 1;
-      //           console.log({ isOverlap, overLapCount });
-      //           const boxIndex = newBoxList.findIndex((box) => {
-      //             return box.id === boxA.id;
-      //           });
-
-      //           // newBoxList[boxIndex].localPosition.x = overLapCount;
-
-      //           // console.log(newBoxList[boxIndex].id, newBoxList[boxIndex].localPosition.x);
-      //           // console.log({ isOverlap, overLapCount, boxIndex }, newBoxList[boxIndex].id, newBoxList[boxIndex].localPosition.x);
-      //         } else {
-      //           // const boxIndex = newBoxList.findIndex((box) => {
-      //           //   return box.id === boxA.id;
-      //           // });
-      //           // if (newBoxList[boxIndex].localPosition.x > 0) {
-      //           //   newBoxList[boxIndex].localPosition.x -= 1;
-      //           // }
-      //         }
-      //       }
-      //     });
-      //   });
-
-      //   newColumnList[index].colDiv = overLapCount + 1;
-
-      //   return col;
-      // });
-
-      // newBoxList.forEach((box, index) => {
-      //   const boxColIndex = getColIndex(box.position.x);
-      //   const col = newColumnList[boxColIndex];
-
-      //   if (box.id === droppedBox.id) {
-      //     if (boxColIndex !== droppedBox.position.x) {
-      //       newBoxList[index].position = {
-      //         x: boxColIndex,
-      //         y: droppedBox.position.y,
-      //       };
-      //     }
-      //   } else {
-      //     if (col.colDiv <= 1 && box.localPosition.x > 0) {
-      //       newBoxList[index].localPosition = {
-      //         x: 0,
-      //         y: box.localPosition.y,
-      //       };
-      //     }
-      //   }
-      // });
-
-      //
-      //
       const { boxList: modifiedBoxData, columnList: modifiedColumnList } = modifyData(newBoxList, newColumnList, droppedBox);
-      onUpdateBoxList(modifiedBoxData);
-      onUpdateColumnList(modifiedColumnList);
-    },
-    [boxList, columnList]
-  );
-
-  const onUpdateBoxSize = useCallback(
-    (resizedBox: BoxProps, index: number) => {
-      const newBoxList = _.cloneDeep(boxList);
-      const newColumnList = _.cloneDeep(columnList);
-      const { boxList: modifiedBoxData, columnList: modifiedColumnList } = modifyData(newBoxList, newColumnList, resizedBox);
       onUpdateBoxList(modifiedBoxData);
       onUpdateColumnList(modifiedColumnList);
     },
@@ -265,15 +189,12 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         <ColumnContainer columnList={columnList}>
           <BoxContainer
             boxList={boxList}
-            columnList={columnList}
             maxWidth={maxWidth}
             maxHeight={maxHeight}
             isMouseDown={isMouseDown}
             onUpdateBox={onUpdateBox}
-            onUpdateBoxSize={onUpdateBoxSize}
             onDropBox={handleDropBox}
             onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
-            onUpdateBoxList={onUpdateBoxList}
           />
         </ColumnContainer>
       </div>

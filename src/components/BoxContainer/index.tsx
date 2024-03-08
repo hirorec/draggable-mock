@@ -3,36 +3,22 @@ import _ from 'lodash';
 import React, { useCallback, useRef, useState } from 'react';
 
 import { STEP } from '@/const';
-import { BoxProps, ColumnProps, Position, Size } from '@/types';
+import { BoxProps, Position, Size } from '@/types';
 
 import styles from './index.module.scss';
 import { Box } from '../Box';
 
 type Props = {
   boxList: BoxProps[];
-  columnList: ColumnProps[];
   maxWidth: number;
   maxHeight: number;
   isMouseDown: boolean;
   onUpdateBox: (box: BoxProps, index: number) => void;
   onDropBox: (box: BoxProps, index: number) => void;
-  onUpdateBoxSize: (box: BoxProps, index: number) => void;
   onUpdateBoxSizeEnd: (box: BoxProps, index: number) => void;
-  onUpdateBoxList: (boxList: BoxProps[]) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({
-  boxList,
-  columnList,
-  maxWidth,
-  maxHeight,
-  isMouseDown,
-  onUpdateBox,
-  onDropBox,
-  onUpdateBoxSize,
-  onUpdateBoxSizeEnd,
-  onUpdateBoxList,
-}) => {
+export const BoxContainer: React.FC<Props> = ({ boxList, maxWidth, maxHeight, isMouseDown, onUpdateBox, onDropBox, onUpdateBoxSizeEnd }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
 
