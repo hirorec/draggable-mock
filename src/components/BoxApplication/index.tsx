@@ -95,69 +95,55 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   const handleDropBox = useCallback(
     (droppedBox: BoxProps, index: number) => {
       console.log('handleDropBox');
-      let newBoxList = _.cloneDeep(boxList);
-
-      const getColIndex = (x: number) => {
-        let count = 0;
-        let colIndex = -1;
-
-        columnList.forEach((col, i) => {
-          for (let j = 0; j < col.colDiv; j++) {
-            if (count === x) {
-              colIndex = i;
-            }
-            count++;
-          }
-        });
-
-        return colIndex;
-      };
+      const newBoxList = _.cloneDeep(boxList);
+      const newColumnList = _.cloneDeep(columnList);
 
       newBoxList[index].position = {
         x: droppedBox.position.x,
         y: droppedBox.position.y,
       };
 
-      const newColumnList = _.cloneDeep(columnList);
+      // const newColumnList = _.cloneDeep(columnList);
 
-      columnList.forEach((col, index) => {
-        let overLapCount = 0;
+      // columnList.forEach((col, index) => {
+      //   let overLapCount = 0;
 
-        const boxInColList = newBoxList.filter((box) => {
-          return box.position.x === index;
-        });
+      //   const boxInColList = newBoxList.filter((box) => {
+      //     return box.position.x === index;
+      //   });
 
-        boxInColList.forEach((boxA) => {
-          boxInColList.forEach((boxB) => {
-            if (boxB.id !== boxA.id && boxA.id !== droppedBox.id) {
-              const isOverlap = overlapBox(boxA, boxB);
+      //   boxInColList.forEach((boxA) => {
+      //     boxInColList.forEach((boxB) => {
+      //       if (boxB.id !== boxA.id && boxA.id !== droppedBox.id) {
+      //         const isOverlap = overlapBox(boxA, boxB);
 
-              if (isOverlap) {
-                overLapCount += 1;
-                console.log({ isOverlap, overLapCount });
-                const boxIndex = newBoxList.findIndex((box) => {
-                  return box.id === boxA.id;
-                });
+      //         if (isOverlap) {
+      //           overLapCount += 1;
+      //           console.log({ isOverlap, overLapCount });
+      //           const boxIndex = newBoxList.findIndex((box) => {
+      //             return box.id === boxA.id;
+      //           });
 
-                newBoxList[boxIndex].localPosition.x = overLapCount;
-                // console.log(newBoxList[boxIndex].id, newBoxList[boxIndex].localPosition.x);
-                // console.log({ isOverlap, overLapCount, boxIndex }, newBoxList[boxIndex].id, newBoxList[boxIndex].localPosition.x);
-              } else {
-                // const boxIndex = newBoxList.findIndex((box) => {
-                //   return box.id === boxA.id;
-                // });
-                // if (newBoxList[boxIndex].localPosition.x > 0) {
-                //   newBoxList[boxIndex].localPosition.x -= 1;
-                // }
-              }
-            }
-          });
-        });
+      //           // newBoxList[boxIndex].localPosition.x = overLapCount;
 
-        newColumnList[index].colDiv = overLapCount + 1;
+      //           // console.log(newBoxList[boxIndex].id, newBoxList[boxIndex].localPosition.x);
+      //           // console.log({ isOverlap, overLapCount, boxIndex }, newBoxList[boxIndex].id, newBoxList[boxIndex].localPosition.x);
+      //         } else {
+      //           // const boxIndex = newBoxList.findIndex((box) => {
+      //           //   return box.id === boxA.id;
+      //           // });
+      //           // if (newBoxList[boxIndex].localPosition.x > 0) {
+      //           //   newBoxList[boxIndex].localPosition.x -= 1;
+      //           // }
+      //         }
+      //       }
+      //     });
+      //   });
 
-        return col;
-      });
+      //   newColumnList[index].colDiv = overLapCount + 1;
+
+      //   return col;
+      // });
 
       // newBoxList.forEach((box, index) => {
       //   const boxColIndex = getColIndex(box.position.x);
@@ -181,18 +167,25 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       // });
 
       //
-      onUpdateColumnList(newColumnList);
-      newBoxList = updateBoxPositionToGlobal(newBoxList, columnList, newColumnList);
-      onUpdateBoxList(newBoxList);
+      //
+      const { boxList: modifiedBoxData, columnList: modifiedColumnList } = modifyData(newBoxList, newColumnList, droppedBox);
+      onUpdateBoxList(modifiedBoxData);
+      onUpdateColumnList(modifiedColumnList);
     },
     [boxList, columnList]
   );
 
-  const updateBoxPositionToGlobal = (boxList: BoxProps[], columnList: ColumnProps[], newColumnList: ColumnProps[]) => {
-    console.log('updateBoxPositionToGlobal');
-    const newBoxList = _.cloneDeep(boxList);
+  const modifyData = (
+    boxList: BoxProps[],
+    columnList: ColumnProps[],
+    updatedBox?: BoxProps
+  ): {
+    boxList: BoxProps[];
+    columnList: ColumnProps[];
+  } => {
+    console.log('modifyData');
 
-    const getColIndex = (x: number, columnList: ColumnProps[]) => {
+    const getColIndex = (x: number) => {
       let count = 0;
       let colIndex = -1;
 
@@ -208,19 +201,79 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       return colIndex;
     };
 
-    newBoxList.forEach((box, index) => {
-      let globalX = box.position.x;
+    columnList.forEach((col, index) => {
+      let overLapCount = 0;
 
-      const dx = getColIndex(box.position.x, columnList) - getColIndex(box.position.x, newColumnList);
-      globalX += dx;
+      const boxInColList = boxList.filter((box) => {
+        return box.position.x === index;
+      });
 
-      newBoxList[index].position = {
-        x: globalX,
-        y: box.position.y,
-      };
+      boxInColList.forEach((boxA) => {
+        boxInColList.forEach((boxB) => {
+          let conditions = boxB.id !== boxA.id;
+
+          if (updatedBox) {
+            conditions = conditions && boxA.id !== updatedBox.id;
+          }
+
+          if (conditions) {
+            const isOverlap = overlapBox(boxB, boxA);
+            const boxIndex = boxList.findIndex((box) => {
+              return box.id === boxA.id;
+            });
+
+            if (isOverlap) {
+              overLapCount += 1;
+              // boxList[boxIndex].localPosition.x = overLapCount;
+            } else {
+              // if (boxList[boxIndex].localPosition.x > 0) {
+              //   boxList[boxIndex].localPosition.x -= 1;
+              // }
+            }
+          }
+        });
+      });
+
+      console.log({ colIndex: index, overLapCount });
+      columnList[index].colDiv = overLapCount + 1;
+
+      return col;
     });
 
-    return newBoxList;
+    // const newBoxList = _.cloneDeep(boxList);
+
+    // const getColIndex = (x: number, columnList: ColumnProps[]) => {
+    //   let count = 0;
+    //   let colIndex = -1;
+
+    //   columnList.forEach((col, i) => {
+    //     for (let j = 0; j < col.colDiv; j++) {
+    //       if (count === x) {
+    //         colIndex = i;
+    //       }
+    //       count++;
+    //     }
+    //   });
+
+    //   return colIndex;
+    // };
+
+    // newBoxList.forEach((box, index) => {
+    //   let globalX = box.position.x;
+
+    //   const dx = getColIndex(box.position.x, columnList) - getColIndex(box.position.x, newColumnList);
+    //   globalX += dx;
+
+    //   newBoxList[index].position = {
+    //     x: globalX,
+    //     y: box.position.y,
+    //   };
+    // });
+
+    return {
+      boxList,
+      columnList,
+    };
   };
 
   return (
