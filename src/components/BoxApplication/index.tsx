@@ -185,6 +185,14 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   } => {
     console.log('modifyData');
 
+    boxList.forEach((box) => {
+      if (box.id === updatedBox?.id) {
+        box.zIndex = 1;
+      } else {
+        box.zIndex = 0;
+      }
+    });
+
     const getColIndex = (x: number) => {
       let count = 0;
       let colIndex = -1;

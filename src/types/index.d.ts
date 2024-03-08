@@ -22,6 +22,7 @@ export type BoxProps = {
   position: Position;
   localPosition: Position;
   size: Size;
+  zIndex: number;
 };
 
 export type ColumnProps = {

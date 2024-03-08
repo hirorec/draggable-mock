@@ -24,11 +24,34 @@ export const overlapBox = (boxA: BoxProps, boxB: BoxProps): boolean => {
     },
   ];
 
-  const result = boxPositionsA.some((position) => {
+  const boxPositionsB: Position[] = [
+    {
+      x: boxB.position.x,
+      y: boxB.position.y,
+    },
+    {
+      x: boxB.position.x + boxB.size.width,
+      y: boxB.position.y,
+    },
+    {
+      x: boxB.position.x + boxB.size.width,
+      y: boxB.position.y + boxB.size.height,
+    },
+    {
+      x: boxB.position.x,
+      y: boxB.position.y + boxB.size.height,
+    },
+  ];
+
+  const result1 = boxPositionsA.some((position) => {
     return positionInBox(position, boxB);
   });
 
-  return result;
+  const result2 = boxPositionsB.some((position) => {
+    return positionInBox(position, boxA);
+  });
+
+  return result1 || result2;
 };
 
 const positionInBox = (position: Position, box: BoxProps): boolean => {

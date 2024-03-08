@@ -32,6 +32,7 @@ export default function Page() {
           width: 1,
           height: 2,
         },
+        zIndex: 0,
       },
       {
         id: '2',
@@ -51,6 +52,7 @@ export default function Page() {
           width: 1,
           height: 3,
         },
+        zIndex: 0,
       },
       {
         id: '3',
@@ -70,6 +72,7 @@ export default function Page() {
           width: 1,
           height: 5,
         },
+        zIndex: 0,
       },
       {
         id: '4',
@@ -89,6 +92,7 @@ export default function Page() {
           width: 1,
           height: 15,
         },
+        zIndex: 0,
       },
       {
         id: '5',
@@ -108,6 +112,7 @@ export default function Page() {
           width: 1,
           height: 5,
         },
+        zIndex: 0,
       },
     ];
     setBoxList(boxList);
