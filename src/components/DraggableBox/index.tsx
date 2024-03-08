@@ -197,6 +197,7 @@ export const DraggableBox: React.FC<Props> = ({
 
   useEffect(() => {
     if (!isAppMouseDown) {
+      onDragEnd(modifiedPosition);
       onDragLeave(modifiedPosition);
     }
   }, [isAppMouseDown, modifiedPosition]);

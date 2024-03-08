@@ -17,7 +17,7 @@ type Props = {
   onUpdateBox: (box: BoxProps, index: number) => void;
   onDropBox: (box: BoxProps, index: number) => void;
   onUpdateBoxList: (boxList: BoxProps[]) => void;
-  onOverlapBox: (box: BoxProps) => void;
+  // onOverlapBox: (box: BoxProps) => void;
 };
 
 export const BoxContainer: React.FC<Props> = ({
@@ -29,7 +29,7 @@ export const BoxContainer: React.FC<Props> = ({
   onUpdateBox,
   onDropBox,
   onUpdateBoxList,
-  onOverlapBox,
+  // onOverlapBox,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);

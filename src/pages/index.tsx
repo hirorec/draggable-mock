@@ -14,25 +14,25 @@ export default function Page() {
 
   useEffect(() => {
     const boxList: BoxProps[] = [
-      {
-        id: '1',
-        colIndex: 0,
-        backgroundColor: '#FFE4BF',
-        borderColor: '#F2A455',
-        label: `Draggable\nBox1`,
-        position: {
-          x: 0,
-          y: 0,
-        },
-        localPosition: {
-          x: 0,
-          y: 0,
-        },
-        size: {
-          width: 1,
-          height: 2,
-        },
-      },
+      // {
+      //   id: '1',
+      //   colIndex: 0,
+      //   backgroundColor: '#FFE4BF',
+      //   borderColor: '#F2A455',
+      //   label: `Draggable\nBox1`,
+      //   position: {
+      //     x: 0,
+      //     y: 0,
+      //   },
+      //   localPosition: {
+      //     x: 0,
+      //     y: 0,
+      //   },
+      //   size: {
+      //     width: 1,
+      //     height: 2,
+      //   },
+      // },
       {
         id: '2',
         colIndex: 0,
@@ -71,25 +71,25 @@ export default function Page() {
           height: 4,
         },
       },
-      {
-        id: '4',
-        colIndex: 0,
-        backgroundColor: '#FFE4BF',
-        borderColor: '#F2A455',
-        label: `Draggable\nBox4`,
-        position: {
-          x: 4,
-          y: 1,
-        },
-        localPosition: {
-          x: 0,
-          y: 0,
-        },
-        size: {
-          width: 1,
-          height: 14,
-        },
-      },
+      // {
+      //   id: '4',
+      //   colIndex: 0,
+      //   backgroundColor: '#FFE4BF',
+      //   borderColor: '#F2A455',
+      //   label: `Draggable\nBox4`,
+      //   position: {
+      //     x: 4,
+      //     y: 1,
+      //   },
+      //   localPosition: {
+      //     x: 0,
+      //     y: 0,
+      //   },
+      //   size: {
+      //     width: 1,
+      //     height: 14,
+      //   },
+      // },
     ];
     setBoxList(boxList);
   }, []);
@@ -112,7 +112,6 @@ export default function Page() {
   };
 
   const handleUpdateBoxList = (boxList: BoxProps[]) => {
-    console.log(boxList.filter((box) => box.id === '3')[0].position);
     setBoxList(boxList);
   };
 
