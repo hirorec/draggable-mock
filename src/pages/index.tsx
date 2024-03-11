@@ -136,7 +136,7 @@ export default function Page() {
       },
       {
         id: '4',
-        colIndex: 3,
+        colIndex: 2,
         backgroundColor: '#FFE4BF',
         borderColor: '#F2A455',
         label: `Draggable\nBox4`,
@@ -156,7 +156,7 @@ export default function Page() {
       },
       {
         id: '5',
-        colIndex: 4,
+        colIndex: 3,
         backgroundColor: '#FFE4BF',
         borderColor: '#F2A455',
         label: `Draggable\nBox5`,
