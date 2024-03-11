@@ -54,6 +54,26 @@ export default function Page() {
         },
         zIndex: 0,
       },
+      // {
+      //   id: '2-0',
+      //   colIndex: 1,
+      //   backgroundColor: '#E6F7DA',
+      //   borderColor: '#93ED6F',
+      //   label: `Draggable\nBox2`,
+      //   position: {
+      //     x: 1,
+      //     y: 0,
+      //   },
+      //   localPosition: {
+      //     x: 0,
+      //     y: 0,
+      //   },
+      //   size: {
+      //     width: 1,
+      //     height: 3,
+      //   },
+      //   zIndex: 0,
+      // },
       {
         id: '3',
         colIndex: 1,

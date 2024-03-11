@@ -106,6 +106,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     };
 
     const overlappedBoxIndices: number[] = [];
+    const overlappedBoxData: { id: string }[] = [];
 
     columnList.forEach((col, index) => {
       let overLapCount = 0;
@@ -130,7 +131,9 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
             if (isOverlap) {
               overLapCount += 1;
+              console.log(boxA);
               overlappedBoxIndices.push(boxIndex);
+              overlappedBoxData.push({ id: boxA.id });
             }
           }
         });
@@ -153,7 +156,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
         boxListInCol.forEach((box) => {
           if (box.id !== updatedBox?.id) {
-            box.position.x = x;
+            // box.position.x = x;
           }
         });
 

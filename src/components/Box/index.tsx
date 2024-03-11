@@ -105,14 +105,14 @@ export const Box: React.FC<Props> = ({
         onDrop(newStepBasePosition);
       }
     },
-    [overlayPosition]
+    [overlayPosition, stepBasePosition]
   );
 
   const handleDragLeave = useCallback(
     (newStepBasePosition: Position) => {
       setOverlayPosition({ ...newStepBasePosition });
     },
-    [overlayPosition]
+    [overlayPosition, stepBasePosition]
   );
 
   const handleResizeBoxEnd = useCallback(() => {
