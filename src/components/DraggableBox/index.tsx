@@ -120,7 +120,8 @@ export const DraggableBox: React.FC<Props> = ({
       setCursor('unset');
       return;
     }
-    if ((isMouseDown || isWindowMouseDown) && isMouseOver) {
+
+    if (isMouseDown || isWindowMouseDown) {
       setCursor('all-scroll');
       setIsDragging(true);
     } else if (isMouseOver) {
