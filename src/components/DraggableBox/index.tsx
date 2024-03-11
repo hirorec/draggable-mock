@@ -82,29 +82,30 @@ export const DraggableBox: React.FC<Props> = ({
   }, [stepBasePosition]);
 
   useEffect(() => {
-    const onWindowMouseDown = () => {
-      if (isMouseOver) {
-        setIsMouseDown(true);
-      }
-    };
+    // const onWindowMouseDown = () => {
+    //   if (isMouseOver) {
+    //     // setIsMouseDown(true);
+    //   }
+    // };
 
     const onWindowMouseUp = () => {
       if (selectedBoxId === id) {
         onDragEnd(modifiedPosition);
         onDragLeave(modifiedPosition);
         setIsMouseDown(false);
+        setIsDragging(false);
         setSelectedBoxId(undefined);
       }
     };
 
-    window.addEventListener('mousedown', onWindowMouseDown);
+    // window.addEventListener('mousedown', onWindowMouseDown);
     window.addEventListener('mouseup', onWindowMouseUp);
 
     return () => {
-      window.removeEventListener('mousedown', onWindowMouseDown);
+      // window.removeEventListener('mousedown', onWindowMouseDown);
       window.removeEventListener('mouseup', onWindowMouseUp);
     };
-  }, [modifiedPosition, isMouseOver, selectedBoxId]);
+  }, [modifiedPosition, isMouseOver, selectedBoxId, isDragging]);
 
   useEffect(() => {
     setTransform({
