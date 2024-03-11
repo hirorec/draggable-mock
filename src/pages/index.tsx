@@ -42,7 +42,7 @@ export default function Page() {
         label: `Draggable\nBox1-2`,
         position: {
           x: 0,
-          y: 1,
+          y: 2,
         },
         localPosition: {
           x: 0,
@@ -62,7 +62,7 @@ export default function Page() {
         label: `Draggable\nBox1-3`,
         position: {
           x: 0,
-          y: 3,
+          y: 5,
         },
         localPosition: {
           x: 0,
@@ -122,7 +122,7 @@ export default function Page() {
         label: `Draggable\nBox2-2`,
         position: {
           x: 1,
-          y: 2,
+          y: 5,
         },
         localPosition: {
           x: 0,
@@ -141,7 +141,7 @@ export default function Page() {
         borderColor: '#F2A455',
         label: `Draggable\nBox4`,
         position: {
-          x: 3,
+          x: 2,
           y: 0,
         },
         localPosition: {
@@ -161,7 +161,7 @@ export default function Page() {
         borderColor: '#F2A455',
         label: `Draggable\nBox5`,
         position: {
-          x: 4,
+          x: 3,
           y: 1,
         },
         localPosition: {

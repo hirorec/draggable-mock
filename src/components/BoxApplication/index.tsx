@@ -79,24 +79,9 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         },
       };
 
-      // newBoxList[index].position = {
-      //   x: droppedBox.position.x + droppedBox.localPosition.x,
-      //   y: droppedBox.position.y,
-      // };
-
-      // console.log(_.cloneDeep(newBoxList[index]));
-      // console.log(newBoxList[index]);
-      // newBoxList[index].localPosition = {
-      //   x: 0,
-      //   y: 0,
-      // };
-      // console.log(newBoxList[index].position.x, '====');
-
       const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, newColumnList, droppedBox);
       onUpdateBoxList(modifiedBoxList);
       onUpdateColumnList(modifiedColumnList);
-      // onUpdateBoxList(boxList);
-      // onUpdateColumnList(columnList);
     },
     [boxList, columnList, isAppModifying, selectedBoxId, initialized]
   );
@@ -121,43 +106,20 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
     // 操作boxの新しいcolIndexセット
     if (updatedBox) {
-      // console.log(updatedBox);
       let x = 0;
       const updatedBoxIndex = boxList.findIndex((box) => box.id === updatedBox.id);
 
-      // console.log(columnList);
       columnList.forEach((col, index) => {
         for (let i = 0; i < col.colDiv; i++) {
           if (boxList[updatedBoxIndex].position.x === x) {
-            // console.log('-------', {
-            //   index,
-            //   colDiv: col.colDiv,
-            //   x,
-            //   positionX: boxList[updatedBoxIndex].position.x,
-            //   localX: boxList[updatedBoxIndex].localPosition.x,
-            // });
-
-            // if (boxList[updatedBoxIndex].colIndex !== index) {
-            //   boxList[updatedBoxIndex].position.x = 0;
-            //   boxList[updatedBoxIndex].localPosition.x = 0;
-            //   boxList[updatedBoxIndex].colIndex = index;
-            // }
-
             boxList[updatedBoxIndex].position.x = x - col.colDiv;
-            // boxList[updatedBoxIndex].localPosition.x = 0;
             boxList[updatedBoxIndex].colIndex = index;
-            // console.log(_.cloneDeep(boxList[updatedBoxIndex]));
-            // boxList[updatedBoxIndex].position.x =
-            // console.log({ id: updatedBox.id, x: updatedBox.position.x, newColIndex: index }, columnList);
           }
 
           x++;
         }
       });
-      // console.log(boxList[updatedBoxIndex], boxList);
     }
-
-    // console.log(_.cloneDeep(boxList));
 
     //--------------
     // reset
@@ -184,7 +146,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       });
     });
 
-    // const overlappedBoxData: { colIndex: number; id: string; overLapCount: number; ids: string[] }[] = [];
     const overlappedBoxData: string[][] = [];
 
     columnList.forEach((col, index) => {
@@ -208,35 +169,16 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
             const isOverlap = overlapBox(boxBClone, boxAClone);
 
-            // if (initialized) {
-            //   console.log({ isOverlap }, boxBClone.id, boxBClone.position, boxAClone.id, boxAClone.position);
-            // }
-
-            // console.log({ id: boxB.id, isOverlap }, boxB, boxA);
-            // const foundOverlappedItem = overlappedBoxData.find((item) => {
-            //   return item.ids.includes(boxA.id) && item.ids.includes(boxB.id);
-            // });
-            // console.log({ isOverlap, foundOverlappedItem }, boxB, boxA);
-            // console.log(boxA, boxB);
-            // if (isOverlap && !foundOverlappedItem) {
-            //   // overLapCount += 1;
-            //   overlappedBoxData.push({ colIndex: index, id: boxA.id, overLapCount, ids: [boxA.id, boxB.id] });
-            // }
-
             if (isOverlap) {
               overlappedIds.push(boxA.id, boxB.id);
             }
           }
         });
-
-        // const items = overlappedBoxData.filter((item) => item.colIndex === index);
-        // console.log(_.uniq(items.map((item) => item.ids).flat()), '----');
       });
 
       columnList[index].colDiv = overLapCount + 1;
 
       const ids = _.uniq(overlappedIds);
-      // console.log(ids);
       overlappedBoxData.push(ids);
       columnList[index].colDiv = Math.max(ids.length, 1);
       return col;
@@ -250,23 +192,9 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       const boxListInCol = boxList.filter((box) => {
         return box.colIndex === index;
       });
-      // console.log(boxListInCol, '====');
-
       for (let i = 0; i < col.colDiv; i++) {
         boxListInCol.forEach((box) => {
-          // if (updatedBox && updatedBox.id === box.id) {
-          //   // console.log(box, '-----');
-          //   // box.position.x = box.position.x + box.localPosition.x + box.colIndex;
-          //   box.position.x = box.colIndex;
-          // } else {
-          // console.log({ id: box.id, x, colDiv: col.colDiv, position: box.position });
           box.position.x = x - col.colDiv + 1;
-          // box.localPosition.x = x;
-          // }
-
-          if (updatedBox && updatedBox.id === box.id) {
-            //
-          }
         });
 
         x++;
@@ -274,19 +202,18 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     });
 
     overlappedBoxData.forEach((ids) => {
-      console.log(ids);
+      // console.log(ids);
       for (let i = 1; i < ids.length; i++) {
         const id = ids[i];
         const box = boxList.find((b) => b.id === id);
 
         if (box) {
           box.localPosition.x = i;
-          // console.log(box.id, i);
         }
       }
     });
 
-    await sleep(100);
+    await sleep(0);
     setIsAppModifying(false);
 
     console.log(boxList, columnList);
