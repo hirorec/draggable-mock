@@ -4,7 +4,11 @@
   position: relative;
   width: 150px;
   height: 100%;
-  border: solid 1px #bbb;
+  border: solid 1px #999;
+
+  &:not(:first-child) {
+    border-left: 0;
+  }
 }
 
 .columnContent {
@@ -13,7 +17,7 @@
   background-color: #f6f6f6;
 
   &:not(:first-child) {
-    border-left: 1px dashed #d1d1d1;
+    border-left: 1px dashed #999;
   }
 }
 
@@ -30,5 +34,5 @@
   left: 0;
   width: 100%;
   height: 1px;
-  background-color: #e1e1e1;
+  background-color: #ddd;
 }
