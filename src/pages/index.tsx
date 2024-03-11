@@ -19,7 +19,7 @@ export default function Page() {
         colIndex: 0,
         backgroundColor: '#FFE4BF',
         borderColor: '#F2A455',
-        label: `Draggable\nBox1-1`,
+        label: `Box1-1`,
         position: {
           x: 0,
           y: 0,
@@ -39,7 +39,7 @@ export default function Page() {
         colIndex: 0,
         backgroundColor: '#FFE4BF',
         borderColor: '#F2A455',
-        label: `Draggable\nBox1-2`,
+        label: `Box1-2`,
         position: {
           x: 0,
           y: 2,
@@ -59,7 +59,7 @@ export default function Page() {
         colIndex: 0,
         backgroundColor: '#FFE4BF',
         borderColor: '#F2A455',
-        label: `Draggable\nBox1-3`,
+        label: `Box1-3`,
         position: {
           x: 0,
           y: 4,
@@ -79,7 +79,7 @@ export default function Page() {
         colIndex: 1,
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
-        label: `Draggable\nBox2-0`,
+        label: `Box2-0`,
         position: {
           x: 1,
           y: 0,
@@ -99,7 +99,7 @@ export default function Page() {
         colIndex: 1,
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
-        label: `Draggable\nBox2-1`,
+        label: `Box2-1`,
         position: {
           x: 1,
           y: 1,
@@ -119,7 +119,7 @@ export default function Page() {
         colIndex: 1,
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
-        label: `Draggable\nBox2-2`,
+        label: `Box2-2`,
         position: {
           x: 1,
           y: 7,
@@ -139,7 +139,7 @@ export default function Page() {
         colIndex: 2,
         backgroundColor: '#FFE4BF',
         borderColor: '#F2A455',
-        label: `Draggable\nBox4`,
+        label: `Box4`,
         position: {
           x: 2,
           y: 0,
@@ -159,7 +159,7 @@ export default function Page() {
         colIndex: 3,
         backgroundColor: '#FFE4BF',
         borderColor: '#F2A455',
-        label: `Draggable\nBox5`,
+        label: `Box5`,
         position: {
           x: 3,
           y: 1,
