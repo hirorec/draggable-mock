@@ -196,6 +196,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       const boxListInCol = boxList.filter((box) => {
         return box.colIndex === index;
       });
+
       for (let i = 0; i < col.colDiv; i++) {
         boxListInCol.forEach((box) => {
           box.position.x = x - col.colDiv + 1;
@@ -215,9 +216,25 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
     // ローカルポジション設定
     overlappedBoxData.forEach((ids) => {
-      // console.log(ids);
-      for (let i = 1; i < ids.length; i++) {
-        const id = ids[i];
+      const sortedIds = ids.sort((a, b) => {
+        const boxA = boxList.find((box) => box.id === a);
+        const boxB = boxList.find((box) => box.id === b);
+
+        if (!boxA || !boxB) {
+          return 0;
+        }
+
+        if (boxA.position.y < boxB.position.y) {
+          return -1;
+        } else if (boxA.position.y > boxB.position.y) {
+          return 1;
+        }
+
+        return 0;
+      });
+
+      for (let i = 1; i < sortedIds.length; i++) {
+        const id = sortedIds[i];
         const box = boxList.find((b) => b.id === id);
 
         if (box) {

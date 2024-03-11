@@ -82,7 +82,7 @@ export default function Page() {
         label: `Box2-0`,
         position: {
           x: 1,
-          y: 0,
+          y: 2,
         },
         localPosition: {
           x: 0,
