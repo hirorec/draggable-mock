@@ -14,26 +14,26 @@ export default function Page() {
 
   useEffect(() => {
     const boxList: BoxProps[] = [
-      // {
-      //   id: '1',
-      //   colIndex: 0,
-      //   backgroundColor: '#FFE4BF',
-      //   borderColor: '#F2A455',
-      //   label: `Draggable\nBox1`,
-      //   position: {
-      //     x: 0,
-      //     y: 0,
-      //   },
-      //   localPosition: {
-      //     x: 0,
-      //     y: 0,
-      //   },
-      //   size: {
-      //     width: 1,
-      //     height: 2,
-      //   },
-      //   zIndex: 0,
-      // },
+      {
+        id: '1',
+        colIndex: 0,
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox1`,
+        position: {
+          x: 0,
+          y: 0,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 2,
+        },
+        zIndex: 0,
+      },
       {
         id: '2',
         colIndex: 1,
@@ -74,46 +74,46 @@ export default function Page() {
         },
         zIndex: 0,
       },
-      // {
-      //   id: '4',
-      //   colIndex: 4,
-      //   backgroundColor: '#FFE4BF',
-      //   borderColor: '#F2A455',
-      //   label: `Draggable\nBox4`,
-      //   position: {
-      //     x: 4,
-      //     y: 0,
-      //   },
-      //   localPosition: {
-      //     x: 0,
-      //     y: 0,
-      //   },
-      //   size: {
-      //     width: 1,
-      //     height: 15,
-      //   },
-      //   zIndex: 0,
-      // },
-      // {
-      //   id: '5',
-      //   colIndex: 5,
-      //   backgroundColor: '#FFE4BF',
-      //   borderColor: '#F2A455',
-      //   label: `Draggable\nBox5`,
-      //   position: {
-      //     x: 5,
-      //     y: 1,
-      //   },
-      //   localPosition: {
-      //     x: 0,
-      //     y: 0,
-      //   },
-      //   size: {
-      //     width: 1,
-      //     height: 5,
-      //   },
-      //   zIndex: 0,
-      // },
+      {
+        id: '4',
+        colIndex: 3,
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox4`,
+        position: {
+          x: 3,
+          y: 0,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 15,
+        },
+        zIndex: 0,
+      },
+      {
+        id: '5',
+        colIndex: 4,
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox5`,
+        position: {
+          x: 4,
+          y: 1,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 5,
+        },
+        zIndex: 0,
+      },
     ];
     setBoxList(boxList);
   }, []);
@@ -127,7 +127,7 @@ export default function Page() {
       { id: '5', label: 'column 5', rowDiv, colDiv: 1 },
       { id: '6', label: 'column 6', rowDiv, colDiv: 1 },
       { id: '7', label: 'column 7', rowDiv, colDiv: 1 },
-      // { id: '8', label: 'column 8', rowDiv, colDiv: 1 },
+      { id: '8', label: 'column 8', rowDiv, colDiv: 1 },
       // { id: '9', label: 'column 9', rowDiv, colDiv: 1 },
     ];
     setColumnList(columnList);

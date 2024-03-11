@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { BoxAppProvider, useBoxAppOrigin } from '@/hooks/useBoxApp';
 import { BoxProps, ColumnProps } from '@/types';
@@ -28,10 +28,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       return prev + current.colDiv;
     }, 0);
   }, [columnList]);
-
-  useEffect(() => {
-    console.log({ isAppModifying });
-  }, [isAppModifying]);
 
   const handleUpdateBoxSizeEnd = useCallback(
     async (resizedBox: BoxProps) => {
@@ -78,7 +74,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       };
     }
 
-    console.log('modifyData', { isAppModifying });
+    console.log('modifyData');
     setIsAppModifying(true);
 
     // boxList.forEach((box) => {
@@ -149,8 +145,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
     columnList.forEach((col, index) => {
       for (let i = 0; i < col.colDiv; i++) {
-        // console.log({ x, index });
-
         const boxListInCol = boxList.filter((box) => {
           return box.colIndex === index;
         });
@@ -159,8 +153,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
           // const boxIndex = boxList.findIndex((box2) => box2.id === box.id);
           // boxList[boxIndex].position.x = x;
           if (box.id !== updatedBox?.id) {
-            // _.cloneDeep(box).position.x = x;
-            box.position.x = 0;
+            box.position.x = x;
           }
         });
 
@@ -169,14 +162,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     });
 
     // console.log({ overlappedBoxIndices });
-
-    // boxList.forEach((box, index) => {
-    //   if (overlappedBoxIndices.includes(index)) {
-    //     box.localPosition.x = 1;
-    //   } else {
-    //     box.localPosition.x = 0;
-    //   }
-    // });
 
     // boxList.forEach((box, index) => {
     //   let globalX = getColIndex(box.position.x);
@@ -188,7 +173,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     //   // };
     // });
 
-    await sleep(1000);
+    await sleep(100);
     setIsAppModifying(false);
 
     return {
