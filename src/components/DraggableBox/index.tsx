@@ -10,6 +10,7 @@ import styles from './index.module.scss';
 import type { Position, Step } from '@/types';
 
 type Props = {
+  id: string;
   width: number;
   height: number;
   step: Step;
@@ -31,6 +32,7 @@ type Transform = {
 };
 
 export const DraggableBox: React.FC<Props> = ({
+  id,
   width,
   height,
   step,
@@ -44,7 +46,7 @@ export const DraggableBox: React.FC<Props> = ({
   onDragLeave,
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
-  const { isAppModifying } = useBoxApp();
+  const { setSelectedBoxId, selectedBoxId } = useBoxApp();
   const [transform, setTransform] = useState<Transform>({
     x: step.x * (stepBasePosition.x + localPosition.x),
     y: step.y * (stepBasePosition.y + localPosition.y),
@@ -87,9 +89,12 @@ export const DraggableBox: React.FC<Props> = ({
     };
 
     const onWindowMouseUp = () => {
-      onDragEnd(modifiedPosition);
-      onDragLeave(modifiedPosition);
-      setIsMouseDown(false);
+      if (selectedBoxId === id) {
+        onDragEnd(modifiedPosition);
+        onDragLeave(modifiedPosition);
+        setIsMouseDown(false);
+        setSelectedBoxId(undefined);
+      }
     };
 
     window.addEventListener('mousedown', onWindowMouseDown);
@@ -99,7 +104,7 @@ export const DraggableBox: React.FC<Props> = ({
       window.removeEventListener('mousedown', onWindowMouseDown);
       window.removeEventListener('mouseup', onWindowMouseUp);
     };
-  }, [modifiedPosition, isMouseOver]);
+  }, [modifiedPosition, isMouseOver, selectedBoxId]);
 
   useEffect(() => {
     setTransform({
@@ -202,9 +207,10 @@ export const DraggableBox: React.FC<Props> = ({
 
   const handleMouseDown = useCallback(() => {
     if (isMouseOver) {
+      setSelectedBoxId(id);
       setIsMouseDown(true);
     }
-  }, [isMouseOver]);
+  }, [id, isMouseOver]);
 
   const handleMouseUp = useCallback(() => {
     setIsMouseDown(false);

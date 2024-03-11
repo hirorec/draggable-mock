@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { BoxAppProvider, useBoxAppOrigin } from '@/hooks/useBoxApp';
 import { BoxProps, ColumnProps } from '@/types';
@@ -21,7 +21,11 @@ type Props = {
 
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
   const blockAppOrigin = useBoxAppOrigin();
-  const { isAppModifying, setIsAppModifying } = blockAppOrigin;
+  const { isAppModifying, setIsAppModifying, selectedBoxId } = blockAppOrigin;
+
+  useEffect(() => {
+    console.log({ selectedBoxId });
+  }, [selectedBoxId]);
 
   const maxWidth = useMemo((): number => {
     return columnList.reduce((prev, current) => {

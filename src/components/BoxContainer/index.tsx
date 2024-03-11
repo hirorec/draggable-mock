@@ -141,6 +141,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, maxWidth, maxHeight, on
         return (
           <Box
             key={index}
+            id={box.id}
             label={box.label}
             backgroundColor={box.backgroundColor}
             borderColor={box.borderColor}

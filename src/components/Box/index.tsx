@@ -9,6 +9,7 @@ import { Position, Size, Step } from '@/types';
 import styles from './index.module.scss';
 
 type Props = {
+  id: string;
   label: string;
   borderColor: string;
   backgroundColor: string;
@@ -26,6 +27,7 @@ type Props = {
 };
 
 export const Box: React.FC<Props> = ({
+  id,
   label,
   borderColor,
   backgroundColor,
@@ -132,6 +134,7 @@ export const Box: React.FC<Props> = ({
       )} */}
 
       <DraggableBox
+        id={id}
         width={boxSize.width}
         height={boxSize.height}
         step={step}

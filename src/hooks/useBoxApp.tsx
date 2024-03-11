@@ -3,12 +3,15 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 export type BoxAppContextType = {
   isAppModifying: boolean;
   isWindowMouseDown: boolean;
+  selectedBoxId: string | undefined;
   setIsAppModifying: (value: boolean) => void;
+  setSelectedBoxId: (value: string | undefined) => void;
 } | null;
 
 export const useBoxAppOrigin = () => {
   const [isAppModifying, setIsAppModifying] = useState<boolean>(false);
   const [isWindowMouseDown, setIsWindowMouseDown] = useState<boolean>(false);
+  const [selectedBoxId, setSelectedBoxId] = useState<string>();
 
   useEffect(() => {
     const onWindowMouseDown = () => {
@@ -31,7 +34,9 @@ export const useBoxAppOrigin = () => {
   return {
     isAppModifying,
     isWindowMouseDown,
+    selectedBoxId,
     setIsAppModifying,
+    setSelectedBoxId,
   };
 };
 
