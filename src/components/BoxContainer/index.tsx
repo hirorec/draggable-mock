@@ -3,6 +3,7 @@ import _ from 'lodash';
 import React, { useCallback, useRef, useState } from 'react';
 
 import { STEP } from '@/const';
+import { useBlockApp } from '@/hooks/useBlockApp';
 import { BoxProps, Position, Size } from '@/types';
 
 import styles from './index.module.scss';
@@ -13,22 +14,13 @@ type Props = {
   boxList: BoxProps[];
   maxWidth: number;
   maxHeight: number;
-  isMouseDown: boolean;
   onUpdateBox: (box: BoxProps, index: number) => void;
   onDropBox: (box: BoxProps, index: number) => void;
   onUpdateBoxSizeEnd: (box: BoxProps, index: number) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({
-  isAppModifying,
-  boxList,
-  maxWidth,
-  maxHeight,
-  isMouseDown,
-  onUpdateBox,
-  onDropBox,
-  onUpdateBoxSizeEnd,
-}) => {
+export const BoxContainer: React.FC<Props> = ({ isAppModifying, boxList, maxWidth, maxHeight, onUpdateBox, onDropBox, onUpdateBoxSizeEnd }) => {
+  const { isWindowMouseDown } = useBlockApp();
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
 
@@ -112,7 +104,7 @@ export const BoxContainer: React.FC<Props> = ({
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!containerRef.current || isMouseDown) {
+      if (!containerRef.current || isWindowMouseDown) {
         return;
       }
 
@@ -141,7 +133,7 @@ export const BoxContainer: React.FC<Props> = ({
         }
       });
     },
-    [containerRef.current, boxList, isMouseDown]
+    [containerRef.current, boxList, isWindowMouseDown]
   );
 
   return (
@@ -159,7 +151,6 @@ export const BoxContainer: React.FC<Props> = ({
             stepBasePosition={box.position}
             localPosition={box.localPosition}
             zIndex={getZIndex(index)}
-            isMouseDown={isMouseDown}
             maxHeight={maxHeight}
             onUpdatePosition={(position: Position) => handleUpdateBoxPosition(index, position)}
             onUpdateSize={(size: Size) => handleUpdateBoxSize(index, size)}

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { BlockAppProvider, useBlockAppOrigin } from '@/hooks/useBlockApp';
 import { BoxProps, ColumnProps } from '@/types';
@@ -22,8 +22,6 @@ type Props = {
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
   const blockAppOrigin = useBlockAppOrigin();
   const { isAppModifying, setIsAppModifying } = blockAppOrigin;
-  const [isMouseDown, setIsMouseDown] = useState(false);
-  // const [isAppModifying, setIsAppModifying] = useState(false);
 
   const maxWidth = useMemo((): number => {
     return columnList.reduce((prev, current) => {
@@ -31,44 +29,24 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     }, 0);
   }, [columnList]);
 
-  // useEffect(() => {
-  //   const onMouseDown = () => {
-  //     setIsMouseDown(true);
-  //   };
-  //   const onMouseUp = () => {
-  //     setIsMouseDown(false);
-  //   };
-
-  //   window.addEventListener('mousedown', onMouseDown);
-  //   window.addEventListener('mouseup', onMouseUp);
-
-  //   return () => {
-  //     window.removeEventListener('mousedown', onMouseDown);
-  //     window.removeEventListener('mouseup', onMouseUp);
-  //   };
-  // }, []);
-
   useEffect(() => {
     console.log({ isAppModifying });
   }, [isAppModifying]);
 
   const handleUpdateBoxSizeEnd = useCallback(
     async (resizedBox: BoxProps) => {
-      setIsAppModifying(true);
       console.log('handleUpdateBoxSizeEnd');
       const newBoxList = _.cloneDeep(boxList);
       const newColumnList = _.cloneDeep(columnList);
       const { boxList: modifiedBoxData, columnList: modifiedColumnList } = await modifyData(newBoxList, newColumnList, resizedBox);
       onUpdateBoxList(modifiedBoxData);
       onUpdateColumnList(modifiedColumnList);
-      setIsAppModifying(false);
     },
     [boxList, columnList, isAppModifying]
   );
 
   const handleDropBox = useCallback(
     async (droppedBox: BoxProps, index: number) => {
-      // setIsAppModifying(true);
       console.log('handleDropBox');
       const newBoxList = _.cloneDeep(boxList);
       const newColumnList = _.cloneDeep(columnList);
@@ -81,10 +59,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, newColumnList, droppedBox);
       onUpdateBoxList(modifiedBoxList);
       onUpdateColumnList(modifiedColumnList);
-
-      await sleep(100);
-      setIsAppModifying(false);
-      console.log('=========');
     },
     [boxList, columnList, isAppModifying]
   );
@@ -106,8 +80,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
     console.log('modifyData', { isAppModifying });
     setIsAppModifying(true);
-
-    await sleep(100);
 
     // boxList.forEach((box) => {
     //   if (box.id === updatedBox?.id) {
@@ -216,6 +188,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     //   // };
     // });
 
+    await sleep(1000);
     setIsAppModifying(false);
 
     return {
@@ -235,7 +208,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
               boxList={boxList}
               maxWidth={maxWidth}
               maxHeight={maxHeight}
-              isMouseDown={isMouseDown}
               onUpdateBox={onUpdateBox}
               onDropBox={handleDropBox}
               onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}

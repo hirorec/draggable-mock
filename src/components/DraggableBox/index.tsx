@@ -14,7 +14,6 @@ type Props = {
   height: number;
   step: Step;
   resizeMode: boolean;
-  isMouseDown: boolean;
   children: React.ReactNode;
   stepBasePosition: Position;
   localPosition: Position;
