@@ -150,10 +150,8 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         });
 
         boxListInCol.forEach((box) => {
-          // const boxIndex = boxList.findIndex((box2) => box2.id === box.id);
-          // boxList[boxIndex].position.x = x;
           if (box.id !== updatedBox?.id) {
-            box.position.x = x;
+            // box.position.x = x;
           }
         });
 

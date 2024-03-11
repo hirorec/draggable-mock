@@ -7,7 +7,6 @@ import { STEP } from '@/const';
 import { Position, Size, Step } from '@/types';
 
 import styles from './index.module.scss';
-import { BoxOverlay } from '../BoxOverlay';
 
 type Props = {
   isAppModifying: boolean;
@@ -122,7 +121,7 @@ export const Box: React.FC<Props> = ({
 
   return (
     <div className={clsx(styles.box)} style={{ zIndex }}>
-      {overlayVisible && (
+      {/* {overlayVisible && (
         <BoxOverlay
           text={label}
           backgroundColor={backgroundColor}
@@ -132,7 +131,7 @@ export const Box: React.FC<Props> = ({
           position={overlayPosition}
           localPosition={localPosition}
         />
-      )}
+      )} */}
 
       <DraggableBox
         width={boxSize.width}

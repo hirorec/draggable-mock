@@ -160,7 +160,6 @@ export const DraggableBox: React.FC<Props> = ({
         const y = newStepBasePosition.y + dy / STEP.Y;
         // newStepBasePosition.x = x;
         newStepBasePosition.y = y;
-
         newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
         newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
 
@@ -184,7 +183,7 @@ export const DraggableBox: React.FC<Props> = ({
         if (rectMousePosition.x >= rect.width) {
           newStepBasePosition.x = newStepBasePosition.x + 1;
           resetMouseMoveAmount();
-        } else if (rectMousePosition.x < 0) {
+        } else if (rectMousePosition.x <= 0) {
           newStepBasePosition.x = newStepBasePosition.x - 1;
           resetMouseMoveAmount();
         } else {
