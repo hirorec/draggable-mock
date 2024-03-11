@@ -3,7 +3,7 @@ import _ from 'lodash';
 import React, { useCallback, useRef, useState } from 'react';
 
 import { STEP } from '@/const';
-import { useBlockApp } from '@/hooks/useBlockApp';
+import { useBoxApp } from '@/hooks/useBoxApp';
 import { BoxProps, Position, Size } from '@/types';
 
 import styles from './index.module.scss';
@@ -20,7 +20,7 @@ type Props = {
 };
 
 export const BoxContainer: React.FC<Props> = ({ isAppModifying, boxList, maxWidth, maxHeight, onUpdateBox, onDropBox, onUpdateBoxSizeEnd }) => {
-  const { isWindowMouseDown } = useBlockApp();
+  const { isWindowMouseDown } = useBoxApp();
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
 

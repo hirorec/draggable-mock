@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { STEP } from '@/const';
-import { useBlockApp } from '@/hooks/useBlockApp';
+import { useBoxApp } from '@/hooks/useBoxApp';
 
 import styles from './index.module.scss';
 
@@ -44,7 +44,7 @@ export const DraggableBox: React.FC<Props> = ({
   onDragLeave,
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
-  const { isAppModifying } = useBlockApp();
+  const { isAppModifying } = useBoxApp();
   const [transform, setTransform] = useState<Transform>({
     x: step.x * (stepBasePosition.x + localPosition.x),
     y: step.y * (stepBasePosition.y + localPosition.y),

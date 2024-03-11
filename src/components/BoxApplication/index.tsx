@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
 
-import { BlockAppProvider, useBlockAppOrigin } from '@/hooks/useBlockApp';
+import { BoxAppProvider, useBoxAppOrigin } from '@/hooks/useBoxApp';
 import { BoxProps, ColumnProps } from '@/types';
 import { overlapBox, sleep } from '@/utils';
 
@@ -20,7 +20,7 @@ type Props = {
 };
 
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
-  const blockAppOrigin = useBlockAppOrigin();
+  const blockAppOrigin = useBoxAppOrigin();
   const { isAppModifying, setIsAppModifying } = blockAppOrigin;
 
   const maxWidth = useMemo((): number => {
@@ -201,7 +201,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   return (
     <div className={clsx(styles.application)}>
       <div className={clsx(styles.applicationInner)}>
-        <BlockAppProvider value={blockAppOrigin}>
+        <BoxAppProvider value={blockAppOrigin}>
           <ColumnContainer columnList={columnList}>
             <BoxContainer
               isAppModifying={isAppModifying}
@@ -213,7 +213,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
               onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
             />
           </ColumnContainer>
-        </BlockAppProvider>
+        </BoxAppProvider>
       </div>
     </div>
   );

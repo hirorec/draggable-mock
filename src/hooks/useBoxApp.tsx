@@ -1,12 +1,12 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-export type BlockAppContextType = {
+export type BoxAppContextType = {
   isAppModifying: boolean;
   isWindowMouseDown: boolean;
   setIsAppModifying: (value: boolean) => void;
 } | null;
 
-export const useBlockAppOrigin = () => {
+export const useBoxAppOrigin = () => {
   const [isAppModifying, setIsAppModifying] = useState<boolean>(false);
   const [isWindowMouseDown, setIsWindowMouseDown] = useState<boolean>(false);
 
@@ -35,10 +35,10 @@ export const useBlockAppOrigin = () => {
   };
 };
 
-const BlockAppContext = createContext<BlockAppContextType>(null);
+const BoxAppContext = createContext<BoxAppContextType>(null);
 
-export const BlockAppProvider = ({ children, value }: { children: React.ReactNode; value: BlockAppContextType }) => {
-  return <BlockAppContext.Provider value={value}>{children}</BlockAppContext.Provider>;
+export const BoxAppProvider = ({ children, value }: { children: React.ReactNode; value: BoxAppContextType }) => {
+  return <BoxAppContext.Provider value={value}>{children}</BoxAppContext.Provider>;
 };
 
-export const useBlockApp = () => useContext(BlockAppContext)!;
+export const useBoxApp = () => useContext(BoxAppContext)!;
