@@ -243,6 +243,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
           <ColumnContainer columnList={columnList || []}>
             <BoxContainer
               boxList={boxList || []}
+              columnList={columnList || []}
               maxWidth={maxWidth}
               maxHeight={maxHeight}
               onUpdateBox={onUpdateBox}

@@ -1,16 +1,18 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import { STEP } from '@/const';
 import { useBoxApp } from '@/hooks/useBoxApp';
-import { BoxProps, Position, Size } from '@/types';
 
 import styles from './index.module.scss';
 import { Box } from '../Box';
 
+import type { BoxProps, ColumnProps, Position, Size } from '@/types';
+
 type Props = {
   boxList: BoxProps[];
+  columnList: ColumnProps[];
   maxWidth: number;
   maxHeight: number;
   onUpdateBox: (box: BoxProps, index: number) => void;
@@ -18,7 +20,7 @@ type Props = {
   onUpdateBoxSizeEnd: (box: BoxProps, index: number) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({ boxList, maxWidth, maxHeight, onUpdateBox, onDropBox, onUpdateBoxSizeEnd }) => {
+export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, maxHeight, onUpdateBox, onDropBox, onUpdateBoxSizeEnd }) => {
   const { isWindowMouseDown } = useBoxApp();
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
@@ -135,8 +137,14 @@ export const BoxContainer: React.FC<Props> = ({ boxList, maxWidth, maxHeight, on
     [containerRef.current, boxList, isWindowMouseDown]
   );
 
+  const containerWidth = useMemo(() => {
+    return columnList.reduce((prev, current) => {
+      return prev + current.colDiv * STEP.X;
+    }, 0);
+  }, [columnList]);
+
   return (
-    <div ref={containerRef} className={clsx(styles.container)} onMouseMove={handleMouseMove}>
+    <div ref={containerRef} className={clsx(styles.container)} onMouseMove={handleMouseMove} style={{ width: `${containerWidth}px` }}>
       {boxList.map((box, index) => {
         return (
           <Box
