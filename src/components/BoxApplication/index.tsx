@@ -151,6 +151,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
     const overlappedBoxData: string[][] = [];
 
+    // 重なり判定
     columnList.forEach((col, index) => {
       let overLapCount = 0;
       const overlappedIds: string[] = [];
@@ -189,8 +190,8 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
     console.log('overlappedBoxData', overlappedBoxData);
 
+    // ポジション設定
     let x = 0;
-
     columnList.forEach((col, index) => {
       const boxListInCol = boxList.filter((box) => {
         return box.colIndex === index;
@@ -212,6 +213,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       }
     });
 
+    // ローカルポジション設定
     overlappedBoxData.forEach((ids) => {
       // console.log(ids);
       for (let i = 1; i < ids.length; i++) {
@@ -226,8 +228,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
     await sleep(0);
     setIsAppModifying(false);
-
-    console.log(boxList, columnList);
+    // console.log(boxList, columnList);
     return {
       boxList,
       columnList,
