@@ -10,6 +10,7 @@ import styles from './index.module.scss';
 import { BoxContainer } from '../BoxContainer';
 import { ColumnContainer } from '../ColumnContainer';
 import { ColumnHeader } from '../ColumnHeader';
+import { ColumnRowHeader } from '../ColumnRowHeader';
 
 type Props = {
   boxList?: BoxProps[];
@@ -196,6 +197,14 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       for (let i = 0; i < col.colDiv; i++) {
         boxListInCol.forEach((box) => {
           box.position.x = x - col.colDiv + 1;
+
+          const overlappedBoxItem = overlappedBoxData[index];
+
+          if (overlappedBoxItem.includes(box.id)) {
+            box.size.width = 1;
+          } else {
+            box.size.width = col.colDiv;
+          }
         });
 
         x++;
@@ -227,8 +236,9 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   return (
     <div className={clsx(styles.application)}>
       <div className={clsx(styles.applicationInner)}>
-        <ColumnHeader columnList={columnList || []} />
         <BoxAppProvider value={blockAppOrigin}>
+          <ColumnHeader columnList={columnList || []} />
+          <ColumnRowHeader columnList={columnList || []} />
           <ColumnContainer columnList={columnList || []}>
             <BoxContainer
               boxList={boxList || []}

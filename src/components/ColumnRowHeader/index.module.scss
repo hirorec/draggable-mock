@@ -1,0 +1,29 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  pointer-events: none;
+}
+
+.headerInner {
+  position: sticky;
+  padding-top: 40px;
+  left: -100px;
+  width: 100px;
+  background-color: #fff;
+}
+
+.headerRow {
+  position: relative;
+  top: -2px;
+  width: 100%;
+  border-top: 1px solid #ddd;
+
+  // &:last-child {
+  //   border-bottom: 1px solid #ccc;
+  // }
+}

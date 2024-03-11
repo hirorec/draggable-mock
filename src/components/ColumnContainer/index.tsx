@@ -18,7 +18,6 @@ export const ColumnContainer: React.FC<Props> = ({ columnList, children }) => {
         {columnList.map((column, index) => {
           return <Column key={index} id={column.id} colDiv={column.colDiv} rowDiv={column.rowDiv} label='' />;
         })}
-
         {children}
       </div>
     </div>

@@ -8,3 +8,13 @@
   position: relative;
   width: 100%;
 }
+
+.colsHeader {
+  position: absolute;
+  // top: 0;
+  left: -100px;
+  width: 100px;
+  height: 100px;
+  background-color: #ccc;
+  z-index: 1;
+}

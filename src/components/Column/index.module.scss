@@ -4,7 +4,8 @@
   position: relative;
   width: 150px;
   height: 100%;
-  border: solid 1px #999;
+  border-left: solid 1px #999;
+  border-right: solid 1px #999;
 
   &:not(:first-child) {
     border-left: 0;

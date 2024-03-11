@@ -62,7 +62,7 @@ export default function Page() {
         label: `Draggable\nBox1-3`,
         position: {
           x: 0,
-          y: 5,
+          y: 4,
         },
         localPosition: {
           x: 0,
@@ -122,7 +122,7 @@ export default function Page() {
         label: `Draggable\nBox2-2`,
         position: {
           x: 1,
-          y: 5,
+          y: 7,
         },
         localPosition: {
           x: 0,
