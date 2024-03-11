@@ -148,10 +148,12 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       });
     });
 
-    const overlappedBoxData: { id: string; overLapCount: number; ids: string[] }[] = [];
+    // const overlappedBoxData: { colIndex: number; id: string; overLapCount: number; ids: string[] }[] = [];
+    const overlappedBoxData: string[][] = [];
 
     columnList.forEach((col, index) => {
       let overLapCount = 0;
+      const overlappedIds: string[] = [];
 
       const boxInColList = boxList.filter((box) => {
         return box.colIndex === index;
@@ -161,20 +163,32 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         boxInColList.forEach((boxB) => {
           if (boxB.id !== boxA.id) {
             const isOverlap = overlapBox(boxB, boxA);
-            const foundOverlappedItem = overlappedBoxData.find((item) => {
-              return item.ids.includes(boxA.id) && item.ids.includes(boxB.id);
-            });
+            // const foundOverlappedItem = overlappedBoxData.find((item) => {
+            //   return item.ids.includes(boxA.id) && item.ids.includes(boxB.id);
+            // });
+            // console.log({ isOverlap, foundOverlappedItem }, boxB, boxA);
             // console.log(boxA, boxB);
-            if (isOverlap && !foundOverlappedItem) {
-              overLapCount += 1;
-              overlappedBoxData.push({ id: boxA.id, overLapCount, ids: [boxA.id, boxB.id] });
+            // if (isOverlap && !foundOverlappedItem) {
+            //   // overLapCount += 1;
+            //   overlappedBoxData.push({ colIndex: index, id: boxA.id, overLapCount, ids: [boxA.id, boxB.id] });
+            // }
+
+            if (isOverlap) {
+              overlappedIds.push(boxA.id, boxB.id);
             }
           }
         });
+
+        // const items = overlappedBoxData.filter((item) => item.colIndex === index);
+        // console.log(_.uniq(items.map((item) => item.ids).flat()), '----');
       });
 
       columnList[index].colDiv = overLapCount + 1;
-      console.log({ colIndex: index, overLapCount });
+
+      const ids = _.uniq(overlappedIds);
+      console.log(ids);
+      overlappedBoxData.push(ids);
+      columnList[index].colDiv = Math.max(ids.length, 1);
       return col;
     });
 
@@ -189,12 +203,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
       for (let i = 0; i < col.colDiv; i++) {
         boxListInCol.forEach((box) => {
-          // const foundBox = overlappedBoxData.find((item) => item.id === box.id);
-          // console.log(box);
-          // if (box.id !== selectedBoxId && !foundBox) {
-          //   box.position.x = x;
-          // }
-          // console.log(x);
           box.position.x = x - col.colDiv + 1;
         });
 
@@ -202,15 +210,18 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       }
     });
 
-    overlappedBoxData.forEach((item) => {
-      const overlapBoxIndex = boxList.findIndex((box) => box.id === item.id);
+    overlappedBoxData.forEach((ids) => {
+      for (let i = 1; i < ids.length; i++) {
+        const id = ids[i];
+        const box = boxList.find((b) => b.id === id);
 
-      if (overlapBoxIndex >= 0) {
-        boxList[overlapBoxIndex].localPosition.x = item.overLapCount;
+        if (box) {
+          box.localPosition.x = i;
+        }
       }
     });
 
-    await sleep(100);
+    await sleep(0);
     setIsAppModifying(false);
 
     console.log(boxList, columnList);

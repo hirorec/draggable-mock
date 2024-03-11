@@ -14,46 +14,66 @@ export default function Page() {
 
   useEffect(() => {
     const boxList: BoxProps[] = [
-      // {
-      //   id: '1-1',
-      //   colIndex: 0,
-      //   backgroundColor: '#FFE4BF',
-      //   borderColor: '#F2A455',
-      //   label: `Draggable\nBox1-1`,
-      //   position: {
-      //     x: 0,
-      //     y: 0,
-      //   },
-      //   localPosition: {
-      //     x: 0,
-      //     y: 0,
-      //   },
-      //   size: {
-      //     width: 1,
-      //     height: 2,
-      //   },
-      //   zIndex: 0,
-      // },
-      // {
-      //   id: '1-2',
-      //   colIndex: 0,
-      //   backgroundColor: '#FFE4BF',
-      //   borderColor: '#F2A455',
-      //   label: `Draggable\nBox1-2`,
-      //   position: {
-      //     x: 0,
-      //     y: 1,
-      //   },
-      //   localPosition: {
-      //     x: 0,
-      //     y: 0,
-      //   },
-      //   size: {
-      //     width: 1,
-      //     height: 3,
-      //   },
-      //   zIndex: 0,
-      // },
+      {
+        id: '1-1',
+        colIndex: 0,
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox1-1`,
+        position: {
+          x: 0,
+          y: 0,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 2,
+        },
+        zIndex: 0,
+      },
+      {
+        id: '1-2',
+        colIndex: 0,
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox1-2`,
+        position: {
+          x: 0,
+          y: 1,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 3,
+        },
+        zIndex: 0,
+      },
+      {
+        id: '1-3',
+        colIndex: 0,
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox1-3`,
+        position: {
+          x: 0,
+          y: 3,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 3,
+        },
+        zIndex: 0,
+      },
       {
         id: '2-0',
         colIndex: 1,
@@ -82,7 +102,7 @@ export default function Page() {
         label: `Draggable\nBox2-1`,
         position: {
           x: 1,
-          y: 2,
+          y: 1,
         },
         localPosition: {
           x: 0,
@@ -95,11 +115,11 @@ export default function Page() {
         zIndex: 0,
       },
       {
-        id: '3',
+        id: '2-2',
         colIndex: 1,
         backgroundColor: '#E6F7DA',
         borderColor: '#93ED6F',
-        label: `Draggable\nBox3`,
+        label: `Draggable\nBox2-2`,
         position: {
           x: 1,
           y: 2,

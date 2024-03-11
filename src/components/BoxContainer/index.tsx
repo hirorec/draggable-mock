@@ -36,7 +36,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, maxWidth, maxHeight, on
       const newPosition = { ...position };
       const box = _.cloneDeep(boxList[index]);
 
-      if (newPosition.x < 0) {
+      if (newPosition.x + box.localPosition.x < 0) {
         newPosition.x = 0;
       }
 
