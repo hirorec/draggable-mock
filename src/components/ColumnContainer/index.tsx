@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { useRef } from 'react';
+import React from 'react';
 
 import { ColumnProps } from '@/types';
 
@@ -12,15 +12,15 @@ type Props = {
 };
 
 export const ColumnContainer: React.FC<Props> = ({ columnList, children }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   return (
-    <div ref={containerRef} className={clsx(styles.container)}>
-      {columnList.map((column, index) => {
-        return <Column key={index} id='' colDiv={column.colDiv} rowDiv={column.rowDiv} label='' />;
-      })}
+    <div className={clsx(styles.container)}>
+      <div className={clsx(styles.cols)}>
+        {columnList.map((column, index) => {
+          return <Column key={index} id={column.id} colDiv={column.colDiv} rowDiv={column.rowDiv} label='' />;
+        })}
 
-      {children}
+        {children}
+      </div>
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { overlapBox, sleep } from '@/utils';
 import styles from './index.module.scss';
 import { BoxContainer } from '../BoxContainer';
 import { ColumnContainer } from '../ColumnContainer';
+import { ColumnHeader } from '../ColumnHeader';
 
 type Props = {
   boxList?: BoxProps[];
@@ -226,6 +227,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   return (
     <div className={clsx(styles.application)}>
       <div className={clsx(styles.applicationInner)}>
+        <ColumnHeader columnList={columnList || []} />
         <BoxAppProvider value={blockAppOrigin}>
           <ColumnContainer columnList={columnList || []}>
             <BoxContainer

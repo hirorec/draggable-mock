@@ -1,6 +1,10 @@
 .container {
+  position: relative;
+  // width: 100%;
+}
+
+.cols {
   display: flex;
   position: relative;
-  z-index: 0;
-  overflow: hidden;
+  width: 100%;
 }

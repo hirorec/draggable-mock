@@ -1,0 +1,23 @@
+.header {
+  display: flex;
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 40px;
+  z-index: 1;
+}
+
+.headerCell {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
+  position: relative;
+  background-color: #f7edef;
+
+  &:not(:last-child) {
+    border-right: 1px solid #999;
+  }
+}

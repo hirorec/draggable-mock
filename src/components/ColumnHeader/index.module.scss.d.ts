@@ -1,6 +1,6 @@
 export type Styles = {
-  cols: string;
-  container: string;
+  header: string;
+  headerCell: string;
 };
 
 export type ClassNames = keyof Styles;
