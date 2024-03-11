@@ -70,6 +70,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       }
 
       console.log('handleDropBox');
+
       let newBoxList = _.cloneDeep(boxList);
       const newColumnList = _.cloneDeep(columnList);
 

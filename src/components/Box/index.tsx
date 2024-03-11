@@ -101,9 +101,10 @@ export const Box: React.FC<Props> = ({
     (newStepBasePosition: Position) => {
       setOverlayPosition({ ...newStepBasePosition });
 
-      if (overlayPosition.x !== newStepBasePosition.x || overlayPosition.y !== newStepBasePosition.y) {
-        onDrop(newStepBasePosition);
-      }
+      // if (overlayPosition.x !== newStepBasePosition.x || overlayPosition.y !== newStepBasePosition.y) {
+      //   onDrop(newStepBasePosition);
+      // }
+      onDrop(newStepBasePosition);
     },
     [overlayPosition, stepBasePosition]
   );
