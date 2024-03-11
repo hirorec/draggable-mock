@@ -9,6 +9,7 @@ import styles from './index.module.scss';
 import { Box } from '../Box';
 
 type Props = {
+  isAppModifying: boolean;
   boxList: BoxProps[];
   maxWidth: number;
   maxHeight: number;
@@ -18,7 +19,16 @@ type Props = {
   onUpdateBoxSizeEnd: (box: BoxProps, index: number) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({ boxList, maxWidth, maxHeight, isMouseDown, onUpdateBox, onDropBox, onUpdateBoxSizeEnd }) => {
+export const BoxContainer: React.FC<Props> = ({
+  isAppModifying,
+  boxList,
+  maxWidth,
+  maxHeight,
+  isMouseDown,
+  onUpdateBox,
+  onDropBox,
+  onUpdateBoxSizeEnd,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
 
@@ -140,6 +150,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, maxWidth, maxHeight, is
         return (
           <Box
             key={index}
+            isAppModifying={isAppModifying}
             label={box.label}
             backgroundColor={box.backgroundColor}
             borderColor={box.borderColor}

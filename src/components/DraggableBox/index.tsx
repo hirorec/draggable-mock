@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { STEP } from '@/const';
+import { useBlockApp } from '@/hooks/useBlockApp';
 
 import styles from './index.module.scss';
 
@@ -35,7 +36,6 @@ export const DraggableBox: React.FC<Props> = ({
   height,
   step,
   resizeMode,
-  isMouseDown: isAppMouseDown,
   children,
   stepBasePosition,
   localPosition,
@@ -45,6 +45,7 @@ export const DraggableBox: React.FC<Props> = ({
   onDragLeave,
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
+  const { isAppModifying } = useBlockApp();
   const [transform, setTransform] = useState<Transform>({
     x: step.x * (stepBasePosition.x + localPosition.x),
     y: step.y * (stepBasePosition.y + localPosition.y),
@@ -54,6 +55,7 @@ export const DraggableBox: React.FC<Props> = ({
   const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
   const [mouseMoveAmount, setMouseMoveAmount] = useState<Position>({ x: 0, y: 0 });
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isWindowMouseDown, setIsWindowMouseDown] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [cursor, setCursor] = useState<'unset' | 'grab' | 'all-scroll'>('unset');
@@ -79,6 +81,27 @@ export const DraggableBox: React.FC<Props> = ({
   }, [stepBasePosition]);
 
   useEffect(() => {
+    const onWindowMouseDown = () => {
+      if (isMouseOver) {
+        setIsMouseDown(true);
+      }
+    };
+
+    const onWindowMouseUp = () => {
+      onDragEnd(modifiedPosition);
+      onDragLeave(modifiedPosition);
+    };
+
+    window.addEventListener('mousedown', onWindowMouseDown);
+    window.addEventListener('mouseup', onWindowMouseUp);
+
+    return () => {
+      window.removeEventListener('mousedown', onWindowMouseDown);
+      window.removeEventListener('mouseup', onWindowMouseUp);
+    };
+  }, [modifiedPosition, isMouseOver]);
+
+  useEffect(() => {
     setTransform({
       x: step.x * (modifiedPosition.x + localPosition.x),
       y: step.y * (modifiedPosition.y + localPosition.y),
@@ -92,8 +115,7 @@ export const DraggableBox: React.FC<Props> = ({
       setCursor('unset');
       return;
     }
-
-    if (isMouseDown || isAppMouseDown) {
+    if ((isMouseDown || isWindowMouseDown) && isMouseOver) {
       setCursor('all-scroll');
       setIsDragging(true);
     } else if (isMouseOver) {
@@ -103,7 +125,7 @@ export const DraggableBox: React.FC<Props> = ({
       setCursor('unset');
       setIsDragging(false);
     }
-  }, [isAppMouseDown, isMouseOver, resizeMode]);
+  }, [isWindowMouseDown, isMouseDown, isMouseOver, resizeMode]);
 
   useEffect(() => {
     onUpdateDragging(isDragging);
@@ -194,13 +216,6 @@ export const DraggableBox: React.FC<Props> = ({
     setIsMouseDown(false);
     resetMouseMoveAmount();
   }, []);
-
-  useEffect(() => {
-    if (!isAppMouseDown) {
-      onDragEnd(modifiedPosition);
-      onDragLeave(modifiedPosition);
-    }
-  }, [isAppMouseDown, modifiedPosition]);
 
   return (
     <div

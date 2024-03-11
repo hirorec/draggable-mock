@@ -2,8 +2,9 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { BlockAppProvider, useBlockAppOrigin } from '@/hooks/useBlockApp';
 import { BoxProps, ColumnProps } from '@/types';
-import { overlapBox } from '@/utils';
+import { overlapBox, sleep } from '@/utils';
 
 import styles from './index.module.scss';
 import { BoxContainer } from '../BoxContainer';
@@ -19,7 +20,10 @@ type Props = {
 };
 
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
+  const blockAppOrigin = useBlockAppOrigin();
+  const { isAppModifying, setIsAppModifying } = blockAppOrigin;
   const [isMouseDown, setIsMouseDown] = useState(false);
+  // const [isAppModifying, setIsAppModifying] = useState(false);
 
   const maxWidth = useMemo((): number => {
     return columnList.reduce((prev, current) => {
@@ -27,37 +31,44 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     }, 0);
   }, [columnList]);
 
+  // useEffect(() => {
+  //   const onMouseDown = () => {
+  //     setIsMouseDown(true);
+  //   };
+  //   const onMouseUp = () => {
+  //     setIsMouseDown(false);
+  //   };
+
+  //   window.addEventListener('mousedown', onMouseDown);
+  //   window.addEventListener('mouseup', onMouseUp);
+
+  //   return () => {
+  //     window.removeEventListener('mousedown', onMouseDown);
+  //     window.removeEventListener('mouseup', onMouseUp);
+  //   };
+  // }, []);
+
   useEffect(() => {
-    const onMouseDown = () => {
-      setIsMouseDown(true);
-    };
-    const onMouseUp = () => {
-      setIsMouseDown(false);
-    };
-
-    window.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mouseup', onMouseUp);
-
-    return () => {
-      window.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('mouseup', onMouseUp);
-    };
-  }, []);
+    console.log({ isAppModifying });
+  }, [isAppModifying]);
 
   const handleUpdateBoxSizeEnd = useCallback(
-    (resizedBox: BoxProps) => {
+    async (resizedBox: BoxProps) => {
+      setIsAppModifying(true);
       console.log('handleUpdateBoxSizeEnd');
       const newBoxList = _.cloneDeep(boxList);
       const newColumnList = _.cloneDeep(columnList);
-      const { boxList: modifiedBoxData, columnList: modifiedColumnList } = modifyData(newBoxList, newColumnList, resizedBox);
+      const { boxList: modifiedBoxData, columnList: modifiedColumnList } = await modifyData(newBoxList, newColumnList, resizedBox);
       onUpdateBoxList(modifiedBoxData);
       onUpdateColumnList(modifiedColumnList);
+      setIsAppModifying(false);
     },
-    [boxList, columnList]
+    [boxList, columnList, isAppModifying]
   );
 
   const handleDropBox = useCallback(
-    (droppedBox: BoxProps, index: number) => {
+    async (droppedBox: BoxProps, index: number) => {
+      // setIsAppModifying(true);
       console.log('handleDropBox');
       const newBoxList = _.cloneDeep(boxList);
       const newColumnList = _.cloneDeep(columnList);
@@ -67,30 +78,44 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         y: droppedBox.position.y,
       };
 
-      const { boxList: modifiedBoxData, columnList: modifiedColumnList } = modifyData(newBoxList, newColumnList, droppedBox);
-      onUpdateBoxList(modifiedBoxData);
+      const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, newColumnList, droppedBox);
+      onUpdateBoxList(modifiedBoxList);
       onUpdateColumnList(modifiedColumnList);
+
+      await sleep(100);
+      setIsAppModifying(false);
+      console.log('=========');
     },
-    [boxList, columnList]
+    [boxList, columnList, isAppModifying]
   );
 
-  const modifyData = (
+  const modifyData = async (
     boxList: BoxProps[],
     columnList: ColumnProps[],
     updatedBox?: BoxProps
-  ): {
+  ): Promise<{
     boxList: BoxProps[];
     columnList: ColumnProps[];
-  } => {
-    console.log('modifyData');
+  }> => {
+    if (isAppModifying) {
+      return {
+        boxList,
+        columnList,
+      };
+    }
 
-    boxList.forEach((box) => {
-      if (box.id === updatedBox?.id) {
-        box.zIndex = 1;
-      } else {
-        box.zIndex = 0;
-      }
-    });
+    console.log('modifyData', { isAppModifying });
+    setIsAppModifying(true);
+
+    await sleep(100);
+
+    // boxList.forEach((box) => {
+    //   if (box.id === updatedBox?.id) {
+    //     box.zIndex = 1;
+    //   } else {
+    //     box.zIndex = 0;
+    //   }
+    // });
 
     const getColIndex = (x: number) => {
       let count = 0;
@@ -107,6 +132,8 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
       return colIndex;
     };
+
+    const overlappedBoxIndices: number[] = [];
 
     columnList.forEach((col, index) => {
       let overLapCount = 0;
@@ -131,7 +158,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
             if (isOverlap) {
               overLapCount += 1;
-              // boxList[boxIndex].localPosition.x = overLapCount;
+              overlappedBoxIndices.push(boxIndex);
             } else {
               // if (boxList[boxIndex].localPosition.x > 0) {
               //   boxList[boxIndex].localPosition.x -= 1;
@@ -141,43 +168,58 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         });
       });
 
-      console.log({ colIndex: index, overLapCount });
       columnList[index].colDiv = overLapCount + 1;
 
       return col;
     });
 
-    // const newBoxList = _.cloneDeep(boxList);
+    let x = 0;
 
-    // const getColIndex = (x: number, columnList: ColumnProps[]) => {
-    //   let count = 0;
-    //   let colIndex = -1;
+    columnList.forEach((col, index) => {
+      for (let i = 0; i < col.colDiv; i++) {
+        // console.log({ x, index });
 
-    //   columnList.forEach((col, i) => {
-    //     for (let j = 0; j < col.colDiv; j++) {
-    //       if (count === x) {
-    //         colIndex = i;
-    //       }
-    //       count++;
-    //     }
-    //   });
+        const boxListInCol = boxList.filter((box) => {
+          return box.colIndex === index;
+        });
 
-    //   return colIndex;
-    // };
+        boxListInCol.forEach((box) => {
+          // const boxIndex = boxList.findIndex((box2) => box2.id === box.id);
+          // boxList[boxIndex].position.x = x;
+          if (box.id !== updatedBox?.id) {
+            // _.cloneDeep(box).position.x = x;
+            box.position.x = 0;
+          }
+        });
 
-    // newBoxList.forEach((box, index) => {
-    //   let globalX = box.position.x;
+        x++;
+      }
+    });
 
-    //   const dx = getColIndex(box.position.x, columnList) - getColIndex(box.position.x, newColumnList);
-    //   globalX += dx;
+    // console.log({ overlappedBoxIndices });
 
-    //   newBoxList[index].position = {
-    //     x: globalX,
-    //     y: box.position.y,
-    //   };
+    // boxList.forEach((box, index) => {
+    //   if (overlappedBoxIndices.includes(index)) {
+    //     box.localPosition.x = 1;
+    //   } else {
+    //     box.localPosition.x = 0;
+    //   }
     // });
 
+    // boxList.forEach((box, index) => {
+    //   let globalX = getColIndex(box.position.x);
+    //   console.log(box, { globalX });
+
+    //   // boxList[index].position = {
+    //   //   x: globalX,
+    //   //   y: box.position.y,
+    //   // };
+    // });
+
+    setIsAppModifying(false);
+
     return {
+      // boxList: _.cloneDeep(boxList),
       boxList,
       columnList,
     };
@@ -186,17 +228,20 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   return (
     <div className={clsx(styles.application)}>
       <div className={clsx(styles.applicationInner)}>
-        <ColumnContainer columnList={columnList}>
-          <BoxContainer
-            boxList={boxList}
-            maxWidth={maxWidth}
-            maxHeight={maxHeight}
-            isMouseDown={isMouseDown}
-            onUpdateBox={onUpdateBox}
-            onDropBox={handleDropBox}
-            onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
-          />
-        </ColumnContainer>
+        <BlockAppProvider value={blockAppOrigin}>
+          <ColumnContainer columnList={columnList}>
+            <BoxContainer
+              isAppModifying={isAppModifying}
+              boxList={boxList}
+              maxWidth={maxWidth}
+              maxHeight={maxHeight}
+              isMouseDown={isMouseDown}
+              onUpdateBox={onUpdateBox}
+              onDropBox={handleDropBox}
+              onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
+            />
+          </ColumnContainer>
+        </BlockAppProvider>
       </div>
     </div>
   );

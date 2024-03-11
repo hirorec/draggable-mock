@@ -10,6 +10,7 @@ import styles from './index.module.scss';
 import { BoxOverlay } from '../BoxOverlay';
 
 type Props = {
+  isAppModifying: boolean;
   label: string;
   borderColor: string;
   backgroundColor: string;
@@ -28,6 +29,7 @@ type Props = {
 };
 
 export const Box: React.FC<Props> = ({
+  isAppModifying,
   label,
   borderColor,
   backgroundColor,

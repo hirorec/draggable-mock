@@ -59,3 +59,10 @@ const positionInBox = (position: Position, box: BoxProps): boolean => {
   const resY = position.y > box.position.y && position.y < box.position.y + box.size.height;
   return resX && resY;
 };
+
+export const sleep = (duration: number) =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(null);
+    }, duration);
+  });
