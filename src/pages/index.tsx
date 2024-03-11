@@ -110,7 +110,7 @@ export default function Page() {
         },
         size: {
           width: 1,
-          height: 3,
+          height: 4,
         },
         zIndex: 0,
       },
@@ -134,46 +134,46 @@ export default function Page() {
         },
         zIndex: 0,
       },
-      // {
-      //   id: '4',
-      //   colIndex: 3,
-      //   backgroundColor: '#FFE4BF',
-      //   borderColor: '#F2A455',
-      //   label: `Draggable\nBox4`,
-      //   position: {
-      //     x: 3,
-      //     y: 0,
-      //   },
-      //   localPosition: {
-      //     x: 0,
-      //     y: 0,
-      //   },
-      //   size: {
-      //     width: 1,
-      //     height: 15,
-      //   },
-      //   zIndex: 0,
-      // },
-      // {
-      //   id: '5',
-      //   colIndex: 4,
-      //   backgroundColor: '#FFE4BF',
-      //   borderColor: '#F2A455',
-      //   label: `Draggable\nBox5`,
-      //   position: {
-      //     x: 4,
-      //     y: 1,
-      //   },
-      //   localPosition: {
-      //     x: 0,
-      //     y: 0,
-      //   },
-      //   size: {
-      //     width: 1,
-      //     height: 5,
-      //   },
-      //   zIndex: 0,
-      // },
+      {
+        id: '4',
+        colIndex: 3,
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox4`,
+        position: {
+          x: 3,
+          y: 0,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 15,
+        },
+        zIndex: 0,
+      },
+      {
+        id: '5',
+        colIndex: 4,
+        backgroundColor: '#FFE4BF',
+        borderColor: '#F2A455',
+        label: `Draggable\nBox5`,
+        position: {
+          x: 4,
+          y: 1,
+        },
+        localPosition: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 1,
+          height: 5,
+        },
+        zIndex: 0,
+      },
     ];
     setBoxList(boxList);
   }, []);

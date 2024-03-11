@@ -5,6 +5,10 @@ export const equalPosition = (positionA: Position, positionB: Position): boolean
 };
 
 export const overlapBox = (boxA: BoxProps, boxB: BoxProps): boolean => {
+  if (equalPosition(boxA.position, boxB.position)) {
+    return true;
+  }
+
   const boxPositionsA: Position[] = [
     {
       x: boxA.position.x,

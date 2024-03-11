@@ -68,19 +68,37 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       }
 
       console.log('handleDropBox');
-      const newBoxList = _.cloneDeep(boxList);
+      let newBoxList = _.cloneDeep(boxList);
       const newColumnList = _.cloneDeep(columnList);
 
-      newBoxList[index].position = {
-        x: droppedBox.position.x,
-        y: droppedBox.position.y,
+      newBoxList[index] = {
+        ...newBoxList[index],
+        position: {
+          x: droppedBox.position.x + droppedBox.localPosition.x,
+          y: droppedBox.position.y,
+        },
       };
+
+      // newBoxList[index].position = {
+      //   x: droppedBox.position.x + droppedBox.localPosition.x,
+      //   y: droppedBox.position.y,
+      // };
+
+      // console.log(_.cloneDeep(newBoxList[index]));
+      // console.log(newBoxList[index]);
+      // newBoxList[index].localPosition = {
+      //   x: 0,
+      //   y: 0,
+      // };
+      // console.log(newBoxList[index].position.x, '====');
 
       const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, newColumnList, droppedBox);
       onUpdateBoxList(modifiedBoxList);
       onUpdateColumnList(modifiedColumnList);
+      // onUpdateBoxList(boxList);
+      // onUpdateColumnList(columnList);
     },
-    [boxList, columnList, isAppModifying, selectedBoxId]
+    [boxList, columnList, isAppModifying, selectedBoxId, initialized]
   );
 
   const modifyData = async (
@@ -98,34 +116,52 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       };
     }
 
-    console.log('modifyData', { selectedBoxId });
+    console.log('modifyData');
     setIsAppModifying(true);
 
     // 操作boxの新しいcolIndexセット
-    const selectedBoxIndex = boxList.findIndex((box) => {
-      return box.id === updatedBox?.id;
-    });
-
-    if (updatedBox && selectedBoxIndex >= 0) {
+    if (updatedBox) {
+      // console.log(updatedBox);
       let x = 0;
+      const updatedBoxIndex = boxList.findIndex((box) => box.id === updatedBox.id);
 
-      const selectedBox = boxList[selectedBoxIndex];
+      // console.log(columnList);
+      columnList.forEach((col, index) => {
+        for (let i = 0; i < col.colDiv; i++) {
+          if (boxList[updatedBoxIndex].position.x === x) {
+            // console.log('-------', {
+            //   index,
+            //   colDiv: col.colDiv,
+            //   x,
+            //   positionX: boxList[updatedBoxIndex].position.x,
+            //   localX: boxList[updatedBoxIndex].localPosition.x,
+            // });
 
-      if (selectedBox) {
-        columnList.forEach((col, index) => {
-          for (let i = 0; i < col.colDiv; i++) {
-            if (updatedBox.position.x === x) {
-              boxList[selectedBoxIndex].colIndex = index;
-              console.log({ newColIndex: index });
-            }
+            // if (boxList[updatedBoxIndex].colIndex !== index) {
+            //   boxList[updatedBoxIndex].position.x = 0;
+            //   boxList[updatedBoxIndex].localPosition.x = 0;
+            //   boxList[updatedBoxIndex].colIndex = index;
+            // }
 
-            x++;
+            boxList[updatedBoxIndex].position.x = x - col.colDiv;
+            // boxList[updatedBoxIndex].localPosition.x = 0;
+            boxList[updatedBoxIndex].colIndex = index;
+            // console.log(_.cloneDeep(boxList[updatedBoxIndex]));
+            // boxList[updatedBoxIndex].position.x =
+            // console.log({ id: updatedBox.id, x: updatedBox.position.x, newColIndex: index }, columnList);
           }
-        });
-      }
+
+          x++;
+        }
+      });
+      // console.log(boxList[updatedBoxIndex], boxList);
     }
 
+    // console.log(_.cloneDeep(boxList));
+
+    //--------------
     // reset
+    //--------------
     boxList.forEach((box) => {
       box.localPosition.x = 0;
     });
@@ -162,7 +198,21 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       boxInColList.forEach((boxA) => {
         boxInColList.forEach((boxB) => {
           if (boxB.id !== boxA.id) {
-            const isOverlap = overlapBox(boxB, boxA);
+            const boxAClone = _.clone(boxA);
+            const boxBClone = _.clone(boxB);
+
+            if (initialized) {
+              boxAClone.position.x = 0;
+              boxBClone.position.x = 0;
+            }
+
+            const isOverlap = overlapBox(boxBClone, boxAClone);
+
+            // if (initialized) {
+            //   console.log({ isOverlap }, boxBClone.id, boxBClone.position, boxAClone.id, boxAClone.position);
+            // }
+
+            // console.log({ id: boxB.id, isOverlap }, boxB, boxA);
             // const foundOverlappedItem = overlappedBoxData.find((item) => {
             //   return item.ids.includes(boxA.id) && item.ids.includes(boxB.id);
             // });
@@ -186,7 +236,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       columnList[index].colDiv = overLapCount + 1;
 
       const ids = _.uniq(overlappedIds);
-      console.log(ids);
+      // console.log(ids);
       overlappedBoxData.push(ids);
       columnList[index].colDiv = Math.max(ids.length, 1);
       return col;
@@ -200,10 +250,23 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       const boxListInCol = boxList.filter((box) => {
         return box.colIndex === index;
       });
+      // console.log(boxListInCol, '====');
 
       for (let i = 0; i < col.colDiv; i++) {
         boxListInCol.forEach((box) => {
+          // if (updatedBox && updatedBox.id === box.id) {
+          //   // console.log(box, '-----');
+          //   // box.position.x = box.position.x + box.localPosition.x + box.colIndex;
+          //   box.position.x = box.colIndex;
+          // } else {
+          // console.log({ id: box.id, x, colDiv: col.colDiv, position: box.position });
           box.position.x = x - col.colDiv + 1;
+          // box.localPosition.x = x;
+          // }
+
+          if (updatedBox && updatedBox.id === box.id) {
+            //
+          }
         });
 
         x++;
@@ -211,17 +274,19 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     });
 
     overlappedBoxData.forEach((ids) => {
+      console.log(ids);
       for (let i = 1; i < ids.length; i++) {
         const id = ids[i];
         const box = boxList.find((b) => b.id === id);
 
         if (box) {
           box.localPosition.x = i;
+          // console.log(box.id, i);
         }
       }
     });
 
-    await sleep(0);
+    await sleep(100);
     setIsAppModifying(false);
 
     console.log(boxList, columnList);
