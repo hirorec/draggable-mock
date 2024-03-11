@@ -89,6 +89,7 @@ export const DraggableBox: React.FC<Props> = ({
     const onWindowMouseUp = () => {
       onDragEnd(modifiedPosition);
       onDragLeave(modifiedPosition);
+      setIsMouseDown(false);
     };
 
     window.addEventListener('mousedown', onWindowMouseDown);
@@ -210,10 +211,10 @@ export const DraggableBox: React.FC<Props> = ({
     resetMouseMoveAmount();
   }, []);
 
-  const handleMouseLeave = useCallback(() => {
-    setIsMouseDown(false);
-    resetMouseMoveAmount();
-  }, []);
+  // const handleMouseLeave = useCallback(() => {
+  //   setIsMouseDown(false);
+  //   resetMouseMoveAmount();
+  // }, []);
 
   return (
     <div
@@ -223,7 +224,7 @@ export const DraggableBox: React.FC<Props> = ({
       onMouseMove={handleMouseMove}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
+      // onMouseLeave={handleMouseLeave}
     >
       {children}
     </div>

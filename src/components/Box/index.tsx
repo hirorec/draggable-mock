@@ -9,7 +9,6 @@ import { Position, Size, Step } from '@/types';
 import styles from './index.module.scss';
 
 type Props = {
-  isAppModifying: boolean;
   label: string;
   borderColor: string;
   backgroundColor: string;
@@ -27,7 +26,6 @@ type Props = {
 };
 
 export const Box: React.FC<Props> = ({
-  isAppModifying,
   label,
   borderColor,
   backgroundColor,

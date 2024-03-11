@@ -127,16 +127,14 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
             if (isOverlap) {
               overLapCount += 1;
               overlappedBoxIndices.push(boxIndex);
-            } else {
-              // if (boxList[boxIndex].localPosition.x > 0) {
-              //   boxList[boxIndex].localPosition.x -= 1;
-              // }
             }
           }
         });
       });
 
       columnList[index].colDiv = overLapCount + 1;
+
+      console.log({ colIndex: index, overLapCount });
 
       return col;
     });
@@ -151,7 +149,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
         boxListInCol.forEach((box) => {
           if (box.id !== updatedBox?.id) {
-            // box.position.x = x;
+            box.position.x = x;
           }
         });
 
@@ -187,7 +185,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         <BoxAppProvider value={blockAppOrigin}>
           <ColumnContainer columnList={columnList}>
             <BoxContainer
-              isAppModifying={isAppModifying}
               boxList={boxList}
               maxWidth={maxWidth}
               maxHeight={maxHeight}
