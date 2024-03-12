@@ -54,7 +54,6 @@ export const ResizableBox: React.FC<Props> = ({
       left: `${RESIZABLE_BOX_WRAPPER_OFFSET.X}px`,
       width: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET.X * 2}px)`,
       height: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET.Y * 2}px)`,
-      // boxShadow: shadowVisible ? '0px 0px 10px rgba(0, 0, 0, 0.2)' : '',
       backgroundColor,
       borderColor,
     };
