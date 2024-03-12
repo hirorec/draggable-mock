@@ -1,3 +1,45 @@
 .container {
   position: relative;
 }
+
+.ui {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  padding: 20px 40px;
+  // background-color: #ccc;
+}
+
+.buttons {
+  display: flex;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5px 30px;
+  border: solid 1px #ccc;
+
+  &:not(:first-child) {
+    border-left: none;
+  }
+
+  &:hover {
+    background-color: #eee;
+  }
+
+  &.selected {
+    pointer-events: none;
+    border-color: transparent;
+    background-color: #333;
+    color: #fff;
+  }
+}

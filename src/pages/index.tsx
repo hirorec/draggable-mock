@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import { BOX_LIST } from '@/const/boxList';
 import { BoxApplication } from '@/features/BoxApplication';
@@ -11,6 +11,7 @@ import styles from './index.module.scss';
 export default function Page() {
   const [boxList, setBoxList] = useState<BoxProps[]>();
   const [columnList, setColumnList] = useState<ColumnProps[]>();
+  const [selectedBoxListIndex, setSelectedBoxListIndex] = useState(0);
   const rowDiv = 30;
 
   useEffect(() => {
@@ -51,6 +52,15 @@ export default function Page() {
     setColumnList(columnList);
   };
 
+  const handleBoxListButton = (index: number) => {
+    setSelectedBoxListIndex(index);
+  };
+
+  const handleTimeDivValueChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const el = event.currentTarget as HTMLSelectElement;
+    console.log(el.value);
+  };
+
   return (
     <div className={clsx(styles.container)}>
       <BoxApplication
@@ -61,6 +71,25 @@ export default function Page() {
         onUpdateBoxList={handleUpdateBoxList}
         onUpdateColumnList={handleUpdateColumnList}
       />
+      <div className={styles.ui}>
+        <div className={styles.buttons}>
+          <button className={clsx(styles.button, selectedBoxListIndex === 0 && styles.selected)} onClick={() => handleBoxListButton(0)}>
+            boxList 1
+          </button>
+          <button className={clsx(styles.button, selectedBoxListIndex === 1 && styles.selected)} onClick={() => handleBoxListButton(1)}>
+            boxList 2
+          </button>
+          <button className={clsx(styles.button, selectedBoxListIndex === 2 && styles.selected)} onClick={() => handleBoxListButton(2)}>
+            boxList 3
+          </button>
+        </div>
+        <select onChange={handleTimeDivValueChange}>
+          <option value={1}>5分</option>
+          <option value={2}>10分</option>
+          <option value={3}>15分</option>
+          <option value={4}>20分</option>
+        </select>
+      </div>
     </div>
   );
 }
