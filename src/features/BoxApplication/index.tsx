@@ -99,12 +99,14 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
         if (direction === -1 && newScrollX < 0) {
           return;
+        } else if (direction === 1) {
+          console.log({ newScrollX });
         }
 
-        // console.log({ newScrollX });
+        // TODO: スクロール min/max処理
         setScrollX(newScrollX);
         // appInnerRef.current.scrollTo(newScrollX, 0);
-        gsap.to(appInnerRef.current, { duration: 0.5, ease: 'power3.inOut', scrollTo: { x: newScrollX, y: 0 } });
+        gsap.to(appInnerRef.current, { duration: 0.2, ease: 'power3.inOut', scrollTo: { x: newScrollX, y: 0 } });
       }
     },
     [appInnerRef.current, scrollX]

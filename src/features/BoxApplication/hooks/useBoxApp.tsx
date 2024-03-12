@@ -11,9 +11,11 @@ export type BoxAppContextType = {
   isAppModifying: boolean;
   isWindowMouseDown: boolean;
   selectedBoxId: string | undefined;
+  windowWidth: number;
   setInitialized: (value: boolean) => void;
   setIsAppModifying: (value: boolean) => void;
   setSelectedBoxId: (value: string | undefined) => void;
+  setWindowWidth: (value: number) => void;
   modifyData: (
     boxList: BoxProps[],
     columnList: ColumnProps[],
@@ -29,6 +31,7 @@ export const useBoxAppOrigin = () => {
   const [isAppModifying, setIsAppModifying] = useState<boolean>(false);
   const [isWindowMouseDown, setIsWindowMouseDown] = useState<boolean>(false);
   const [selectedBoxId, setSelectedBoxId] = useState<string>();
+  const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
     const onWindowMouseDown = () => {
@@ -39,12 +42,19 @@ export const useBoxAppOrigin = () => {
       setIsWindowMouseDown(false);
     };
 
+    const onWindowResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
     window.addEventListener('mousedown', onWindowMouseDown);
     window.addEventListener('mouseup', onWindowMouseUp);
+    window.addEventListener('resize', onWindowResize);
+    onWindowResize();
 
     return () => {
       window.removeEventListener('mousedown', onWindowMouseDown);
       window.removeEventListener('mouseup', onWindowMouseUp);
+      window.removeEventListener('resize', onWindowResize);
     };
   }, []);
 
@@ -221,6 +231,7 @@ export const useBoxAppOrigin = () => {
     initialized,
     isAppModifying,
     isWindowMouseDown,
+    windowWidth,
     selectedBoxId,
     setInitialized,
     setIsAppModifying,

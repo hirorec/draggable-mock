@@ -6,6 +6,7 @@ import { ColumnProps } from '@/features/BoxApplication/types';
 import styles from './index.module.scss';
 import { Arrow } from './parts/Arrow';
 import { STEP } from '../../const';
+import { useBoxApp } from '../../hooks/useBoxApp';
 
 type Props = {
   columnList: ColumnProps[];
@@ -14,8 +15,8 @@ type Props = {
 
 export const ColumnHeader: React.FC<Props> = ({ columnList, onScroll }) => {
   const colsRef = useRef<HTMLDivElement>(null);
+  const { windowWidth } = useBoxApp();
   const [headerNavStyle, setHeaderNavStyle] = useState<{ width: string }>({ width: '' });
-  const [windowWidth, setWindowWidth] = useState(0);
 
   const getWidth = (index: number) => {
     return columnList[index].colDiv * STEP.X;
@@ -39,19 +40,6 @@ export const ColumnHeader: React.FC<Props> = ({ columnList, onScroll }) => {
     const width = Math.min(colsW, viewportWidth);
     return { width: `${width}px` };
   }, [columnList, windowWidth]);
-
-  useEffect(() => {
-    const onWindowResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', onWindowResize);
-    onWindowResize();
-
-    return () => {
-      window.removeEventListener('resize', onWindowResize);
-    };
-  }, []);
 
   useEffect(() => {
     if (colsRef.current) {
