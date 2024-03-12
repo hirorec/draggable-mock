@@ -44,7 +44,6 @@ export default function Page() {
   );
 
   const handleUpdateBoxList = (boxList: BoxProps[]) => {
-    // console.log(boxList);
     setBoxList(boxList);
   };
 
