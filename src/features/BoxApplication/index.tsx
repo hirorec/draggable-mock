@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { BoxProps, ColumnProps } from '@/features/BoxApplication/types';
 
@@ -8,6 +8,7 @@ import { BoxContainer } from './components/BoxContainer';
 import { ColumnContainer } from './components/ColumnContainer';
 import { ColumnHeader } from './components/ColumnHeader';
 import { ColumnRowHeader } from './components/ColumnRowHeader';
+import { STEP } from './const';
 import { useBoxApp } from './hooks/useBoxApp';
 import styles from './index.module.scss';
 
@@ -22,6 +23,8 @@ type Props = {
 
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
   const { initialized, isAppModifying, setInitialized, selectedBoxId, modifyData } = useBoxApp();
+  const appInnerRef = useRef<HTMLDivElement>(null);
+  const [scrollX, setScrollX] = useState(0);
 
   const maxWidth = useMemo((): number => {
     return (
@@ -85,11 +88,22 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     [boxList, columnList, isAppModifying, selectedBoxId, initialized]
   );
 
+  const handleColScroll = useCallback(
+    (direction: 1 | -1) => {
+      if (appInnerRef.current) {
+        const newScrollX = scrollX + STEP.X * direction;
+        appInnerRef.current.scrollTo(newScrollX, 0);
+        setScrollX(newScrollX);
+      }
+    },
+    [appInnerRef.current, scrollX]
+  );
+
   if (initialized && boxList && columnList) {
     return (
       <div className={clsx(styles.application)}>
-        <div className={clsx(styles.applicationInner)}>
-          <ColumnHeader columnList={columnList} />
+        <div ref={appInnerRef} className={clsx(styles.applicationInner)}>
+          <ColumnHeader columnList={columnList} onScroll={handleColScroll} />
           <ColumnRowHeader columnList={columnList} />
           <ColumnContainer columnList={columnList}>
             <BoxContainer

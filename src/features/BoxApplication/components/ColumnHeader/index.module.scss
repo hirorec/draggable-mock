@@ -1,22 +1,51 @@
 @import '../..//styles/variables';
 
 .header {
-  display: flex;
   position: sticky;
   top: 0;
   height: $colRowHeaderHeight;
   z-index: 1;
 }
 
-.headerNav {
+.cols {
   display: flex;
-  justify-content: space-between;
+  height: 100%;
+}
+
+.headerNav {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: $colRowHeaderHeight;
-  z-index: 2;
+  z-index: 1;
+}
+
+.headerNavInner {
+  display: flex;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: calc(100vw - 40px - $colRowHeaderWidth);
+  height: 100%;
+}
+
+.navButton {
+  width: 20px;
+  height: 100%;
+
+  &.prev {
+    background: linear-gradient(270deg, rgba(250, 175, 187, 0) 0%, #faafbb 100%);
+
+    :global(svg) {
+      transform: scaleX(-1);
+    }
+  }
+
+  &.next {
+    background: linear-gradient(270deg, #faafbb 0%, rgba(250, 175, 187, 0) 100%);
+  }
 }
 
 .headerCell {
