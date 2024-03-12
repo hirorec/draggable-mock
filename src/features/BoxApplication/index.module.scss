@@ -1,11 +1,12 @@
 @import '@/features/BoxApplication/styles/variables';
 
 $padX: 20px;
-$padY: 20px;
+$padTop: 100px;
+$padBottom: 20px;
 
 .application {
   position: fixed;
-  top: $padY;
+  top: $padTop;
   left: $padX;
   width: 100%;
   height: 100%;
@@ -28,7 +29,7 @@ $padY: 20px;
   position: relative;
   padding-left: $colRowHeaderWidth;
   width: calc(100vw - $padX * 2);
-  height: calc(100% - $padY * 2);
+  height: calc(100% - $padTop - $padBottom);
   overflow: auto;
 
   &::-webkit-scrollbar {
