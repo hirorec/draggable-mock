@@ -32,6 +32,14 @@
     border-left: none;
   }
 
+  &:first-child {
+    border-radius: 5px 0 0 5px;
+  }
+
+  &:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+
   &:hover {
     background-color: #efefef;
   }
@@ -45,6 +53,7 @@
 }
 
 .select {
-  padding: 3px 10px;
+  border-radius: 5px;
+  padding: 4px 10px;
   border-color: #bbb;
 }
