@@ -36,4 +36,8 @@
   &:not(:first-child) {
     border-top: 1px dashed $borderColor;
   }
+
+  &:nth-child(6n + 1) {
+    border-top: 2px solid $borderColor;
+  }
 }

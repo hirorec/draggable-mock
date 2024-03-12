@@ -9,6 +9,7 @@
 }
 
 .headerCell {
+  position: relative;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -18,5 +19,19 @@
   position: relative;
   background-color: #f7edef;
   border-bottom: 2px solid $borderColor;
-  border-right: 1px solid $borderColor;
+  // border-left: 1px solid $borderColor;
+
+  &:not(:first-child) {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -1.5px;
+      width: 1px;
+      height: 20px;
+      margin: auto;
+      background-color: $borderColor;
+    }
+  }
 }
