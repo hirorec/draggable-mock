@@ -2,13 +2,13 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
-import { STEP } from '@/const';
-import { useBoxApp } from '@/hooks/useBoxApp';
+import { STEP } from '@/features/BoxApplication/const';
+import { useBoxApp } from '@/features/BoxApplication/hooks/useBoxApp';
 
 import styles from './index.module.scss';
 import { Box } from '../Box';
 
-import type { BoxProps, ColumnProps, Position, Size } from '@/types';
+import type { BoxProps, ColumnProps, Position, Size } from '@/features/BoxApplication/types';
 
 type Props = {
   boxList: BoxProps[];

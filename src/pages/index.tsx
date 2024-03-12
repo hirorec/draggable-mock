@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { BoxApplication } from '@/components/BoxApplication';
-import { BoxProps, ColumnProps } from '@/types';
+import { BoxApplication } from '@/features/BoxApplication';
+import { BoxProps, ColumnProps } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';
 

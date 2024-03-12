@@ -2,15 +2,15 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { BoxAppProvider, useBoxAppOrigin } from '@/hooks/useBoxApp';
-import { BoxProps, ColumnProps } from '@/types';
-import { overlapBox, sleep } from '@/utils';
+import { BoxAppProvider, useBoxAppOrigin } from '@/features/BoxApplication/hooks/useBoxApp';
+import { BoxProps, ColumnProps } from '@/features/BoxApplication/types';
+import { overlapBox, sleep } from '@/features/BoxApplication/utils';
 
+import { BoxContainer } from './components/BoxContainer';
+import { ColumnContainer } from './components/ColumnContainer';
+import { ColumnHeader } from './components/ColumnHeader';
+import { ColumnRowHeader } from './components/ColumnRowHeader';
 import styles from './index.module.scss';
-import { BoxContainer } from '../BoxContainer';
-import { ColumnContainer } from '../ColumnContainer';
-import { ColumnHeader } from '../ColumnHeader';
-import { ColumnRowHeader } from '../ColumnRowHeader';
 
 type Props = {
   boxList?: BoxProps[];

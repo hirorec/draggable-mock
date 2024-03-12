@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { RESIZABLE_BOX_WRAPPER_OFFSET } from '@/const';
+import { RESIZABLE_BOX_WRAPPER_OFFSET } from '@/features/BoxApplication/const';
 
 import styles from './index.module.scss';
 
-import type { Position, Step } from '@/types';
+import type { Position, Step } from '@/features/BoxApplication/types';
 
 type Props = {
   label: string;

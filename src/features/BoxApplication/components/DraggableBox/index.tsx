@@ -2,12 +2,12 @@ import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { STEP } from '@/const';
-import { useBoxApp } from '@/hooks/useBoxApp';
+import { STEP } from '@/features/BoxApplication/const';
+import { useBoxApp } from '@/features/BoxApplication/hooks/useBoxApp';
 
 import styles from './index.module.scss';
 
-import type { Position, Step } from '@/types';
+import type { Position, Step } from '@/features/BoxApplication/types';
 
 type Props = {
   id: string;

@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import React, { useMemo } from 'react';
 
-import { STEP } from '@/const';
-import { ColumnProps } from '@/types';
+import { STEP } from '@/features/BoxApplication/const';
+import { ColumnProps } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';
 

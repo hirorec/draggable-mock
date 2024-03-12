@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 
-import { ColumnProps } from '@/types';
+import { ColumnProps } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';
 

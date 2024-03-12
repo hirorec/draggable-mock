@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 
-import { STEP } from '@/const';
+import { STEP } from '@/features/BoxApplication/const';
 
 import styles from './index.module.scss';
 

@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { DraggableBox } from '@/components/DraggableBox';
-import { ResizableBox } from '@/components/ResizableBox';
-import { STEP } from '@/const';
-import { Position, Size, Step } from '@/types';
+import { DraggableBox } from '@/features/BoxApplication/components/DraggableBox';
+import { ResizableBox } from '@/features/BoxApplication/components/ResizableBox';
+import { STEP } from '@/features/BoxApplication/const';
+import { Position, Size, Step } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';
 

@@ -1,4 +1,4 @@
-import { BoxProps, Position } from '@/types';
+import { BoxProps, Position } from '@/features/BoxApplication/types';
 
 export const equalPosition = (positionA: Position, positionB: Position): boolean => {
   return positionA.x === positionB.x && positionA.y === positionB.y;

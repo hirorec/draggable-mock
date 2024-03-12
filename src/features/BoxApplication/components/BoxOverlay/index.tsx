@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import React, { useMemo, useRef } from 'react';
 
-import { RESIZABLE_BOX_WRAPPER_OFFSET, STEP } from '@/const';
+import { RESIZABLE_BOX_WRAPPER_OFFSET, STEP } from '@/features/BoxApplication/const';
 
 import styles from './index.module.scss';
 
-import type { Position } from '@/types';
+import type { Position } from '@/features/BoxApplication/types';
 
 type Props = {
   text: string;
