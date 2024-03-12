@@ -1,6 +1,10 @@
 import clsx from 'clsx';
+import gsap from 'gsap';
+import { ScrollToPlugin } from 'gsap/dist/ScrollToPlugin';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+gsap.registerPlugin(ScrollToPlugin);
 
 import { BoxProps, ColumnProps } from '@/features/BoxApplication/types';
 
@@ -92,8 +96,15 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     (direction: 1 | -1) => {
       if (appInnerRef.current) {
         const newScrollX = scrollX + STEP.X * direction;
-        appInnerRef.current.scrollTo(newScrollX, 0);
+
+        if (direction === -1 && newScrollX < 0) {
+          return;
+        }
+
+        // console.log({ newScrollX });
         setScrollX(newScrollX);
+        // appInnerRef.current.scrollTo(newScrollX, 0);
+        gsap.to(appInnerRef.current, { duration: 0.5, ease: 'power3.inOut', scrollTo: { x: newScrollX, y: 0 } });
       }
     },
     [appInnerRef.current, scrollX]

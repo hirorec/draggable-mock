@@ -5,5 +5,5 @@
     "source.fixAll.eslint": "explicit",
     "source.fixAll.stylelint": "explicit"
   },
-  "cSpell.words": ["clsx"]
+  "cSpell.words": ["clsx", "gsap"]
 }

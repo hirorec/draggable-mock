@@ -20,6 +20,7 @@
     "@dnd-kit/modifiers": "^7.0.0",
     "@dnd-kit/sortable": "^8.0.0",
     "clsx": "^1.2.1",
+    "gsap": "^3.12.5",
     "lodash": "^4.17.21",
     "next": "13.4.5",
     "react": "^18",
