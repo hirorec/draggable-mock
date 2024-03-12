@@ -45,7 +45,7 @@ export const Box: React.FC<Props> = ({
   onDrop,
   onClick,
 }) => {
-  const { isAppModifying } = useBoxApp();
+  const { isAppModifying, isBoxDragging, setIsBoxDragging } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
@@ -53,7 +53,7 @@ export const Box: React.FC<Props> = ({
     y: stepBasePosition.y,
   });
   const [resizeMode, setResizeMode] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
+  // const [isDragging, setIsDragging] = useState(false);
 
   const boxSize: Size = useMemo(() => {
     return {
@@ -69,16 +69,16 @@ export const Box: React.FC<Props> = ({
   }, [isAppModifying]);
 
   useEffect(() => {
-    if (isDragging || resizeMode) {
+    if (isBoxDragging || resizeMode) {
       setOverlayVisible(true);
     } else {
       setOverlayVisible(false);
     }
 
-    if (isDragging) {
+    if (isBoxDragging) {
       setOverlayBoxHeight(boxSize.height);
     }
-  }, [isDragging, resizeMode, boxSize]);
+  }, [isBoxDragging, resizeMode, boxSize]);
 
   const handleResizeBox = useCallback(
     (direction: boolean) => {
@@ -105,9 +105,9 @@ export const Box: React.FC<Props> = ({
     setResizeMode(resizeMode);
   };
 
-  const handleUpdateDragging = (isDragging: boolean) => {
-    setIsDragging(isDragging);
-  };
+  // const handleUpdateDragging = (isDragging: boolean) => {
+  //   setIsDragging(isDragging);
+  // };
 
   const handleDragEnd = useCallback(
     (newStepBasePosition: Position) => {
@@ -151,7 +151,7 @@ export const Box: React.FC<Props> = ({
         stepBasePosition={stepBasePosition}
         localPosition={localPosition}
         resizeMode={resizeMode}
-        onUpdateDragging={handleUpdateDragging}
+        // onUpdateDragging={handleUpdateDragging}
         onUpdatePosition={onUpdatePosition}
         onDragEnd={handleDragEnd}
         onDragLeave={handleDragLeave}
@@ -163,7 +163,6 @@ export const Box: React.FC<Props> = ({
           width={boxSize.width}
           height={boxSize.height}
           step={step}
-          shadowVisible={isDragging}
           onResizeHeight={handleResizeBox}
           onResizeHeightEnd={handleResizeBoxEnd}
           onUpdateResizeMode={handleUpdateResizeMode}

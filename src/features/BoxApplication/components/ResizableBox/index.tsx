@@ -14,7 +14,6 @@ type Props = {
   width: number;
   height: number;
   step: Step;
-  shadowVisible?: boolean;
   onResizeHeight: (direction: boolean) => void;
   onResizeHeightEnd: () => void;
   onUpdateResizeMode: (resizeMode: boolean) => void;
@@ -28,7 +27,6 @@ export const ResizableBox: React.FC<Props> = ({
   width,
   height,
   step,
-  shadowVisible = false,
   onResizeHeight,
   onResizeHeightEnd,
   onUpdateResizeMode,
@@ -60,7 +58,7 @@ export const ResizableBox: React.FC<Props> = ({
       backgroundColor,
       borderColor,
     };
-  }, [borderColor, backgroundColor, step, isEdge, shadowVisible]);
+  }, [borderColor, backgroundColor, step, isEdge]);
 
   useEffect(() => {
     onUpdateResizeMode(resizeMode || isEdge);

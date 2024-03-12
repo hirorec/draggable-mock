@@ -13,9 +13,11 @@ export type BoxAppContextType = {
   selectedBoxId: string | undefined;
   windowWidth: number;
   viewportWidth: number;
+  isBoxDragging: boolean;
   setInitialized: (value: boolean) => void;
   setIsAppModifying: (value: boolean) => void;
   setSelectedBoxId: (value: string | undefined) => void;
+  setIsBoxDragging: (value: boolean) => void;
   modifyData: (
     boxList: BoxProps[],
     columnList: ColumnProps[],
@@ -33,6 +35,7 @@ export const useBoxAppOrigin = () => {
   const [selectedBoxId, setSelectedBoxId] = useState<string>();
   const [windowWidth, setWindowWidth] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
+  const [isBoxDragging, setIsBoxDragging] = useState(false);
 
   useEffect(() => {
     const onWindowMouseDown = () => {
@@ -240,9 +243,11 @@ export const useBoxAppOrigin = () => {
     windowWidth,
     viewportWidth,
     selectedBoxId,
+    isBoxDragging,
     setInitialized,
     setIsAppModifying,
     setSelectedBoxId,
+    setIsBoxDragging,
     modifyData,
   };
 };
