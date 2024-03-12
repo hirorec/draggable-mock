@@ -1,4 +1,6 @@
-import { BoxProps, Position } from '@/features/BoxApplication/types';
+import { BoxProps, ColumnProps, Position } from '@/features/BoxApplication/types';
+
+import { STEP } from '../const';
 
 export const equalPosition = (positionA: Position, positionB: Position): boolean => {
   return positionA.x === positionB.x && positionA.y === positionB.y;
@@ -62,4 +64,11 @@ const positionInBox = (position: Position, box: BoxProps): boolean => {
   const resX = position.x >= box.position.x && position.x <= box.position.x + box.size.width;
   const resY = position.y > box.position.y && position.y < box.position.y + box.size.height;
   return resX && resY;
+};
+
+export const colsWidthTotal = (columnList: ColumnProps[]) => {
+  const width = columnList.reduce((prev, next) => {
+    return prev + next.colDiv * STEP.X;
+  }, 0);
+  return width;
 };

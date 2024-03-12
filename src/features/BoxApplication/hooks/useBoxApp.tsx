@@ -12,6 +12,7 @@ export type BoxAppContextType = {
   isWindowMouseDown: boolean;
   selectedBoxId: string | undefined;
   windowWidth: number;
+  viewportWidth: number;
   setInitialized: (value: boolean) => void;
   setIsAppModifying: (value: boolean) => void;
   setSelectedBoxId: (value: string | undefined) => void;
@@ -32,6 +33,7 @@ export const useBoxAppOrigin = () => {
   const [isWindowMouseDown, setIsWindowMouseDown] = useState<boolean>(false);
   const [selectedBoxId, setSelectedBoxId] = useState<string>();
   const [windowWidth, setWindowWidth] = useState(0);
+  const [viewportWidth, setViewportWidth] = useState(0);
 
   useEffect(() => {
     const onWindowMouseDown = () => {
@@ -57,6 +59,11 @@ export const useBoxAppOrigin = () => {
       window.removeEventListener('resize', onWindowResize);
     };
   }, []);
+
+  useEffect(() => {
+    const viewportWidth = windowWidth - 40 - 65;
+    setViewportWidth(viewportWidth);
+  }, [windowWidth]);
 
   const modifyData = async (
     boxList: BoxProps[],
@@ -232,6 +239,7 @@ export const useBoxAppOrigin = () => {
     isAppModifying,
     isWindowMouseDown,
     windowWidth,
+    viewportWidth,
     selectedBoxId,
     setInitialized,
     setIsAppModifying,

@@ -7,43 +7,38 @@ import styles from './index.module.scss';
 import { Arrow } from './parts/Arrow';
 import { STEP } from '../../const';
 import { useBoxApp } from '../../hooks/useBoxApp';
+import { colsWidthTotal } from '../../utils';
 
 type Props = {
   columnList: ColumnProps[];
+  isScrollMin: boolean;
+  isScrollMax: boolean;
   onScroll: (direction: 1 | -1) => void;
 };
 
-export const ColumnHeader: React.FC<Props> = ({ columnList, onScroll }) => {
+export const ColumnHeader: React.FC<Props> = ({ columnList, isScrollMin, isScrollMax, onScroll }) => {
   const colsRef = useRef<HTMLDivElement>(null);
-  const { windowWidth } = useBoxApp();
+  const { windowWidth, viewportWidth } = useBoxApp();
   const [headerNavStyle, setHeaderNavStyle] = useState<{ width: string }>({ width: '' });
 
   const getWidth = (index: number) => {
     return columnList[index].colDiv * STEP.X;
   };
 
-  const colsWidth = () => {
-    const width = columnList.reduce((prev, next) => {
-      return prev + next.colDiv * STEP.X;
-    }, 0);
-    return width;
-  };
-
   const headerStyle = useMemo(() => {
-    const width = colsWidth();
+    const width = colsWidthTotal(columnList);
     return { width: `${width}px` };
   }, [columnList]);
 
   const headerNavInnerStyle = useMemo(() => {
-    const colsW = colsWidth();
-    const viewportWidth = windowWidth - 40 - 65;
+    const colsW = colsWidthTotal(columnList);
     const width = Math.min(colsW, viewportWidth);
     return { width: `${width}px` };
-  }, [columnList, windowWidth]);
+  }, [columnList, windowWidth, viewportWidth]);
 
   useEffect(() => {
     if (colsRef.current) {
-      const max = colsWidth();
+      const max = colsWidthTotal(columnList);
       const width = Math.min(max, colsRef.current.clientWidth);
       setHeaderNavStyle({ width: `${width}px` });
     }
@@ -53,12 +48,20 @@ export const ColumnHeader: React.FC<Props> = ({ columnList, onScroll }) => {
     <div className={clsx(styles.header)} style={headerStyle}>
       <div className={clsx(styles.headerNav)} style={headerNavStyle}>
         <div className={clsx(styles.headerNavInner)} style={headerNavInnerStyle}>
-          <button className={clsx(styles.navButton, styles.prev)} onClick={() => onScroll(-1)}>
-            <Arrow />
-          </button>
-          <button className={clsx(styles.navButton, styles.next)} onClick={() => onScroll(1)}>
-            <Arrow />
-          </button>
+          {!isScrollMin ? (
+            <button className={clsx(styles.navButton, styles.prev)} onClick={() => onScroll(-1)}>
+              <Arrow />
+            </button>
+          ) : (
+            <div />
+          )}
+          {!isScrollMax ? (
+            <button className={clsx(styles.navButton, styles.next)} onClick={() => onScroll(1)}>
+              <Arrow />
+            </button>
+          ) : (
+            <div />
+          )}
         </div>
       </div>
       <div ref={colsRef} className={clsx(styles.cols)}>

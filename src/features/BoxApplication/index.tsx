@@ -15,6 +15,7 @@ import { ColumnRowHeader } from './components/ColumnRowHeader';
 import { STEP } from './const';
 import { useBoxApp } from './hooks/useBoxApp';
 import styles from './index.module.scss';
+import { colsWidthTotal } from './utils';
 
 type Props = {
   boxList?: BoxProps[];
@@ -26,9 +27,11 @@ type Props = {
 };
 
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
-  const { initialized, isAppModifying, setInitialized, selectedBoxId, modifyData } = useBoxApp();
+  const { initialized, isAppModifying, setInitialized, selectedBoxId, modifyData, viewportWidth, windowWidth } = useBoxApp();
   const appInnerRef = useRef<HTMLDivElement>(null);
   const [scrollX, setScrollX] = useState(0);
+  const [isScrollMin, setIsScrollMin] = useState(false);
+  const [isScrollMax, setIsScrollMax] = useState(false);
 
   const maxWidth = useMemo((): number => {
     return (
@@ -50,6 +53,12 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       })();
     }
   }, [initialized, isAppModifying, boxList, columnList]);
+
+  useEffect(() => {
+    if (initialized) {
+      handleColScroll(-1);
+    }
+  }, [initialized]);
 
   const handleUpdateBoxSizeEnd = useCallback(
     async (resizedBox: BoxProps) => {
@@ -96,27 +105,39 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     (direction: 1 | -1) => {
       if (appInnerRef.current) {
         const newScrollX = scrollX + STEP.X * direction;
+        // console.log({ newScrollX });
 
-        if (direction === -1 && newScrollX < 0) {
+        if (newScrollX < 0) {
           return;
-        } else if (direction === 1) {
-          console.log({ newScrollX });
         }
 
-        // TODO: スクロール min/max処理
         setScrollX(newScrollX);
-        // appInnerRef.current.scrollTo(newScrollX, 0);
         gsap.to(appInnerRef.current, { duration: 0.2, ease: 'power3.inOut', scrollTo: { x: newScrollX, y: 0 } });
       }
     },
-    [appInnerRef.current, scrollX]
+    [appInnerRef.current, scrollX, columnList, viewportWidth]
   );
+
+  useEffect(() => {
+    const colsWidth = colsWidthTotal(columnList || []);
+    const maxThreshold = colsWidth - viewportWidth;
+    setIsScrollMin(false);
+    setIsScrollMax(false);
+
+    if (scrollX <= 0) {
+      setIsScrollMin(true);
+    }
+
+    if (scrollX >= maxThreshold) {
+      setIsScrollMax(true);
+    }
+  }, [scrollX, columnList, windowWidth]);
 
   if (initialized && boxList && columnList) {
     return (
       <div className={clsx(styles.application)}>
         <div ref={appInnerRef} className={clsx(styles.applicationInner)}>
-          <ColumnHeader columnList={columnList} onScroll={handleColScroll} />
+          <ColumnHeader columnList={columnList} onScroll={handleColScroll} isScrollMin={isScrollMin} isScrollMax={isScrollMax} />
           <ColumnRowHeader columnList={columnList} />
           <ColumnContainer columnList={columnList}>
             <BoxContainer
