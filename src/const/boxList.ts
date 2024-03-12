@@ -144,13 +144,13 @@ export const BOX_LIST: BoxProps[][] = [
     },
     {
       id: '5',
-      colIndex: 3,
+      colIndex: 4,
       backgroundColor: '#F0F5FF',
       borderColor: '#ADC6FF',
       label: `Box5`,
       position: {
-        x: 3,
-        y: 1,
+        x: 4,
+        y: 6,
       },
       localPosition: {
         x: 0,

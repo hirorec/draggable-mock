@@ -34,6 +34,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   const [scrollY, setScrollY] = useState(0);
   const [isScrollMin, setIsScrollMin] = useState(false);
   const [isScrollMax, setIsScrollMax] = useState(false);
+  const [isScrollLocked, setIsScrollLocked] = useState(false);
 
   const maxWidth = useMemo((): number => {
     return (
@@ -76,25 +77,39 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
-      if (isBoxDragging && appInnerRef.current) {
+      if (isBoxDragging && appInnerRef.current && !isScrollLocked) {
         const rect = appInnerRef.current.getBoundingClientRect();
         const rectMousePosition: Position = {
-          x: e.clientX - rect.x,
+          x: e.clientX - rect.x - 65,
           y: e.clientY - rect.y,
         };
         const colsHeight = maxHeight * STEP.Y;
         const maxScrollY = colsHeight - viewportHeight;
-        const offsetY = 100;
 
-        const scrollTo = (y: number) => {
-          console.log('scrollTo');
-          gsap.to(appInnerRef.current, { duration: 0.5, ease: 'power3.out', scrollTo: { x: scrollX, y } });
+        const scrollTo = (x: number, y: number, duration: number) => {
+          setIsScrollLocked(true);
+          gsap.to(appInnerRef.current, {
+            duration,
+            ease: 'power3.out',
+            scrollTo: { x, y },
+            onComplete: () => {
+              setIsScrollLocked(false);
+            },
+          });
         };
 
-        if (rectMousePosition.y + offsetY >= rect.height && scrollY <= 0) {
-          scrollTo(maxScrollY);
-        } else if (rectMousePosition.y - 40 <= 0) {
-          scrollTo(0);
+        const offset = 50;
+
+        if (rectMousePosition.y + offset >= rect.height && scrollY <= 0) {
+          scrollTo(scrollX, maxScrollY, 0.7);
+        } else if (rectMousePosition.y - offset <= 0) {
+          scrollTo(scrollX, 0, 0.7);
+        }
+
+        if (rectMousePosition.x + offset > viewportWidth) {
+          scrollTo(scrollX + STEP.X, scrollY, 0.4);
+        } else if (rectMousePosition.x - offset <= 0) {
+          scrollTo(scrollX - STEP.X, scrollY, 0.4);
         }
       }
     };
@@ -104,7 +119,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
     };
-  }, [isBoxDragging, appInnerRef, scrollY, maxHeight, viewportHeight]);
+  }, [isBoxDragging, appInnerRef, scrollX, scrollY, maxHeight, viewportWidth, viewportHeight, isScrollLocked]);
 
   useEffect(() => {
     const colsWidth = colsWidthTotal(columnList || []);
