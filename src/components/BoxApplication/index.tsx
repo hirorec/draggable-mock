@@ -107,7 +107,9 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     console.log('modifyData');
     setIsAppModifying(true);
 
+    //-----------------------------
     // 操作boxの新しいcolIndexセット
+    //-----------------------------
     if (updatedBox) {
       let x = 0;
       const updatedBoxIndex = boxList.findIndex((box) => box.id === updatedBox.id);
@@ -124,9 +126,9 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       });
     }
 
-    //--------------
+    //-----------------------------
     // reset
-    //--------------
+    //-----------------------------
     boxList.forEach((box) => {
       box.localPosition.x = 0;
     });
@@ -149,9 +151,11 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       });
     });
 
+    //-----------------------------
+    // 重なり判定
+    //-----------------------------
     const overlappedBoxData: string[][] = [];
 
-    // 重なり判定
     columnList.forEach((col, index) => {
       let overLapCount = 0;
       const overlappedIds: string[] = [];
@@ -190,7 +194,9 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
     console.log('overlappedBoxData', overlappedBoxData);
 
+    //-----------------------------
     // ポジション設定
+    //-----------------------------
     let x = 0;
     columnList.forEach((col, index) => {
       const boxListInCol = boxList.filter((box) => {

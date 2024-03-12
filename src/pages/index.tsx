@@ -62,7 +62,7 @@ export default function Page() {
         label: `Box1-3`,
         position: {
           x: 0,
-          y: 4,
+          y: 5,
         },
         localPosition: {
           x: 0,
@@ -82,7 +82,7 @@ export default function Page() {
         label: `Box2-0`,
         position: {
           x: 1,
-          y: 2,
+          y: 0,
         },
         localPosition: {
           x: 0,
@@ -102,7 +102,7 @@ export default function Page() {
         label: `Box2-1`,
         position: {
           x: 1,
-          y: 1,
+          y: 3,
         },
         localPosition: {
           x: 0,
