@@ -234,7 +234,7 @@ export const DraggableBox: React.FC<Props> = ({
       onMouseUp={handleMouseUp}
       // onMouseLeave={handleMouseLeave}
     >
-      {children}
+      <div className={clsx(styles.boxInner)}>{children}</div>
     </div>
   );
 };
