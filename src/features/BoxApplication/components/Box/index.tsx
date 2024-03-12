@@ -53,7 +53,6 @@ export const Box: React.FC<Props> = ({
     y: stepBasePosition.y,
   });
   const [resizeMode, setResizeMode] = useState(false);
-  // const [isDragging, setIsDragging] = useState(false);
 
   const boxSize: Size = useMemo(() => {
     return {
@@ -105,10 +104,6 @@ export const Box: React.FC<Props> = ({
     setResizeMode(resizeMode);
   };
 
-  // const handleUpdateDragging = (isDragging: boolean) => {
-  //   setIsDragging(isDragging);
-  // };
-
   const handleDragEnd = useCallback(
     (newStepBasePosition: Position) => {
       setOverlayPosition({ ...newStepBasePosition });
@@ -151,7 +146,6 @@ export const Box: React.FC<Props> = ({
         stepBasePosition={stepBasePosition}
         localPosition={localPosition}
         resizeMode={resizeMode}
-        // onUpdateDragging={handleUpdateDragging}
         onUpdatePosition={onUpdatePosition}
         onDragEnd={handleDragEnd}
         onDragLeave={handleDragLeave}

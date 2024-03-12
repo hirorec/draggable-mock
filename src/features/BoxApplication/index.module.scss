@@ -28,7 +28,6 @@
   height: calc(100% - $appPadTop - $appPadBottom);
   overflow-x: auto;
   overflow-y: auto;
-  // padding-right: $colWidth;
 
   &::-webkit-scrollbar {
     display: none;

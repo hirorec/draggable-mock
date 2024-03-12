@@ -30,6 +30,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   const { initialized, isAppModifying, setInitialized, selectedBoxId, modifyData, viewportWidth, windowWidth } = useBoxApp();
   const appInnerRef = useRef<HTMLDivElement>(null);
   const [scrollX, setScrollX] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
   const [isScrollMin, setIsScrollMin] = useState(false);
   const [isScrollMax, setIsScrollMax] = useState(false);
 
@@ -55,10 +56,22 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   }, [initialized, isAppModifying, boxList, columnList]);
 
   useEffect(() => {
-    if (initialized) {
-      handleColScroll(-1);
+    const onScroll = (e: Event) => {
+      const el = e.currentTarget as HTMLDivElement;
+      setScrollX(el.scrollLeft);
+      setScrollY(el.scrollTop);
+    };
+
+    if (appInnerRef.current) {
+      appInnerRef.current.addEventListener('scroll', onScroll);
     }
-  }, [initialized]);
+
+    return () => {
+      if (appInnerRef.current) {
+        appInnerRef.current.removeEventListener('scroll', onScroll);
+      }
+    };
+  });
 
   const handleUpdateBoxSizeEnd = useCallback(
     async (resizedBox: BoxProps) => {
@@ -105,17 +118,11 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     (direction: 1 | -1) => {
       if (appInnerRef.current) {
         const newScrollX = scrollX + STEP.X * direction;
-        // console.log({ newScrollX });
-
-        if (newScrollX < 0) {
-          return;
-        }
-
         setScrollX(newScrollX);
-        gsap.to(appInnerRef.current, { duration: 0.2, ease: 'power3.inOut', scrollTo: { x: newScrollX, y: 0 } });
+        gsap.to(appInnerRef.current, { duration: 0.2, ease: 'power3.inOut', scrollTo: { x: newScrollX, y: scrollY } });
       }
     },
-    [appInnerRef.current, scrollX, columnList, viewportWidth]
+    [appInnerRef.current, scrollX, scrollY, columnList, viewportWidth]
   );
 
   useEffect(() => {

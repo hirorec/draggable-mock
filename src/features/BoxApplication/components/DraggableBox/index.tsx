@@ -18,7 +18,6 @@ type Props = {
   children: React.ReactNode;
   stepBasePosition: Position;
   localPosition: Position;
-  // onUpdateDragging: (isDragging: boolean) => void;
   onUpdatePosition: (position: Position) => void;
   onDragEnd: (position: Position) => void;
   onDragLeave: (position: Position) => void;
@@ -40,7 +39,6 @@ export const DraggableBox: React.FC<Props> = ({
   children,
   stepBasePosition,
   localPosition,
-  // onUpdateDragging,
   onUpdatePosition,
   onDragEnd,
   onDragLeave,
@@ -58,7 +56,6 @@ export const DraggableBox: React.FC<Props> = ({
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isWindowMouseDown, setIsWindowMouseDown] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
-  // const [isDragging, setIsDragging] = useState(false);
   const [cursor, setCursor] = useState<'unset' | 'grab' | 'all-scroll'>('unset');
 
   const style = useMemo(() => {
@@ -82,12 +79,6 @@ export const DraggableBox: React.FC<Props> = ({
   }, [stepBasePosition]);
 
   useEffect(() => {
-    // const onWindowMouseDown = () => {
-    //   if (isMouseOver) {
-    //     // setIsMouseDown(true);
-    //   }
-    // };
-
     const onWindowMouseUp = () => {
       if (selectedBoxId === id) {
         onDragEnd(modifiedPosition);
@@ -133,10 +124,6 @@ export const DraggableBox: React.FC<Props> = ({
       setIsBoxDragging(false);
     }
   }, [isWindowMouseDown, isMouseDown, isMouseOver, resizeMode]);
-
-  // useEffect(() => {
-  //   onUpdateDragging(isBoxDragging);
-  // }, [isBoxDragging]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
