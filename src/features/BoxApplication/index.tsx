@@ -90,7 +90,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
           setIsScrollLocked(true);
           gsap.to(appInnerRef.current, {
             duration,
-            ease: 'power3.out',
+            ease: 'none',
             scrollTo: { x, y },
             onComplete: () => {
               setIsScrollLocked(false);
@@ -101,15 +101,15 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         const offset = 50;
 
         if (rectMousePosition.y + offset >= rect.height && scrollY <= 0) {
-          scrollTo(scrollX, maxScrollY, 0.7);
+          scrollTo(scrollX, maxScrollY, 0.3);
         } else if (rectMousePosition.y - offset <= 0) {
-          scrollTo(scrollX, 0, 0.7);
+          scrollTo(scrollX, 0, 0.3);
         }
 
         if (rectMousePosition.x + offset > viewportWidth) {
-          scrollTo(scrollX + STEP.X, scrollY, 0.4);
+          scrollTo(scrollX + STEP.X, scrollY, 0.2);
         } else if (rectMousePosition.x - offset <= 0) {
-          scrollTo(scrollX - STEP.X, scrollY, 0.4);
+          scrollTo(scrollX - STEP.X, scrollY, 0.2);
         }
       }
     };
@@ -182,7 +182,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       if (appInnerRef.current) {
         const newScrollX = scrollX + STEP.X * direction;
         setScrollX(newScrollX);
-        gsap.to(appInnerRef.current, { duration: 0.2, ease: 'power3.inOut', scrollTo: { x: newScrollX, y: scrollY } });
+        gsap.to(appInnerRef.current, { duration: 0.1, ease: 'none', scrollTo: { x: newScrollX, y: scrollY } });
       }
     },
     [appInnerRef.current, scrollX, scrollY, columnList, viewportWidth]
