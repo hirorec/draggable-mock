@@ -86,17 +86,17 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     [boxList, columnList, isAppModifying, selectedBoxId, initialized]
   );
 
-  if (initialized) {
+  if (initialized && boxList && columnList) {
     return (
       <BoxAppProvider value={blockAppOrigin}>
         <div className={clsx(styles.application)}>
           <div className={clsx(styles.applicationInner)}>
-            <ColumnHeader columnList={columnList || []} />
-            <ColumnRowHeader columnList={columnList || []} />
-            <ColumnContainer columnList={columnList || []}>
+            <ColumnHeader columnList={columnList} />
+            <ColumnRowHeader columnList={columnList} />
+            <ColumnContainer columnList={columnList}>
               <BoxContainer
-                boxList={boxList || []}
-                columnList={columnList || []}
+                boxList={boxList}
+                columnList={columnList}
                 maxWidth={maxWidth}
                 maxHeight={maxHeight}
                 onUpdateBox={onUpdateBox}
