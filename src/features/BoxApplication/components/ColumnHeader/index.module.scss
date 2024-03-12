@@ -1,8 +1,10 @@
+@import '@/features/BoxApplication/styles/variables';
+
 .header {
   display: flex;
   position: sticky;
   top: 0;
-  height: 40px;
+  height: $colRowHeaderHeight;
   z-index: 1;
 }
 
@@ -15,6 +17,6 @@
   font-size: 14px;
   position: relative;
   background-color: #f7edef;
-  border-bottom: 1px solid #999;
-  border-right: 1px solid #999;
+  border-bottom: 2px solid $borderColor;
+  border-right: 1px solid $borderColor;
 }

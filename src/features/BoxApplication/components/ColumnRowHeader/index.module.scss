@@ -1,3 +1,5 @@
+@import '@/features/BoxApplication/styles/variables';
+
 .header {
   display: flex;
   flex-direction: column;
@@ -11,18 +13,18 @@
 
 .headerInner {
   position: sticky;
-  padding-top: 40px;
-  left: -100px;
-  width: 100px;
+  padding-top: $colRowHeaderHeight;
+  left: $colRowHeaderWidth * -1;
+  width: $colRowHeaderWidth;
   background-color: #fff;
 
   &::after {
     content: '';
     position: absolute;
-    left: 100px;
+    left: $colRowHeaderWidth;
     top: 0;
     height: 100%;
-    border-right: 1px solid #999;
+    border-right: 2px solid $borderColor;
   }
 }
 
@@ -32,10 +34,6 @@
   width: 100%;
 
   &:not(:first-child) {
-    border-top: 1px solid #ddd;
+    border-top: 1px dashed $borderColor;
   }
-
-  // &:last-child {
-  //   border-bottom: 1px solid #ccc;
-  // }
 }

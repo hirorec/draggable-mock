@@ -124,8 +124,8 @@ export const BOX_LIST: BoxProps[] = [
   {
     id: '4',
     colIndex: 2,
-    backgroundColor: '#FFE4BF',
-    borderColor: '#F2A455',
+    backgroundColor: '#F0F5FF',
+    borderColor: '#ADC6FF',
     label: `Box4`,
     position: {
       x: 2,
@@ -144,8 +144,8 @@ export const BOX_LIST: BoxProps[] = [
   {
     id: '5',
     colIndex: 3,
-    backgroundColor: '#FFE4BF',
-    borderColor: '#F2A455',
+    backgroundColor: '#F0F5FF',
+    borderColor: '#ADC6FF',
     label: `Box5`,
     position: {
       x: 3,

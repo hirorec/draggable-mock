@@ -1,6 +1,5 @@
 export type Styles = {
   cols: string;
-  colsHeader: string;
   container: string;
 };
 
