@@ -3,8 +3,9 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 
 import { sleep } from '@/utils';
 
-import { BoxProps, ColumnProps } from '../types';
 import { overlapBox } from '../utils';
+
+import type { BoxProps, ColumnProps, Position } from '../types';
 
 export type BoxAppContextType = {
   initialized: boolean;
@@ -14,10 +15,12 @@ export type BoxAppContextType = {
   windowWidth: number;
   viewportWidth: number;
   isBoxDragging: boolean;
+  mousePosition: Position;
   setInitialized: (value: boolean) => void;
   setIsAppModifying: (value: boolean) => void;
   setSelectedBoxId: (value: string | undefined) => void;
   setIsBoxDragging: (value: boolean) => void;
+  setMousePosition: (value: Position) => void;
   modifyData: (
     boxList: BoxProps[],
     columnList: ColumnProps[],
@@ -36,6 +39,7 @@ export const useBoxAppOrigin = () => {
   const [windowWidth, setWindowWidth] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
   const [isBoxDragging, setIsBoxDragging] = useState(false);
+  const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
 
   useEffect(() => {
     const onWindowMouseDown = () => {
@@ -244,10 +248,12 @@ export const useBoxAppOrigin = () => {
     viewportWidth,
     selectedBoxId,
     isBoxDragging,
+    mousePosition,
     setInitialized,
     setIsAppModifying,
     setSelectedBoxId,
     setIsBoxDragging,
+    setMousePosition,
     modifyData,
   };
 };
