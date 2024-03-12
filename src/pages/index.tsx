@@ -4,19 +4,22 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import { BOX_LIST } from '@/const/boxList';
 import { BoxApplication } from '@/features/BoxApplication';
+import { BoxAppProvider, useBoxAppOrigin } from '@/features/BoxApplication/hooks/useBoxApp';
 import { BoxProps, ColumnProps } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';
 
 export default function Page() {
-  const [boxList, setBoxList] = useState<BoxProps[]>();
+  const blockAppOrigin = useBoxAppOrigin();
+  const [boxList, setBoxList] = useState<BoxProps[]>(BOX_LIST[0]);
   const [columnList, setColumnList] = useState<ColumnProps[]>();
   const [selectedBoxListIndex, setSelectedBoxListIndex] = useState(0);
   const rowDiv = 30;
 
   useEffect(() => {
-    setBoxList(BOX_LIST);
-  }, []);
+    blockAppOrigin.setInitialized(false);
+    setBoxList(BOX_LIST[selectedBoxListIndex]);
+  }, [selectedBoxListIndex]);
 
   useEffect(() => {
     const columnList: ColumnProps[] = [
@@ -62,34 +65,36 @@ export default function Page() {
   };
 
   return (
-    <div className={clsx(styles.container)}>
-      <BoxApplication
-        boxList={boxList}
-        columnList={columnList}
-        maxHeight={rowDiv}
-        onUpdateBox={handleUpdateBox}
-        onUpdateBoxList={handleUpdateBoxList}
-        onUpdateColumnList={handleUpdateColumnList}
-      />
-      <div className={styles.ui}>
-        <div className={styles.buttons}>
-          <button className={clsx(styles.button, selectedBoxListIndex === 0 && styles.selected)} onClick={() => handleBoxListButton(0)}>
-            boxList 1
-          </button>
-          <button className={clsx(styles.button, selectedBoxListIndex === 1 && styles.selected)} onClick={() => handleBoxListButton(1)}>
-            boxList 2
-          </button>
-          <button className={clsx(styles.button, selectedBoxListIndex === 2 && styles.selected)} onClick={() => handleBoxListButton(2)}>
-            boxList 3
-          </button>
+    <BoxAppProvider value={blockAppOrigin}>
+      <div className={clsx(styles.container)}>
+        <BoxApplication
+          boxList={boxList}
+          columnList={columnList}
+          maxHeight={rowDiv}
+          onUpdateBox={handleUpdateBox}
+          onUpdateBoxList={handleUpdateBoxList}
+          onUpdateColumnList={handleUpdateColumnList}
+        />
+        <div className={styles.ui}>
+          <div className={styles.buttons}>
+            <button className={clsx(styles.button, selectedBoxListIndex === 0 && styles.selected)} onClick={() => handleBoxListButton(0)}>
+              boxList 1
+            </button>
+            <button className={clsx(styles.button, selectedBoxListIndex === 1 && styles.selected)} onClick={() => handleBoxListButton(1)}>
+              boxList 2
+            </button>
+            <button className={clsx(styles.button, selectedBoxListIndex === 2 && styles.selected)} onClick={() => handleBoxListButton(2)}>
+              boxList 3
+            </button>
+          </div>
+          <select onChange={handleTimeDivValueChange}>
+            <option value={1}>5分</option>
+            <option value={2}>10分</option>
+            <option value={3}>15分</option>
+            <option value={4}>20分</option>
+          </select>
         </div>
-        <select onChange={handleTimeDivValueChange}>
-          <option value={1}>5分</option>
-          <option value={2}>10分</option>
-          <option value={3}>15分</option>
-          <option value={4}>20分</option>
-        </select>
       </div>
-    </div>
+    </BoxAppProvider>
   );
 }

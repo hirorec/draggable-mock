@@ -2,13 +2,13 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
 
-import { BoxAppProvider, useBoxAppOrigin } from '@/features/BoxApplication/hooks/useBoxApp';
 import { BoxProps, ColumnProps } from '@/features/BoxApplication/types';
 
 import { BoxContainer } from './components/BoxContainer';
 import { ColumnContainer } from './components/ColumnContainer';
 import { ColumnHeader } from './components/ColumnHeader';
 import { ColumnRowHeader } from './components/ColumnRowHeader';
+import { useBoxApp } from './hooks/useBoxApp';
 import styles from './index.module.scss';
 
 type Props = {
@@ -21,8 +21,7 @@ type Props = {
 };
 
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
-  const blockAppOrigin = useBoxAppOrigin();
-  const { initialized, isAppModifying, setInitialized, selectedBoxId, modifyData } = blockAppOrigin;
+  const { initialized, isAppModifying, setInitialized, selectedBoxId, modifyData } = useBoxApp();
 
   const maxWidth = useMemo((): number => {
     return (
@@ -88,25 +87,23 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
   if (initialized && boxList && columnList) {
     return (
-      <BoxAppProvider value={blockAppOrigin}>
-        <div className={clsx(styles.application)}>
-          <div className={clsx(styles.applicationInner)}>
-            <ColumnHeader columnList={columnList} />
-            <ColumnRowHeader columnList={columnList} />
-            <ColumnContainer columnList={columnList}>
-              <BoxContainer
-                boxList={boxList}
-                columnList={columnList}
-                maxWidth={maxWidth}
-                maxHeight={maxHeight}
-                onUpdateBox={onUpdateBox}
-                onDropBox={handleDropBox}
-                onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
-              />
-            </ColumnContainer>
-          </div>
+      <div className={clsx(styles.application)}>
+        <div className={clsx(styles.applicationInner)}>
+          <ColumnHeader columnList={columnList} />
+          <ColumnRowHeader columnList={columnList} />
+          <ColumnContainer columnList={columnList}>
+            <BoxContainer
+              boxList={boxList}
+              columnList={columnList}
+              maxWidth={maxWidth}
+              maxHeight={maxHeight}
+              onUpdateBox={onUpdateBox}
+              onDropBox={handleDropBox}
+              onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
+            />
+          </ColumnContainer>
         </div>
-      </BoxAppProvider>
+      </div>
     );
   } else {
     return <></>;
