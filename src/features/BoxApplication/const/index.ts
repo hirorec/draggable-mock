@@ -1,5 +1,5 @@
 export const STEP = {
-  X: 150,
+  X: 120,
   Y: 30,
 };
 export const RESIZABLE_BOX_WRAPPER_OFFSET = {

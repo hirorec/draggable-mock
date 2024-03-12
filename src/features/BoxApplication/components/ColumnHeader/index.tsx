@@ -4,6 +4,7 @@ import React from 'react';
 import { ColumnProps } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';
+import { STEP } from '../../const';
 
 type Props = {
   columnList: ColumnProps[];
@@ -11,7 +12,7 @@ type Props = {
 
 export const ColumnHeader: React.FC<Props> = ({ columnList }) => {
   const getWidth = (index: number) => {
-    return columnList[index].colDiv * 150;
+    return columnList[index].colDiv * STEP.X;
   };
 
   return (
