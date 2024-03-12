@@ -87,7 +87,7 @@ export default function Page() {
               boxList 3
             </button>
           </div>
-          <select onChange={handleTimeDivValueChange}>
+          <select className={clsx(styles.select)} onChange={handleTimeDivValueChange}>
             <option value={1}>5分</option>
             <option value={2}>10分</option>
             <option value={3}>15分</option>

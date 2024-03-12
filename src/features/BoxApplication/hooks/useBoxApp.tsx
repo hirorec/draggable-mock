@@ -16,7 +16,6 @@ export type BoxAppContextType = {
   setInitialized: (value: boolean) => void;
   setIsAppModifying: (value: boolean) => void;
   setSelectedBoxId: (value: string | undefined) => void;
-  setWindowWidth: (value: number) => void;
   modifyData: (
     boxList: BoxProps[],
     columnList: ColumnProps[],

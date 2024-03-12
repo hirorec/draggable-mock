@@ -2,6 +2,7 @@ export type Styles = {
   button: string;
   buttons: string;
   container: string;
+  select: string;
   selected: string;
   ui: string;
 };
