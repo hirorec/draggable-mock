@@ -5,7 +5,7 @@ import { sleep } from '@/utils';
 
 import { overlapBox } from '../utils';
 
-import type { BoxProps, ColumnProps, Position } from '../types';
+import type { BoxProps, ColumnProps } from '../types';
 
 export type BoxAppContextType = {
   initialized: boolean;
@@ -14,13 +14,12 @@ export type BoxAppContextType = {
   selectedBoxId: string | undefined;
   windowWidth: number;
   viewportWidth: number;
+  viewportHeight: number;
   isBoxDragging: boolean;
-  mousePosition: Position;
   setInitialized: (value: boolean) => void;
   setIsAppModifying: (value: boolean) => void;
   setSelectedBoxId: (value: string | undefined) => void;
   setIsBoxDragging: (value: boolean) => void;
-  setMousePosition: (value: Position) => void;
   modifyData: (
     boxList: BoxProps[],
     columnList: ColumnProps[],
@@ -37,9 +36,10 @@ export const useBoxAppOrigin = () => {
   const [isWindowMouseDown, setIsWindowMouseDown] = useState<boolean>(false);
   const [selectedBoxId, setSelectedBoxId] = useState<string>();
   const [windowWidth, setWindowWidth] = useState(0);
+  const [windowHeight, setWindowHeight] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(0);
   const [isBoxDragging, setIsBoxDragging] = useState(false);
-  const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
 
   useEffect(() => {
     const onWindowMouseDown = () => {
@@ -52,6 +52,7 @@ export const useBoxAppOrigin = () => {
 
     const onWindowResize = () => {
       setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
     };
 
     window.addEventListener('mousedown', onWindowMouseDown);
@@ -68,8 +69,10 @@ export const useBoxAppOrigin = () => {
 
   useEffect(() => {
     const viewportWidth = windowWidth - 40 - 65;
+    const viewportHeight = windowHeight - 100 - 40 - 20;
     setViewportWidth(viewportWidth);
-  }, [windowWidth]);
+    setViewportHeight(viewportHeight);
+  }, [windowWidth, windowHeight]);
 
   const modifyData = async (
     boxList: BoxProps[],
@@ -246,14 +249,13 @@ export const useBoxAppOrigin = () => {
     isWindowMouseDown,
     windowWidth,
     viewportWidth,
+    viewportHeight,
     selectedBoxId,
     isBoxDragging,
-    mousePosition,
     setInitialized,
     setIsAppModifying,
     setSelectedBoxId,
     setIsBoxDragging,
-    setMousePosition,
     modifyData,
   };
 };

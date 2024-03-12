@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 gsap.registerPlugin(ScrollToPlugin);
 
-import { BoxProps, ColumnProps } from '@/features/BoxApplication/types';
+import { BoxProps, ColumnProps, Position } from '@/features/BoxApplication/types';
 
 import { BoxContainer } from './components/BoxContainer';
 import { ColumnContainer } from './components/ColumnContainer';
@@ -27,7 +27,8 @@ type Props = {
 };
 
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
-  const { initialized, isAppModifying, setInitialized, selectedBoxId, modifyData, viewportWidth, windowWidth } = useBoxApp();
+  const { initialized, isAppModifying, setInitialized, selectedBoxId, modifyData, viewportWidth, viewportHeight, windowWidth, isBoxDragging } =
+    useBoxApp();
   const appInnerRef = useRef<HTMLDivElement>(null);
   const [scrollX, setScrollX] = useState(0);
   const [scrollY, setScrollY] = useState(0);
@@ -72,6 +73,53 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       }
     };
   });
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => {
+      if (isBoxDragging && appInnerRef.current) {
+        const rect = appInnerRef.current.getBoundingClientRect();
+        const rectMousePosition: Position = {
+          x: e.clientX - rect.x,
+          y: e.clientY - rect.y,
+        };
+        const colsHeight = maxHeight * STEP.Y;
+        const maxScrollY = colsHeight - viewportHeight;
+        const offsetY = 100;
+
+        const scrollTo = (y: number) => {
+          console.log('scrollTo');
+          gsap.to(appInnerRef.current, { duration: 0.5, ease: 'power3.out', scrollTo: { x: scrollX, y } });
+        };
+
+        if (rectMousePosition.y + offsetY >= rect.height && scrollY <= 0) {
+          scrollTo(maxScrollY);
+        } else if (rectMousePosition.y - 40 <= 0) {
+          scrollTo(0);
+        }
+      }
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+    };
+  }, [isBoxDragging, appInnerRef, scrollY, maxHeight, viewportHeight]);
+
+  useEffect(() => {
+    const colsWidth = colsWidthTotal(columnList || []);
+    const maxThreshold = colsWidth - viewportWidth;
+    setIsScrollMin(false);
+    setIsScrollMax(false);
+
+    if (scrollX <= 0) {
+      setIsScrollMin(true);
+    }
+
+    if (scrollX >= maxThreshold) {
+      setIsScrollMax(true);
+    }
+  }, [scrollX, columnList, windowWidth]);
 
   const handleUpdateBoxSizeEnd = useCallback(
     async (resizedBox: BoxProps) => {
@@ -124,21 +172,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     },
     [appInnerRef.current, scrollX, scrollY, columnList, viewportWidth]
   );
-
-  useEffect(() => {
-    const colsWidth = colsWidthTotal(columnList || []);
-    const maxThreshold = colsWidth - viewportWidth;
-    setIsScrollMin(false);
-    setIsScrollMax(false);
-
-    if (scrollX <= 0) {
-      setIsScrollMin(true);
-    }
-
-    if (scrollX >= maxThreshold) {
-      setIsScrollMax(true);
-    }
-  }, [scrollX, columnList, windowWidth]);
 
   if (initialized && boxList && columnList) {
     return (

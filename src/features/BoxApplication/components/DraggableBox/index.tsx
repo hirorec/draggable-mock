@@ -44,13 +44,14 @@ export const DraggableBox: React.FC<Props> = ({
   onDragLeave,
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
-  const { setSelectedBoxId, selectedBoxId, isBoxDragging, setIsBoxDragging, mousePosition, setMousePosition } = useBoxApp();
+  const { setSelectedBoxId, selectedBoxId, isBoxDragging, setIsBoxDragging } = useBoxApp();
   const [transform, setTransform] = useState<Transform>({
     x: step.x * (stepBasePosition.x + localPosition.x),
     y: step.y * (stepBasePosition.y + localPosition.y),
     scaleX: 1,
     scaleY: 1,
   });
+  const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
   const [mouseMoveAmount, setMouseMoveAmount] = useState<Position>({ x: 0, y: 0 });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
