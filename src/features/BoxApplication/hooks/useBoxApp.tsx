@@ -151,7 +151,7 @@ export const useBoxAppOrigin = () => {
       return col;
     });
 
-    console.log('overlappedBoxData', overlappedBoxData);
+    // console.log('overlappedBoxData', overlappedBoxData);
 
     //-----------------------------
     // ポジション設定

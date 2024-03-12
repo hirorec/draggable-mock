@@ -7,6 +7,8 @@ import { STEP } from '@/features/BoxApplication/const';
 import { Position, Size, Step } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';
+import { useBoxApp } from '../../hooks/useBoxApp';
+import { BoxOverlay } from '../BoxOverlay';
 
 type Props = {
   id: string;
@@ -43,8 +45,9 @@ export const Box: React.FC<Props> = ({
   onDrop,
   onClick,
 }) => {
+  const { isAppModifying } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
-  const [overlayBoxHeight, setOverlayBoxHeight] = useState(step.y * 4);
+  const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
     x: stepBasePosition.x,
     y: stepBasePosition.y,
@@ -60,11 +63,20 @@ export const Box: React.FC<Props> = ({
   }, [stepBaseSize]);
 
   useEffect(() => {
+    if (!isAppModifying) {
+      setOverlayPosition(stepBasePosition);
+    }
+  }, [isAppModifying]);
+
+  useEffect(() => {
     if (isDragging || resizeMode) {
-      setOverlayBoxHeight(boxSize.height);
       setOverlayVisible(true);
     } else {
       setOverlayVisible(false);
+    }
+
+    if (isDragging) {
+      setOverlayBoxHeight(boxSize.height);
     }
   }, [isDragging, resizeMode, boxSize]);
 
@@ -100,10 +112,6 @@ export const Box: React.FC<Props> = ({
   const handleDragEnd = useCallback(
     (newStepBasePosition: Position) => {
       setOverlayPosition({ ...newStepBasePosition });
-
-      // if (overlayPosition.x !== newStepBasePosition.x || overlayPosition.y !== newStepBasePosition.y) {
-      //   onDrop(newStepBasePosition);
-      // }
       onDrop(newStepBasePosition);
     },
     [overlayPosition, stepBasePosition]
@@ -118,11 +126,12 @@ export const Box: React.FC<Props> = ({
 
   const handleResizeBoxEnd = useCallback(() => {
     onUpdateSizeEnd(stepBaseSize);
+    setOverlayBoxHeight(stepBaseSize.height * STEP.Y);
   }, [stepBaseSize]);
 
   return (
     <div className={clsx(styles.box)} style={{ zIndex }}>
-      {/* {overlayVisible && (
+      {overlayVisible && (
         <BoxOverlay
           text={label}
           backgroundColor={backgroundColor}
@@ -132,7 +141,7 @@ export const Box: React.FC<Props> = ({
           position={overlayPosition}
           localPosition={localPosition}
         />
-      )} */}
+      )}
 
       <DraggableBox
         id={id}
