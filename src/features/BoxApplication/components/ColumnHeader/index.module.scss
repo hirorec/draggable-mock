@@ -1,4 +1,4 @@
-@import '@/features/BoxApplication/styles/variables';
+@import '../..//styles/variables';
 
 .header {
   display: flex;
@@ -6,6 +6,17 @@
   top: 0;
   height: $colRowHeaderHeight;
   z-index: 1;
+}
+
+.headerNav {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $colRowHeaderHeight;
+  z-index: 2;
 }
 
 .headerCell {

@@ -17,6 +17,7 @@ export const ColumnHeader: React.FC<Props> = ({ columnList }) => {
 
   return (
     <div className={clsx(styles.header)}>
+      <div className={clsx(styles.headerNav)}></div>
       {columnList.map((column, index) => {
         return (
           <div className={clsx(styles.headerCell)} style={{ width: `${getWidth(index)}px` }} key={index} id={column.id}>
