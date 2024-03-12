@@ -26,14 +26,14 @@
   justify-content: center;
   text-align: center;
   padding: 5px 30px;
-  border: solid 1px #ccc;
+  border: solid 1px #bbb;
 
   &:not(:first-child) {
     border-left: none;
   }
 
   &:hover {
-    background-color: #eee;
+    background-color: #efefef;
   }
 
   &.selected {
@@ -46,4 +46,5 @@
 
 .select {
   padding: 3px 10px;
+  border-color: #bbb;
 }
