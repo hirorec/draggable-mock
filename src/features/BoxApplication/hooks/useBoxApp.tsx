@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 
 import { sleep } from '@/utils';
 
-import { overlapBox } from '../utils';
+import { overlapBox, yInBox } from '../utils';
 
 import type { BoxProps, ColumnProps } from '../types';
 
@@ -140,17 +140,32 @@ export const useBoxAppOrigin = () => {
     // 重なり判定
     //-----------------------------
     const overlappedBoxData: string[][] = [];
+    const rowOverlapCountMap: number[][] = [];
 
     columnList.forEach((col, index) => {
-      let overLapCount = 0;
+      // let overLapCount = 0;
       const overlappedIds: string[] = [];
 
-      const boxInColList = boxList.filter((box) => {
+      const boxListInCol = boxList.filter((box) => {
         return box.colIndex === index;
       });
 
-      boxInColList.forEach((boxA) => {
-        boxInColList.forEach((boxB) => {
+      const rowOverlapCounts = new Array(col.rowDiv).fill({}).map((_, y) => {
+        const rowOverlapCount = boxListInCol.reduce((prev, current) => {
+          const isOverlap = yInBox(y, current);
+          return prev + (isOverlap ? 1 : 0);
+        }, 0);
+
+        return Math.max(rowOverlapCount - 1, 0);
+      });
+
+      // console.log({ col: index }, rowOverlapCounts);
+      const maxRowOverlapCount = _.max(rowOverlapCounts) || 0;
+      rowOverlapCountMap.push(rowOverlapCounts);
+      // columnList[index].colDiv = maxRowOverlapCount + 1;
+
+      boxListInCol.forEach((boxA) => {
+        boxListInCol.forEach((boxB) => {
           if (boxB.id !== boxA.id) {
             const boxAClone = _.clone(boxA);
             const boxBClone = _.clone(boxB);
@@ -169,8 +184,6 @@ export const useBoxAppOrigin = () => {
         });
       });
 
-      columnList[index].colDiv = overLapCount + 1;
-
       const ids = _.uniq(overlappedIds);
       overlappedBoxData.push(ids);
       columnList[index].colDiv = Math.max(ids.length, 1);
@@ -178,6 +191,7 @@ export const useBoxAppOrigin = () => {
     });
 
     // console.log('overlappedBoxData', overlappedBoxData);
+    // console.log('rowOverlapCountsData', rowOverlapCountMap);
 
     //-----------------------------
     // ポジション設定
@@ -187,6 +201,11 @@ export const useBoxAppOrigin = () => {
       const boxListInCol = boxList.filter((box) => {
         return box.colIndex === index;
       });
+
+      // boxListInCol.forEach((box) => {
+      //   const map = rowOverlapCountMap[index];
+      //   box.localPosition.x = map[box.position.y];
+      // });
 
       for (let i = 0; i < col.colDiv; i++) {
         boxListInCol.forEach((box) => {

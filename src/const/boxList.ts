@@ -78,7 +78,7 @@ export const BOX_LIST: BoxProps[][] = [
       },
       size: {
         width: 1,
-        height: 3,
+        height: 8,
       },
       zIndex: 0,
     },
@@ -98,7 +98,7 @@ export const BOX_LIST: BoxProps[][] = [
       },
       size: {
         width: 1,
-        height: 4,
+        height: 6,
       },
       zIndex: 0,
     },
@@ -110,7 +110,7 @@ export const BOX_LIST: BoxProps[][] = [
       label: `Box2-2`,
       position: {
         x: 1,
-        y: 7,
+        y: 8,
       },
       localPosition: {
         x: 0,
@@ -122,46 +122,46 @@ export const BOX_LIST: BoxProps[][] = [
       },
       zIndex: 0,
     },
-    {
-      id: '4',
-      colIndex: 2,
-      backgroundColor: '#F0F5FF',
-      borderColor: '#ADC6FF',
-      label: `Box4`,
-      position: {
-        x: 2,
-        y: 0,
-      },
-      localPosition: {
-        x: 0,
-        y: 0,
-      },
-      size: {
-        width: 1,
-        height: 15,
-      },
-      zIndex: 0,
-    },
-    {
-      id: '5',
-      colIndex: 4,
-      backgroundColor: '#F0F5FF',
-      borderColor: '#ADC6FF',
-      label: `Box5`,
-      position: {
-        x: 4,
-        y: 6,
-      },
-      localPosition: {
-        x: 0,
-        y: 0,
-      },
-      size: {
-        width: 1,
-        height: 5,
-      },
-      zIndex: 0,
-    },
+    // {
+    //   id: '4',
+    //   colIndex: 2,
+    //   backgroundColor: '#F0F5FF',
+    //   borderColor: '#ADC6FF',
+    //   label: `Box4`,
+    //   position: {
+    //     x: 2,
+    //     y: 0,
+    //   },
+    //   localPosition: {
+    //     x: 0,
+    //     y: 0,
+    //   },
+    //   size: {
+    //     width: 1,
+    //     height: 15,
+    //   },
+    //   zIndex: 0,
+    // },
+    // {
+    //   id: '5',
+    //   colIndex: 3,
+    //   backgroundColor: '#F0F5FF',
+    //   borderColor: '#ADC6FF',
+    //   label: `Box5`,
+    //   position: {
+    //     x: 3,
+    //     y: 1,
+    //   },
+    //   localPosition: {
+    //     x: 0,
+    //     y: 0,
+    //   },
+    //   size: {
+    //     width: 1,
+    //     height: 5,
+    //   },
+    //   zIndex: 0,
+    // },
   ],
   [
     {
@@ -227,7 +227,7 @@ export const BOX_LIST: BoxProps[][] = [
   ],
   [
     {
-      id: '1',
+      id: '4',
       colIndex: 0,
       backgroundColor: '#F0F5FF',
       borderColor: '#ADC6FF',
@@ -242,7 +242,7 @@ export const BOX_LIST: BoxProps[][] = [
       },
       size: {
         width: 1,
-        height: 10,
+        height: 15,
       },
       zIndex: 0,
     },

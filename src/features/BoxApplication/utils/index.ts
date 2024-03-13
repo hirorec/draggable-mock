@@ -66,6 +66,10 @@ const positionInBox = (position: Position, box: BoxProps): boolean => {
   return resX && resY;
 };
 
+export const yInBox = (y: number, box: BoxProps): boolean => {
+  return y >= box.position.y && y < box.position.y + box.size.height;
+};
+
 export const colsWidthTotal = (columnList: ColumnProps[]) => {
   const width = columnList.reduce((prev, next) => {
     return prev + next.colDiv * STEP.X;
