@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 
 import { sleep } from '@/utils';
 
-import { overlapBox, yInBox } from '../utils';
+import { overlapBox, positionInBoxWithBoxLocalX, yInBox } from '../utils';
 
 import type { BoxProps, ColumnProps } from '../types';
 
@@ -162,7 +162,7 @@ export const useBoxAppOrigin = () => {
       // console.log({ col: index }, rowOverlapCounts);
       const maxRowOverlapCount = _.max(rowOverlapCounts) || 0;
       rowOverlapCountMap.push(rowOverlapCounts);
-      // columnList[index].colDiv = maxRowOverlapCount + 1;
+      columnList[index].colDiv = maxRowOverlapCount + 1;
 
       boxListInCol.forEach((boxA) => {
         boxListInCol.forEach((boxB) => {
@@ -186,72 +186,129 @@ export const useBoxAppOrigin = () => {
 
       const ids = _.uniq(overlappedIds);
       overlappedBoxData.push(ids);
-      columnList[index].colDiv = Math.max(ids.length, 1);
+      // columnList[index].colDiv = Math.max(ids.length, 1);
       return col;
     });
 
     // console.log('overlappedBoxData', overlappedBoxData);
-    // console.log('rowOverlapCountsData', rowOverlapCountMap);
+    console.log('rowOverlapCountsData', rowOverlapCountMap);
 
     //-----------------------------
     // ポジション設定
     //-----------------------------
     let x = 0;
-    columnList.forEach((col, index) => {
+    columnList.forEach(async (col, index) => {
       const boxListInCol = boxList.filter((box) => {
         return box.colIndex === index;
       });
 
-      // boxListInCol.forEach((box) => {
-      //   const map = rowOverlapCountMap[index];
-      //   box.localPosition.x = map[box.position.y];
-      // });
+      const modifiedFlags = new Array(boxListInCol.length).fill(false);
 
       for (let i = 0; i < col.colDiv; i++) {
-        boxListInCol.forEach((box) => {
-          box.position.x = x - col.colDiv + 1;
+        console.group(`div ${i}`);
+        boxListInCol.forEach((box, j) => {
+          // TODO
+          // box.position.x = x - col.colDiv + 1;
 
-          const overlappedBoxItem = overlappedBoxData[index];
+          let exist = false;
+          let emptyIndex: number | null = null;
+          new Array(box.size.height).fill({}).forEach((_, row) => {
+            const x = i;
+            const y = row + box.position.y;
 
-          if (overlappedBoxItem.includes(box.id)) {
-            box.size.width = 1;
-          } else {
-            box.size.width = col.colDiv;
+            const exist2 = boxListInCol.some((boxB) => {
+              if (boxB.id !== box.id) {
+                console.log(
+                  { x, y },
+                  { id: boxB.id, x: boxB.position.x, y: boxB.position.y, localX: boxB.localPosition.x, height: boxB.size.height },
+                  positionInBoxWithBoxLocalX({ x, y }, boxB)
+                );
+                return positionInBoxWithBoxLocalX({ x, y }, boxB);
+              }
+
+              return false;
+            });
+
+            if (!exist2) {
+              emptyIndex = 0;
+            }
+
+            // console.log(box.id, { x: i, y, height: box.size.height, exist2 });
+            exist = exist || exist2;
+          });
+
+          console.log(box.id, { exist, modifiedFlag: modifiedFlags[j], emptyIndex });
+
+          if (!modifiedFlags[j]) {
+            if (exist) {
+              if (emptyIndex !== null) {
+                console.log(box.id, emptyIndex);
+                box.localPosition.x = emptyIndex;
+              } else {
+                const map = rowOverlapCountMap[index];
+                box.localPosition.x = map[box.position.y];
+              }
+            }
           }
+
+          // if (exist) {
+          //   if (!modifiedFlags[j]) {
+
+          //   } else {
+          //     box.localPosition.x = emptyIndex;
+          //   }
+          // } else {
+          //   box.localPosition.x = emptyIndex;
+          // }
+
+          modifiedFlags[j] = exist;
+          // const map = rowOverlapCountMap[index];
+          // box.localPosition.x = map[box.position.y];
+
+          // const overlappedBoxItem = overlappedBoxData[index];
+
+          // if (overlappedBoxItem.includes(box.id)) {
+          //   box.size.width = 1;
+          // } else {
+          //   box.size.width = col.colDiv;
+          // }
         });
+        console.groupEnd();
+
+        await sleep(0);
 
         x++;
       }
     });
 
     // ローカルポジション設定
-    overlappedBoxData.forEach((ids) => {
-      const sortedIds = ids.sort((a, b) => {
-        const boxA = boxList.find((box) => box.id === a);
-        const boxB = boxList.find((box) => box.id === b);
+    // overlappedBoxData.forEach((ids) => {
+    //   const sortedIds = ids.sort((a, b) => {
+    //     const boxA = boxList.find((box) => box.id === a);
+    //     const boxB = boxList.find((box) => box.id === b);
 
-        if (!boxA || !boxB) {
-          return 0;
-        }
+    //     if (!boxA || !boxB) {
+    //       return 0;
+    //     }
 
-        if (boxA.position.y < boxB.position.y) {
-          return -1;
-        } else if (boxA.position.y > boxB.position.y) {
-          return 1;
-        }
+    //     if (boxA.position.y < boxB.position.y) {
+    //       return -1;
+    //     } else if (boxA.position.y > boxB.position.y) {
+    //       return 1;
+    //     }
 
-        return 0;
-      });
+    //     return 0;
+    //   });
 
-      for (let i = 1; i < sortedIds.length; i++) {
-        const id = sortedIds[i];
-        const box = boxList.find((b) => b.id === id);
+    //   for (let i = 1; i < sortedIds.length; i++) {
+    //     const id = sortedIds[i];
+    //     const box = boxList.find((b) => b.id === id);
 
-        if (box) {
-          box.localPosition.x = i;
-        }
-      }
-    });
+    //     if (box) {
+    //       // box.localPosition.x = i;
+    //     }
+    //   }
+    // });
 
     await sleep(0);
     setIsAppModifying(false);

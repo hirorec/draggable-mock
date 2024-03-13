@@ -66,6 +66,14 @@ const positionInBox = (position: Position, box: BoxProps): boolean => {
   return resX && resY;
 };
 
+export const positionInBoxWithBoxLocalX = (position: Position, box: BoxProps): boolean => {
+  const boxX = box.position.x + box.localPosition.x;
+  const boxY = box.position.y;
+  const resX = position.x === boxX;
+  const resY = position.y >= boxY && position.y <= boxY + box.size.height;
+  return resX && resY;
+};
+
 export const yInBox = (y: number, box: BoxProps): boolean => {
   return y >= box.position.y && y < box.position.y + box.size.height;
 };
