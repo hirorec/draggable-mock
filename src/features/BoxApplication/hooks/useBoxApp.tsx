@@ -208,6 +208,8 @@ export const useBoxAppOrigin = () => {
         console.group(`div ${i}`);
 
         boxListInCol.forEach((box, j) => {
+          box.position.x = x - col.colDiv + 1;
+
           if (j <= 0) {
             return;
           }
@@ -219,14 +221,14 @@ export const useBoxAppOrigin = () => {
           new Array(box.size.height).fill({}).forEach((_, row) => {
             const exist2 = boxListInCol.some((boxB) => {
               if (boxB.id !== box.id) {
-                const x = index;
-                const y = box.position.y + row;
+                const px = x - col.colDiv + 1;
+                const py = box.position.y + row;
                 console.log(
-                  { x, y },
+                  { x: px, y: py },
                   { id: boxB.id, x: boxB.position.x, y: boxB.position.y, localX: boxB.localPosition.x, height: boxB.size.height },
-                  positionInBoxWithBoxLocalX({ x, y }, boxB)
+                  positionInBoxWithBoxLocalX({ x: px, y: py }, boxB)
                 );
-                return positionInBoxWithBoxLocalX({ x, y }, boxB);
+                return positionInBoxWithBoxLocalX({ x: px, y: py }, boxB);
               }
               return false;
             });
