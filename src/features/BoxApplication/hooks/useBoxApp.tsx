@@ -206,18 +206,21 @@ export const useBoxAppOrigin = () => {
 
       for (let i = 0; i < col.colDiv; i++) {
         console.group(`div ${i}`);
+
         boxListInCol.forEach((box, j) => {
-          // TODO
-          // box.position.x = x - col.colDiv + 1;
+          if (j <= 0) {
+            return;
+          }
 
+          console.log(`${box.id}------`);
           let exist = false;
-          let emptyIndex: number | null = null;
-          new Array(box.size.height).fill({}).forEach((_, row) => {
-            const x = i;
-            const y = row + box.position.y;
 
+          // let emptyIndex: number | null = null;
+          new Array(box.size.height).fill({}).forEach((_, row) => {
             const exist2 = boxListInCol.some((boxB) => {
               if (boxB.id !== box.id) {
+                const x = index;
+                const y = box.position.y + row;
                 console.log(
                   { x, y },
                   { id: boxB.id, x: boxB.position.x, y: boxB.position.y, localX: boxB.localPosition.x, height: boxB.size.height },
@@ -225,43 +228,33 @@ export const useBoxAppOrigin = () => {
                 );
                 return positionInBoxWithBoxLocalX({ x, y }, boxB);
               }
-
               return false;
             });
 
-            if (!exist2) {
-              emptyIndex = 0;
-            }
-
-            // console.log(box.id, { x: i, y, height: box.size.height, exist2 });
             exist = exist || exist2;
           });
 
-          console.log(box.id, { exist, modifiedFlag: modifiedFlags[j], emptyIndex });
+          console.log({ exist, modified: modifiedFlags[j] });
 
           if (!modifiedFlags[j]) {
             if (exist) {
-              if (emptyIndex !== null) {
-                console.log(box.id, emptyIndex);
-                box.localPosition.x = emptyIndex;
-              } else {
-                const map = rowOverlapCountMap[index];
-                box.localPosition.x = map[box.position.y];
-              }
+              console.log('--!!!');
+              box.localPosition.x = i + 1;
+              modifiedFlags[j] = true;
+            } else {
+              // box.localPosition.x = 0;
             }
           }
 
-          // if (exist) {
-          //   if (!modifiedFlags[j]) {
-
+          // if (!modifiedFlags[j]) {
+          //   if (exist) {
+          //     box.localPosition.x = i + 1;
+          //     modifiedFlags[j] = true;
           //   } else {
-          //     box.localPosition.x = emptyIndex;
+          //     box.localPosition.x = 0;
           //   }
-          // } else {
-          //   box.localPosition.x = emptyIndex;
           // }
 
-          modifiedFlags[j] = exist;
           // const map = rowOverlapCountMap[index];
           // box.localPosition.x = map[box.position.y];
 
