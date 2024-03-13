@@ -62,46 +62,46 @@ export const BOX_LIST: BoxProps[][] = [
       },
       zIndex: 0,
     },
-    {
-      id: '2-0',
-      colIndex: 1,
-      backgroundColor: '#E6F7DA',
-      borderColor: '#93ED6F',
-      label: `Box2-0`,
-      position: {
-        x: 1,
-        y: 0,
-      },
-      localPosition: {
-        x: 0,
-        y: 0,
-      },
-      size: {
-        width: 1,
-        height: 8,
-      },
-      zIndex: 0,
-    },
-    {
-      id: '2-1',
-      colIndex: 1,
-      backgroundColor: '#E6F7DA',
-      borderColor: '#93ED6F',
-      label: `Box2-1`,
-      position: {
-        x: 1,
-        y: 1,
-      },
-      localPosition: {
-        x: 0,
-        y: 0,
-      },
-      size: {
-        width: 1,
-        height: 3,
-      },
-      zIndex: 0,
-    },
+    // {
+    //   id: '2-0',
+    //   colIndex: 1,
+    //   backgroundColor: '#E6F7DA',
+    //   borderColor: '#93ED6F',
+    //   label: `Box2-0`,
+    //   position: {
+    //     x: 1,
+    //     y: 0,
+    //   },
+    //   localPosition: {
+    //     x: 0,
+    //     y: 0,
+    //   },
+    //   size: {
+    //     width: 1,
+    //     height: 8,
+    //   },
+    //   zIndex: 0,
+    // },
+    // {
+    //   id: '2-1',
+    //   colIndex: 1,
+    //   backgroundColor: '#E6F7DA',
+    //   borderColor: '#93ED6F',
+    //   label: `Box2-1`,
+    //   position: {
+    //     x: 1,
+    //     y: 1,
+    //   },
+    //   localPosition: {
+    //     x: 0,
+    //     y: 0,
+    //   },
+    //   size: {
+    //     width: 1,
+    //     height: 3,
+    //   },
+    //   zIndex: 0,
+    // },
     // {
     //   id: '2-2',
     //   colIndex: 1,
