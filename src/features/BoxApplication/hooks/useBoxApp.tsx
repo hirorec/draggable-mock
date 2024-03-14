@@ -202,105 +202,57 @@ export const useBoxAppOrigin = () => {
         return box.colIndex === index;
       });
 
-      const modifiedFlags = new Array(boxListInCol.length).fill(false);
-      const boxListInColClone = _.cloneDeep(boxListInCol);
-
       for (let i = 0; i < col.colDiv; i++) {
-        console.group(`div ${i}`);
-
-        // if (i === 0) {
         boxListInCol.forEach((box, j) => {
           box.position.x = x - col.colDiv + 1;
-          console.log(`${box.id}------`, box.position);
-
-          if (j <= 0) {
-            return;
-          }
-
-          let exist = false;
-
-          // boxListInCol.some((boxB) => {
-          //   if (boxB.id !== box.id) {
-          //     const exist2 = new Array(box.size.height).fill({}).some((_, row) => {
-          //       const px = x - col.colDiv + 1;
-          //       const py = box.position.y + row;
-          //       const isOverlap = positionInBoxWithBoxLocalX({ x: px, y: py }, boxB);
-
-          //       console.log(
-          //         { x: px, y: py },
-          //         { id: boxB.id, x: boxB.position.x, y: boxB.position.y, localX: boxB.localPosition.x, height: boxB.size.height },
-          //         isOverlap
-          //       );
-
-          //       return isOverlap;
-          //     });
-
-          //     exist = exist || exist2;
-          //   }
-          //   return false;
-          // });
-
-          let emptyIndex: number | null = null;
-          new Array(box.size.height).fill({}).forEach((a, row) => {
-            console.log({ row });
-            const exist2 = boxListInCol.some((boxB) => {
-              if (boxB.id !== box.id) {
-                const px = box.position.x;
-                const py = box.position.y + row;
-                const boxClone = _.cloneDeep(boxB);
-
-                console.log(
-                  { x: px, y: py },
-                  { id: boxClone.id, x: boxClone.position.x, y: boxClone.position.y, localX: boxClone.localPosition.x, height: boxClone.size.height },
-                  positionInBoxWithBoxLocalX({ x: px, y: py }, boxClone)
-                );
-                return positionInBoxWithBoxLocalX({ x: px, y: py }, boxClone);
-              }
-              return false;
-            });
-
-            exist = exist || exist2;
-          });
-
-          console.log({ exist, modified: modifiedFlags[j] });
-
-          // if (!modifiedFlags[j]) {
-          if (exist) {
-            console.log('--!!!', box.id, 'localPosition', box.localPosition.x);
-            box.localPosition.x = i + 1;
-            modifiedFlags[j] = true;
-          } else {
-            // box.localPosition.x = 0;
-          }
-          // }
-
-          // if (!modifiedFlags[j]) {
-          //   if (exist) {
-          //     box.localPosition.x = i + 1;
-          //     modifiedFlags[j] = true;
-          //   } else {
-          //     box.localPosition.x = 0;
-          //   }
-          // }
-
-          // const map = rowOverlapCountMap[index];
-          // box.localPosition.x = map[box.position.y];
-
-          // const overlappedBoxItem = overlappedBoxData[index];
-
-          // if (overlappedBoxItem.includes(box.id)) {
-          //   box.size.width = 1;
-          // } else {
-          //   box.size.width = col.colDiv;
-          // }
         });
-        console.groupEnd();
-        // }
-
-        await sleep(0);
 
         x++;
       }
+
+      boxListInCol.forEach(async (box, j) => {
+        if (j <= 0) {
+          return;
+        }
+
+        console.group(`box ${box.id}`);
+
+        let x = 0;
+        let loop = true;
+
+        while (loop) {
+          console.group(`x ${x}`);
+          new Array(box.size.height).fill({}).forEach((_, boxRow) => {
+            console.group(`row ${boxRow}`);
+            const y = box.position.y + boxRow;
+            const boxTargets = [...boxListInCol].slice(0, j);
+            const hasOverlap = boxTargets.some((targetBox) => {
+              if (box.id === targetBox.id) {
+                return false;
+              }
+              return positionInBoxWithBoxLocalX({ x, y }, targetBox);
+            });
+
+            console.log({ x, y, hasOverlap });
+
+            if (hasOverlap) {
+              box.localPosition.x += 1;
+            } else {
+              loop = false;
+              console.groupEnd();
+              return;
+            }
+
+            x++;
+            console.groupEnd();
+          });
+          console.groupEnd();
+        }
+
+        console.groupEnd();
+      });
+
+      await sleep(0);
     });
 
     // ローカルポジション設定
