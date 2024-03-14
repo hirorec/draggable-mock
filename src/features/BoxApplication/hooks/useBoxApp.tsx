@@ -203,32 +203,58 @@ export const useBoxAppOrigin = () => {
       });
 
       const modifiedFlags = new Array(boxListInCol.length).fill(false);
+      const boxListInColClone = _.cloneDeep(boxListInCol);
 
       for (let i = 0; i < col.colDiv; i++) {
         console.group(`div ${i}`);
 
+        // if (i === 0) {
         boxListInCol.forEach((box, j) => {
           box.position.x = x - col.colDiv + 1;
+          console.log(`${box.id}------`, box.position);
 
           if (j <= 0) {
             return;
           }
 
-          console.log(`${box.id}------`);
           let exist = false;
 
-          // let emptyIndex: number | null = null;
-          new Array(box.size.height).fill({}).forEach((_, row) => {
+          // boxListInCol.some((boxB) => {
+          //   if (boxB.id !== box.id) {
+          //     const exist2 = new Array(box.size.height).fill({}).some((_, row) => {
+          //       const px = x - col.colDiv + 1;
+          //       const py = box.position.y + row;
+          //       const isOverlap = positionInBoxWithBoxLocalX({ x: px, y: py }, boxB);
+
+          //       console.log(
+          //         { x: px, y: py },
+          //         { id: boxB.id, x: boxB.position.x, y: boxB.position.y, localX: boxB.localPosition.x, height: boxB.size.height },
+          //         isOverlap
+          //       );
+
+          //       return isOverlap;
+          //     });
+
+          //     exist = exist || exist2;
+          //   }
+          //   return false;
+          // });
+
+          let emptyIndex: number | null = null;
+          new Array(box.size.height).fill({}).forEach((a, row) => {
+            console.log({ row });
             const exist2 = boxListInCol.some((boxB) => {
               if (boxB.id !== box.id) {
-                const px = x - col.colDiv + 1;
+                const px = box.position.x;
                 const py = box.position.y + row;
+                const boxClone = _.cloneDeep(boxB);
+
                 console.log(
                   { x: px, y: py },
-                  { id: boxB.id, x: boxB.position.x, y: boxB.position.y, localX: boxB.localPosition.x, height: boxB.size.height },
-                  positionInBoxWithBoxLocalX({ x: px, y: py }, boxB)
+                  { id: boxClone.id, x: boxClone.position.x, y: boxClone.position.y, localX: boxClone.localPosition.x, height: boxClone.size.height },
+                  positionInBoxWithBoxLocalX({ x: px, y: py }, boxClone)
                 );
-                return positionInBoxWithBoxLocalX({ x: px, y: py }, boxB);
+                return positionInBoxWithBoxLocalX({ x: px, y: py }, boxClone);
               }
               return false;
             });
@@ -238,15 +264,15 @@ export const useBoxAppOrigin = () => {
 
           console.log({ exist, modified: modifiedFlags[j] });
 
-          if (!modifiedFlags[j]) {
-            if (exist) {
-              console.log('--!!!');
-              box.localPosition.x = i + 1;
-              modifiedFlags[j] = true;
-            } else {
-              // box.localPosition.x = 0;
-            }
+          // if (!modifiedFlags[j]) {
+          if (exist) {
+            console.log('--!!!', box.id, 'localPosition', box.localPosition.x);
+            box.localPosition.x = i + 1;
+            modifiedFlags[j] = true;
+          } else {
+            // box.localPosition.x = 0;
           }
+          // }
 
           // if (!modifiedFlags[j]) {
           //   if (exist) {
@@ -269,6 +295,7 @@ export const useBoxAppOrigin = () => {
           // }
         });
         console.groupEnd();
+        // }
 
         await sleep(0);
 
