@@ -104,6 +104,13 @@ export const Box: React.FC<Props> = ({
     setResizeMode(resizeMode);
   };
 
+  const handleDragStart = useCallback(
+    (newStepBasePosition: Position) => {
+      setOverlayPosition({ ...newStepBasePosition });
+    },
+    [overlayPosition, stepBasePosition]
+  );
+
   const handleDragEnd = useCallback(
     (newStepBasePosition: Position) => {
       setOverlayPosition({ ...newStepBasePosition });
@@ -147,6 +154,7 @@ export const Box: React.FC<Props> = ({
         localPosition={localPosition}
         resizeMode={resizeMode}
         onUpdatePosition={onUpdatePosition}
+        onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onDragLeave={handleDragLeave}
       >

@@ -19,6 +19,7 @@ type Props = {
   stepBasePosition: Position;
   localPosition: Position;
   onUpdatePosition: (position: Position) => void;
+  onDragStart: (position: Position) => void;
   onDragEnd: (position: Position) => void;
   onDragLeave: (position: Position) => void;
 };
@@ -40,6 +41,7 @@ export const DraggableBox: React.FC<Props> = ({
   stepBasePosition,
   localPosition,
   onUpdatePosition,
+  onDragStart,
   onDragEnd,
   onDragLeave,
 }) => {
@@ -121,6 +123,12 @@ export const DraggableBox: React.FC<Props> = ({
       setIsBoxDragging(false);
     }
   }, [isMouseDown, isMouseOver, resizeMode]);
+
+  useEffect(() => {
+    if (!resizeMode && isMouseDown && !isBoxDragging) {
+      onDragStart(modifiedPosition);
+    }
+  }, [isMouseDown, resizeMode, modifiedPosition, isBoxDragging]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
