@@ -14,7 +14,7 @@ export default function Page() {
   const [boxList, setBoxList] = useState<BoxProps[]>(BOX_LIST[0]);
   const [columnList, setColumnList] = useState<ColumnProps[]>();
   const [selectedBoxListIndex, setSelectedBoxListIndex] = useState(0);
-  const rowDiv = 15;
+  const rowDiv = 30;
 
   useEffect(() => {
     blockAppOrigin.setInitialized(false);
