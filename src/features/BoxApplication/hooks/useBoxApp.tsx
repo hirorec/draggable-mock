@@ -198,7 +198,7 @@ export const useBoxAppOrigin = () => {
               if (box.id === targetBox.id) {
                 return false;
               }
-              // console.log(targetBox.position);
+              console.log({ targetBox: targetBox.id }, targetBox.position);
               return positionInBoxWithBoxLocalX({ x, y }, targetBox);
             });
 

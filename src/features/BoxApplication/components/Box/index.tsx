@@ -45,7 +45,7 @@ export const Box: React.FC<Props> = ({
   onDrop,
   onClick,
 }) => {
-  const { isAppModifying, isBoxDragging, setIsBoxDragging } = useBoxApp();
+  const { isAppModifying, isBoxDragging, selectedBoxId } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
@@ -68,7 +68,7 @@ export const Box: React.FC<Props> = ({
   }, [isAppModifying]);
 
   useEffect(() => {
-    if (isBoxDragging || resizeMode) {
+    if ((isBoxDragging || resizeMode) && selectedBoxId === id) {
       setOverlayVisible(true);
     } else {
       setOverlayVisible(false);
@@ -77,7 +77,7 @@ export const Box: React.FC<Props> = ({
     if (isBoxDragging) {
       setOverlayBoxHeight(boxSize.height);
     }
-  }, [isBoxDragging, resizeMode, boxSize]);
+  }, [isBoxDragging, resizeMode, boxSize, selectedBoxId]);
 
   const handleResizeBox = useCallback(
     (direction: boolean) => {
