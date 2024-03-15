@@ -189,7 +189,6 @@ export const useBoxAppOrigin = () => {
         let loop = true;
 
         while (loop) {
-          // console.groupEnd();
           console.group(`x ${x}`);
           let hasOverlap = false;
 
