@@ -1,7 +1,6 @@
-import _ from 'lodash';
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-import { positionInBoxWithBoxLocalX, yInBox } from '../utils';
+import * as modifier from '../utils/modifier';
 
 import type { BoxProps, ColumnProps } from '../types';
 
@@ -87,152 +86,10 @@ export const useBoxAppOrigin = () => {
       };
     }
 
-    console.log('modifyData');
     setIsAppModifying(true);
-
-    //-----------------------------
-    // 操作boxの新しいcolIndexセット
-    //-----------------------------
-    if (updatedBox) {
-      let x = 0;
-      const updatedBoxIndex = boxList.findIndex((box) => box.id === updatedBox.id);
-
-      columnList.forEach((col, index) => {
-        for (let i = 0; i < col.colDiv; i++) {
-          if (boxList[updatedBoxIndex].position.x === x) {
-            boxList[updatedBoxIndex].position.x = x - col.colDiv;
-            boxList[updatedBoxIndex].colIndex = index;
-          }
-
-          x++;
-        }
-      });
-    }
-
-    //-----------------------------
-    // reset
-    //-----------------------------
-    boxList.forEach((box) => {
-      box.localPosition.x = 0;
-    });
-    columnList.forEach((col, index) => {
-      col.colDiv = 1;
-    });
-    columnList.forEach((_, index) => {
-      const boxListInCol = boxList.filter((box) => {
-        return box.colIndex === index;
-      });
-
-      boxListInCol.forEach((box) => {
-        if (box.id !== selectedBoxId) {
-          const boxIndex = boxList.findIndex((b) => b.id === box.id);
-
-          if (boxIndex >= 0) {
-            boxList[boxIndex].position.x = index;
-          }
-        }
-      });
-    });
-
-    //-----------------------------
-    // 重なり判定
-    //-----------------------------
-    const rowOverlapCountMap: number[][] = [];
-
-    columnList.forEach((col, index) => {
-      const boxListInCol = boxList.filter((box) => {
-        return box.colIndex === index;
-      });
-
-      const rowOverlapCounts = new Array(col.rowDiv).fill({}).map((_, y) => {
-        const rowOverlapCount = boxListInCol.reduce((prev, current) => {
-          const isOverlap = yInBox(y, current);
-          return prev + (isOverlap ? 1 : 0);
-        }, 0);
-
-        return Math.max(rowOverlapCount - 1, 0);
-      });
-
-      const maxRowOverlapCount = _.max(rowOverlapCounts) || 0;
-      rowOverlapCountMap.push(rowOverlapCounts);
-      columnList[index].colDiv = maxRowOverlapCount + 1;
-      return col;
-    });
-
-    // console.log('rowOverlapCountsData', rowOverlapCountMap);
-
-    //-----------------------------
-    // ポジション設定
-    //-----------------------------
-    let x1 = 0;
-    columnList.forEach(async (col, index) => {
-      const boxListInCol = boxList.filter((box) => {
-        return box.colIndex === index;
-      });
-
-      for (let i = 0; i < col.colDiv; i++) {
-        boxListInCol.forEach((box, j) => {
-          box.position.x = x1 - col.colDiv + 1;
-        });
-
-        x1++;
-      }
-
-      boxListInCol.forEach(async (box, j) => {
-        if (j <= 0) {
-          return;
-        }
-        console.groupEnd();
-        console.group(`box ${box.id}`);
-
-        let x = box.position.x;
-        let loop = true;
-
-        while (loop) {
-          console.group(`x ${x}`);
-          let hasOverlap = false;
-
-          new Array(box.size.height).fill({}).forEach((_, boxRow) => {
-            console.group(`row ${boxRow}`);
-            const y = box.position.y + boxRow;
-            const boxTargets = [...boxListInCol].slice(0, j);
-            hasOverlap =
-              hasOverlap ||
-              boxTargets.some((targetBox) => {
-                if (box.id === targetBox.id) {
-                  return false;
-                }
-                console.log({ targetBox: targetBox.id }, targetBox.position);
-                return positionInBoxWithBoxLocalX({ x, y }, targetBox);
-              });
-
-            console.log({ x, y, hasOverlap });
-            console.groupEnd();
-          });
-
-          if (hasOverlap) {
-            box.localPosition.x += 1;
-          } else {
-            loop = false;
-            console.groupEnd();
-            return;
-          }
-
-          x++;
-
-          console.log({ hasOverlap }, 'box.localPosition.x:', box.localPosition.x);
-          console.groupEnd();
-        }
-      });
-    });
-
-    // await sleep(0);
+    const modifiedData = await modifier.modifyData(boxList, columnList, updatedBox, selectedBoxId);
     setIsAppModifying(false);
-
-    return {
-      boxList,
-      columnList,
-    };
+    return modifiedData;
   };
 
   return {
