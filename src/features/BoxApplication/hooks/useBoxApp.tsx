@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { createContext, useState, useContext, useEffect } from 'react';
 
 import * as modifier from '../utils/modifier';
@@ -88,7 +89,7 @@ export const useBoxAppOrigin = () => {
     }
 
     setIsAppModifying(true);
-    const modifiedData = await modifier.modifyData(boxList, columnList, updatedBox, selectedBoxId);
+    const modifiedData = await modifier.modifyData(_.cloneDeep(boxList), _.cloneDeep(columnList), updatedBox, selectedBoxId);
     setIsAppModifying(false);
     return modifiedData;
   };

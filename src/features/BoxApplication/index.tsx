@@ -47,9 +47,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   useEffect(() => {
     if (!initialized && boxList && columnList) {
       (async () => {
-        const newBoxList = _.cloneDeep(boxList);
-        const newColumnList = _.cloneDeep(columnList);
-        const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, newColumnList);
+        const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(boxList, columnList);
         onUpdateBoxList(modifiedBoxList);
         onUpdateColumnList(modifiedColumnList);
         setInitialized(true);
@@ -142,10 +140,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         return;
       }
 
-      console.log('handleUpdateBoxSizeEnd');
-      const newBoxList = _.cloneDeep(boxList);
-      const newColumnList = _.cloneDeep(columnList);
-      const { boxList: modifiedBoxData, columnList: modifiedColumnList } = await modifyData(newBoxList, newColumnList, resizedBox);
+      const { boxList: modifiedBoxData, columnList: modifiedColumnList } = await modifyData(boxList, columnList, resizedBox);
       onUpdateBoxList(modifiedBoxData);
       onUpdateColumnList(modifiedColumnList);
     },
@@ -160,7 +155,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
       console.log('handleDropBox');
       const newBoxList = _.cloneDeep(boxList);
-      const newColumnList = _.cloneDeep(columnList);
 
       newBoxList[index] = {
         ...newBoxList[index],
@@ -170,7 +164,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         },
       };
 
-      const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, newColumnList, droppedBox);
+      const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, columnList, droppedBox);
       onUpdateBoxList(modifiedBoxList);
       onUpdateColumnList(modifiedColumnList);
     },
