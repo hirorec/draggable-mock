@@ -90,7 +90,7 @@ export const BOX_LIST: BoxProps[][] = [
       label: `Box2-1`,
       position: {
         x: 1,
-        y: 1,
+        y: 0,
       },
       localPosition: {
         x: 0,
@@ -110,7 +110,7 @@ export const BOX_LIST: BoxProps[][] = [
       label: `Box2-2`,
       position: {
         x: 1,
-        y: 7,
+        y: 2,
       },
       localPosition: {
         x: 0,

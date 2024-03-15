@@ -182,46 +182,49 @@ export const useBoxAppOrigin = () => {
         if (j <= 0) {
           return;
         }
-
+        console.groupEnd();
         console.group(`box ${box.id}`);
 
         let x = box.position.x;
         let loop = true;
 
         while (loop) {
+          // console.groupEnd();
           console.group(`x ${x}`);
+          let hasOverlap = false;
+
           new Array(box.size.height).fill({}).forEach((_, boxRow) => {
             console.group(`row ${boxRow}`);
             const y = box.position.y + boxRow;
             const boxTargets = [...boxListInCol].slice(0, j);
-            const hasOverlap = boxTargets.some((targetBox) => {
-              if (box.id === targetBox.id) {
-                return false;
-              }
-              console.log({ targetBox: targetBox.id }, targetBox.position);
-              return positionInBoxWithBoxLocalX({ x, y }, targetBox);
-            });
+            hasOverlap =
+              hasOverlap ||
+              boxTargets.some((targetBox) => {
+                if (box.id === targetBox.id) {
+                  return false;
+                }
+                console.log({ targetBox: targetBox.id }, targetBox.position);
+                return positionInBoxWithBoxLocalX({ x, y }, targetBox);
+              });
 
             console.log({ x, y, hasOverlap });
-
-            if (hasOverlap) {
-              box.localPosition.x += 1;
-            } else {
-              loop = false;
-              console.groupEnd();
-              return;
-            }
-
-            x++;
             console.groupEnd();
           });
+
+          if (hasOverlap) {
+            box.localPosition.x += 1;
+          } else {
+            loop = false;
+            console.groupEnd();
+            return;
+          }
+
+          x++;
+
+          console.log({ hasOverlap }, 'box.localPosition.x:', box.localPosition.x);
           console.groupEnd();
         }
-
-        console.groupEnd();
       });
-
-      // await sleep(1000);
     });
 
     // await sleep(0);
