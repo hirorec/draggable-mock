@@ -33,8 +33,8 @@ export const modifyData = async (
   // リセット処理
   reset(boxList, columnList, selectedBoxId);
 
-  // 重なり判定
-  overlapProcess(boxList, columnList);
+  // カラム分割設定
+  modifyColumns(boxList, columnList);
 
   // Boxポジション設定
   modifyBoxPositions(boxList, columnList);
@@ -73,10 +73,10 @@ const reset = (boxList: BoxProps[], columnList: ColumnProps[], selectedBoxId?: s
 };
 
 /*
-  重なり判定処理
-  カラムの列を調整する
+  カラム分割設定
+  重なり判定処理したうえで列ごとの分割数を調整する
  */
-const overlapProcess = (boxList: BoxProps[], columnList: ColumnProps[]) => {
+const modifyColumns = (boxList: BoxProps[], columnList: ColumnProps[]) => {
   columnList.forEach((col, index) => {
     const boxListInCol = boxList.filter((box) => {
       return box.colIndex === index;
