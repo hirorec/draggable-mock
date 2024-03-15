@@ -13,9 +13,7 @@ export const modifyData = async (
   boxList: BoxProps[];
   columnList: ColumnProps[];
 }> => {
-  //-----------------------------
   // 操作boxの新しいcolIndexセット
-  //-----------------------------
   if (updatedBox) {
     let x = 0;
     const updatedBoxIndex = boxList.findIndex((box) => box.id === updatedBox.id);
@@ -32,13 +30,29 @@ export const modifyData = async (
     });
   }
 
-  //-----------------------------
-  // reset
-  //-----------------------------
+  // リセット処理
+  reset(boxList, columnList, selectedBoxId);
+
+  // 重なり判定
+  overlapProcess(boxList, columnList);
+
+  // ポジション設定
+  modifyBoxPositions(boxList, columnList);
+
+  return {
+    boxList,
+    columnList,
+  };
+};
+
+/*
+  reset
+ */
+const reset = (boxList: BoxProps[], columnList: ColumnProps[], selectedBoxId?: string) => {
   boxList.forEach((box) => {
     box.localPosition.x = 0;
   });
-  columnList.forEach((col, index) => {
+  columnList.forEach((col) => {
     col.colDiv = 1;
   });
   columnList.forEach((_, index) => {
@@ -56,12 +70,13 @@ export const modifyData = async (
       }
     });
   });
+};
 
-  //-----------------------------
-  // 重なり判定
-  //-----------------------------
-  const rowOverlapCountMap: number[][] = [];
-
+/*
+  重なり判定処理
+  カラムの行を調整する
+ */
+const overlapProcess = (boxList: BoxProps[], columnList: ColumnProps[]) => {
   columnList.forEach((col, index) => {
     const boxListInCol = boxList.filter((box) => {
       return box.colIndex === index;
@@ -77,16 +92,15 @@ export const modifyData = async (
     });
 
     const maxRowOverlapCount = _.max(rowOverlapCounts) || 0;
-    rowOverlapCountMap.push(rowOverlapCounts);
     columnList[index].colDiv = maxRowOverlapCount + 1;
     return col;
   });
+};
 
-  // console.log('rowOverlapCountsData', rowOverlapCountMap);
-
-  //-----------------------------
-  // ポジション設定
-  //-----------------------------
+/*
+  Boxポジション設定
+ */
+const modifyBoxPositions = (boxList: BoxProps[], columnList: ColumnProps[]) => {
   let x1 = 0;
   columnList.forEach(async (col, index) => {
     const boxListInCol = boxList.filter((box) => {
@@ -148,9 +162,4 @@ export const modifyData = async (
       }
     });
   });
-
-  return {
-    boxList,
-    columnList,
-  };
 };
