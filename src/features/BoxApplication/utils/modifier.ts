@@ -30,8 +30,25 @@ export const modifyData = async (
     });
   }
 
+  // y軸でソート
+  boxList.sort((a, b) => {
+    if (a.position.y > b.position.y) {
+      return 1;
+    }
+
+    if (a.position.y < b.position.y) {
+      return -1;
+    }
+
+    return 0;
+  });
+
+  console.log(boxList);
+
   // リセット処理
   reset(boxList, columnList, selectedBoxId);
+
+  console.log(boxList);
 
   // カラム分割設定
   modifyColumns(boxList, columnList);
