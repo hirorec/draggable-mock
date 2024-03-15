@@ -36,7 +36,7 @@ export const modifyData = async (
   // 重なり判定
   overlapProcess(boxList, columnList);
 
-  // ポジション設定
+  // Boxポジション設定
   modifyBoxPositions(boxList, columnList);
 
   return {
@@ -74,7 +74,7 @@ const reset = (boxList: BoxProps[], columnList: ColumnProps[], selectedBoxId?: s
 
 /*
   重なり判定処理
-  カラムの行を調整する
+  カラムの列を調整する
  */
 const overlapProcess = (boxList: BoxProps[], columnList: ColumnProps[]) => {
   columnList.forEach((col, index) => {
