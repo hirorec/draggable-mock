@@ -13,6 +13,7 @@ export type BoxAppContextType = {
   viewportWidth: number;
   viewportHeight: number;
   isBoxDragging: boolean;
+
   setInitialized: (value: boolean) => void;
   setIsAppModifying: (value: boolean) => void;
   setSelectedBoxId: (value: string | undefined) => void;
@@ -101,6 +102,7 @@ export const useBoxAppOrigin = () => {
     viewportHeight,
     selectedBoxId,
     isBoxDragging,
+
     setInitialized,
     setIsAppModifying,
     setSelectedBoxId,

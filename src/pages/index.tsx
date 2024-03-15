@@ -12,7 +12,7 @@ import styles from './index.module.scss';
 
 export default function Page() {
   const blockAppOrigin = useBoxAppOrigin();
-  const [boxList, setBoxList] = useState<BoxProps[]>(BOX_LIST[0]);
+  const [boxList, setBoxList] = useState<BoxProps[]>();
   const [columnList, setColumnList] = useState<ColumnProps[]>();
   const [selectedBoxListIndex, setSelectedBoxListIndex] = useState(0);
   const rowDiv = 30;
