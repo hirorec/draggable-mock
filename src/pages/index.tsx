@@ -4,7 +4,8 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import { BOX_LIST } from '@/const/boxList';
 import { BoxApplication } from '@/features/BoxApplication';
-import { BoxAppProvider, useBoxAppOrigin } from '@/features/BoxApplication/hooks/useBoxApp';
+import { useBoxAppOrigin } from '@/features/BoxApplication/hooks/useBoxApp';
+import { BoxAppProvider } from '@/features/BoxApplication/providers';
 import { BoxProps, ColumnProps } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';

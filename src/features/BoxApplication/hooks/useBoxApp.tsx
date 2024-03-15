@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 
 import * as modifier from '../utils/modifier';
 
@@ -109,10 +109,5 @@ export const useBoxAppOrigin = () => {
   };
 };
 
-const BoxAppContext = createContext<BoxAppContextType>(null);
-
-export const BoxAppProvider = ({ children, value }: { children: React.ReactNode; value: BoxAppContextType }) => {
-  return <BoxAppContext.Provider value={value}>{children}</BoxAppContext.Provider>;
-};
-
+export const BoxAppContext = createContext<BoxAppContextType>(null);
 export const useBoxApp = () => useContext(BoxAppContext)!;
