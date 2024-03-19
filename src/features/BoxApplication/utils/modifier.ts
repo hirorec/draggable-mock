@@ -4,6 +4,8 @@ import { BoxProps, ColumnProps } from '../types';
 
 import { yInBox, positionInBoxWithBoxLocalX } from '.';
 
+const LOG_ENABLED = false;
+
 export const modifyData = async (
   boxList: BoxProps[],
   columnList: ColumnProps[],
@@ -43,12 +45,8 @@ export const modifyData = async (
     return 0;
   });
 
-  console.log(boxList);
-
   // リセット処理
   reset(boxList, columnList, selectedBoxId);
-
-  console.log(boxList);
 
   // カラム分割設定
   modifyColumns(boxList, columnList);
@@ -125,7 +123,7 @@ const modifyBoxPositions = (boxList: BoxProps[], columnList: ColumnProps[]) => {
     });
 
     for (let i = 0; i < col.colDiv; i++) {
-      boxListInCol.forEach((box, j) => {
+      boxListInCol.forEach((box) => {
         box.position.x = x1 - col.colDiv + 1;
       });
 
@@ -136,18 +134,27 @@ const modifyBoxPositions = (boxList: BoxProps[], columnList: ColumnProps[]) => {
       if (j <= 0) {
         return;
       }
-      console.groupEnd();
-      console.group(`box ${box.id}`);
+
+      if (LOG_ENABLED) {
+        console.groupEnd();
+        console.group(`box ${box.id}`);
+      }
 
       let x = box.position.x;
       let loop = true;
 
       while (loop) {
-        console.group(`x ${x}`);
+        if (LOG_ENABLED) {
+          console.group(`x ${x}`);
+        }
+
         let hasOverlap = false;
 
         new Array(box.size.height).fill({}).forEach((_, boxRow) => {
-          console.group(`row ${boxRow}`);
+          if (LOG_ENABLED) {
+            console.group(`row ${boxRow}`);
+          }
+
           const y = box.position.y + boxRow;
           const boxTargets = [...boxListInCol].slice(0, j);
           hasOverlap =
@@ -156,26 +163,36 @@ const modifyBoxPositions = (boxList: BoxProps[], columnList: ColumnProps[]) => {
               if (box.id === targetBox.id) {
                 return false;
               }
-              console.log({ targetBox: targetBox.id }, targetBox.position);
+              if (LOG_ENABLED) {
+                console.log({ targetBox: targetBox.id }, targetBox.position);
+              }
+
               return positionInBoxWithBoxLocalX({ x, y }, targetBox);
             });
 
-          console.log({ x, y, hasOverlap });
-          console.groupEnd();
+          if (LOG_ENABLED) {
+            console.log({ x, y, hasOverlap });
+            console.groupEnd();
+          }
         });
 
         if (hasOverlap) {
           box.localPosition.x += 1;
         } else {
           loop = false;
-          console.groupEnd();
+          if (LOG_ENABLED) {
+            console.groupEnd();
+          }
+
           return;
         }
 
         x++;
 
-        console.log({ hasOverlap }, 'box.localPosition.x:', box.localPosition.x);
-        console.groupEnd();
+        if (LOG_ENABLED) {
+          console.log({ hasOverlap }, 'box.localPosition.x:', box.localPosition.x);
+          console.groupEnd();
+        }
       }
     });
   });

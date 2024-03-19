@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { createContext, useState, useContext, useEffect } from 'react';
 
+import { DEFAULT_ROW_DIV, DEFAULT_ROW_INTERVAL } from '../const';
 import * as modifier from '../utils/modifier';
 
 import type { BoxProps, ColumnProps } from '../types';
@@ -14,11 +15,17 @@ export type BoxAppContextType = {
   viewportWidth: number;
   viewportHeight: number;
   isBoxDragging: boolean;
+  rowInterval: number;
+  rowDiv: number;
+  rowScale: number;
 
   setInitialized: (value: boolean) => void;
   setIsAppModifying: (value: boolean) => void;
   setSelectedBoxId: (value: string | undefined) => void;
   setIsBoxDragging: (value: boolean) => void;
+  setRowInterval: (value: number) => void;
+  setRowDiv: (value: number) => void;
+  setRowScale: (value: number) => void;
   modifyData: (
     boxList: BoxProps[],
     columnList: ColumnProps[],
@@ -38,6 +45,9 @@ export const useBoxAppOrigin = () => {
   const [windowHeight, setWindowHeight] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
+  const [rowInterval, setRowInterval] = useState(DEFAULT_ROW_INTERVAL);
+  const [rowDiv, setRowDiv] = useState(DEFAULT_ROW_DIV);
+  const [rowScale, setRowScale] = useState(1);
   const [isBoxDragging, setIsBoxDragging] = useState(false);
 
   useEffect(() => {
@@ -103,11 +113,17 @@ export const useBoxAppOrigin = () => {
     viewportHeight,
     selectedBoxId,
     isBoxDragging,
+    rowInterval,
+    rowDiv,
+    rowScale,
 
     setInitialized,
     setIsAppModifying,
     setSelectedBoxId,
     setIsBoxDragging,
+    setRowInterval,
+    setRowDiv,
+    setRowScale,
     modifyData,
   };
 };

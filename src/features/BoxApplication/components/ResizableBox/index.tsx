@@ -71,14 +71,13 @@ export const ResizableBox: React.FC<Props> = ({
 
       const box: HTMLDivElement = boxRef.current;
       const rect = box.getBoundingClientRect();
-
       const newMousePosition = {
         x: e.clientX - rect.x,
         y: e.clientY - rect.y,
       };
-
       const offset = 10;
       const isEdge = newMousePosition.y >= rect.height - offset && newMousePosition.y < rect.height;
+
       setIsEdge(isEdge);
       setMousePosition(newMousePosition);
 

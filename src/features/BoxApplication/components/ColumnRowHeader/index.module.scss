@@ -28,6 +28,10 @@
   }
 }
 
+%columnBorderBold {
+  border-top: 2px solid $borderColor;
+}
+
 .headerRow {
   position: relative;
   top: -2px;
@@ -37,7 +41,26 @@
     border-top: 1px dashed $borderColor;
   }
 
-  &:nth-child(6n + 1) {
-    border-top: 2px solid $borderColor;
+  // &:nth-child(6n + 1) {
+  //   border-top: 2px solid $borderColor;
+  // }
+
+  :global(.rowInterval--5) &,
+  :global(.rowInterval--10) & {
+    &:nth-child(6n + 1) {
+      @extend %columnBorderBold;
+    }
+  }
+
+  :global(.rowInterval--15) & {
+    &:nth-child(4n + 1) {
+      @extend %columnBorderBold;
+    }
+  }
+
+  :global(.rowInterval--20) & {
+    &:nth-child(3n + 1) {
+      @extend %columnBorderBold;
+    }
   }
 }

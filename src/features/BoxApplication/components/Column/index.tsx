@@ -4,6 +4,7 @@ import React from 'react';
 import { STEP } from '@/features/BoxApplication/const';
 
 import styles from './index.module.scss';
+import { useBoxApp } from '../../hooks/useBoxApp';
 
 type Props = {
   id: string;
@@ -13,6 +14,8 @@ type Props = {
 };
 
 export const Column: React.FC<Props> = ({ id, label, colDiv, rowDiv }) => {
+  const { rowInterval } = useBoxApp();
+
   const borderNods = () => {
     if (rowDiv > 0) {
       return new Array(rowDiv - 1).fill({}).map((_, index) => {
@@ -30,7 +33,7 @@ export const Column: React.FC<Props> = ({ id, label, colDiv, rowDiv }) => {
   };
 
   return (
-    <div className={clsx(styles.column)} style={{ width: `${colDiv * STEP.X}px`, height: `${rowDiv * STEP.Y}px` }}>
+    <div className={clsx(styles.column, `rowInterval--${rowInterval}`)} style={{ width: `${colDiv * STEP.X}px`, height: `${rowDiv * STEP.Y}px` }}>
       {contentNodes()}
       <div className={clsx(styles.columnBg)}>{borderNods()}</div>
     </div>

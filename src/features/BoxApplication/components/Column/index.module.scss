@@ -1,4 +1,4 @@
-@import '../..//styles/variables';
+@import '../../styles/variables';
 
 .column {
   display: flex;
@@ -26,6 +26,10 @@
   height: 100%;
 }
 
+%columnBorderBold {
+  border-top: 2px solid $borderColor;
+}
+
 .columnBgBorder {
   position: absolute;
   left: 0;
@@ -33,7 +37,22 @@
   height: 1px;
   border-top: 1px dashed $borderColor;
 
-  &:nth-child(6n) {
-    border-top: 2px solid $borderColor;
+  :global(.rowInterval--5) &,
+  :global(.rowInterval--10) & {
+    &:nth-child(6n) {
+      @extend %columnBorderBold;
+    }
+  }
+
+  :global(.rowInterval--15) & {
+    &:nth-child(4n) {
+      @extend %columnBorderBold;
+    }
+  }
+
+  :global(.rowInterval--20) & {
+    &:nth-child(3n) {
+      @extend %columnBorderBold;
+    }
   }
 }

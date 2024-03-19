@@ -4,6 +4,7 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import { BOX_LIST } from '@/const/boxList';
 import { BoxApplication } from '@/features/BoxApplication';
+import { DEFAULT_ROW_DIV, DEFAULT_ROW_INTERVAL } from '@/features/BoxApplication/const';
 import { useBoxAppOrigin } from '@/features/BoxApplication/hooks/useBoxApp';
 import { BoxAppProvider } from '@/features/BoxApplication/providers';
 import { BoxProps, ColumnProps } from '@/features/BoxApplication/types';
@@ -12,10 +13,12 @@ import styles from './index.module.scss';
 
 export default function Page() {
   const blockAppOrigin = useBoxAppOrigin();
+  const { rowInterval, rowDiv, rowScale, setRowInterval, setRowDiv, setRowScale } = blockAppOrigin;
   const [boxList, setBoxList] = useState<BoxProps[]>();
   const [columnList, setColumnList] = useState<ColumnProps[]>();
   const [selectedBoxListIndex, setSelectedBoxListIndex] = useState(0);
-  const rowDiv = 30;
+  const [rowDivTmp, setRowDivTmp] = useState(rowDiv);
+  const [rowScaleTmp, setRowScaleTmp] = useState(rowScale);
 
   useEffect(() => {
     blockAppOrigin.setInitialized(false);
@@ -36,6 +39,52 @@ export default function Page() {
     ];
     setColumnList(columnList);
   }, []);
+
+  useEffect(() => {
+    const rowScale = DEFAULT_ROW_INTERVAL / rowInterval;
+    const rowDiv = Math.floor(DEFAULT_ROW_DIV * rowScale);
+    setRowDiv(rowDiv);
+    setRowScale(rowScale);
+  }, [rowInterval]);
+
+  useEffect(() => {
+    if (columnList && columnList.length) {
+      if (rowDivTmp !== rowDiv) {
+        const newColumnList = columnList.map((column) => {
+          return {
+            ...column,
+            rowDiv,
+          };
+        });
+
+        setRowDivTmp(rowDiv);
+        setColumnList(newColumnList);
+      }
+    }
+  }, [rowDiv, columnList, rowDivTmp, setRowDivTmp]);
+
+  useEffect(() => {
+    if (boxList && boxList.length) {
+      if (rowScaleTmp !== rowScale) {
+        const newBoxList: BoxProps[] = boxList?.map((box) => {
+          const newBox = _.cloneDeep(box);
+          box.size.width;
+
+          return {
+            ...newBox,
+            // size: {
+            //   width: newBox.size.width,
+            //   height: newBox.size.height * rowScale,
+            // },
+          };
+        });
+
+        console.log({ rowScale });
+        setRowScaleTmp(rowScale);
+        setBoxList(newBoxList);
+      }
+    }
+  }, [rowScale, boxList, rowScaleTmp, setRowDivTmp]);
 
   const handleUpdateBox = useCallback(
     (box: BoxProps, index: number) => {
@@ -62,7 +111,7 @@ export default function Page() {
 
   const handleTimeDivValueChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const el = event.currentTarget as HTMLSelectElement;
-    console.log(el.value);
+    setRowInterval(parseInt(el.value));
   };
 
   return (
@@ -89,10 +138,10 @@ export default function Page() {
             </button>
           </div>
           <select className={clsx(styles.select)} onChange={handleTimeDivValueChange}>
-            <option value={1}>5分</option>
-            <option value={2}>10分</option>
-            <option value={3}>15分</option>
-            <option value={4}>20分</option>
+            <option value={5}>5分</option>
+            <option value={10}>10分</option>
+            <option value={15}>15分</option>
+            <option value={20}>20分</option>
           </select>
         </div>
       </div>
