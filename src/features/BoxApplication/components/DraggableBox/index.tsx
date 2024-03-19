@@ -156,29 +156,10 @@ export const DraggableBox: React.FC<Props> = ({
         const dy = newMousePosition.y - mousePosition.y;
         const newMouseMoveAmount = { ...mouseMoveAmount };
         const newStepBasePosition = { ...stepBasePosition };
-        // const x = newStepBasePosition.x + dx / STEP.X;
         const y = newStepBasePosition.y + dy / STEP.Y;
-        // newStepBasePosition.x = x;
         newStepBasePosition.y = y;
         newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
         newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
-
-        // if (Math.abs(newMouseMoveAmount.y) >= step.y) {
-        //   if (newMouseMoveAmount.y > 0) {
-        //     newStepBasePosition.y = newStepBasePosition.y + 1;
-        //   } else {
-        //     newStepBasePosition.y = newStepBasePosition.y - 1;
-        //   }
-        //   resetMouseMoveAmount();
-        // } else if (rectMousePosition.x >= rect.width) {
-        //   newStepBasePosition.x = newStepBasePosition.x + 1;
-        //   resetMouseMoveAmount();
-        // } else if (rectMousePosition.x < 0) {
-        //   newStepBasePosition.x = newStepBasePosition.x - 1;
-        //   resetMouseMoveAmount();
-        // } else {
-        //   setMouseMoveAmount(newMouseMoveAmount);
-        // }
 
         if (rectMousePosition.x >= rect.width) {
           newStepBasePosition.x = newStepBasePosition.x + 1;
@@ -211,11 +192,6 @@ export const DraggableBox: React.FC<Props> = ({
     resetMouseMoveAmount();
   }, []);
 
-  // const handleMouseLeave = useCallback(() => {
-  //   setIsMouseDown(false);
-  //   resetMouseMoveAmount();
-  // }, []);
-
   return (
     <div
       ref={boxRef}
@@ -224,7 +200,6 @@ export const DraggableBox: React.FC<Props> = ({
       onMouseMove={handleMouseMove}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      // onMouseLeave={handleMouseLeave}
     >
       <div className={clsx(styles.boxInner)}>{children}</div>
     </div>
