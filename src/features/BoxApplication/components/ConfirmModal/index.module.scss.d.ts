@@ -1,4 +1,5 @@
 export type Styles = {
+  boxInfo: string;
   button: string;
   cancel: string;
   modal: string;

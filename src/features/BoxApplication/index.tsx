@@ -12,7 +12,7 @@ import { BoxContainer } from './components/BoxContainer';
 import { ColumnContainer } from './components/ColumnContainer';
 import { ColumnHeader } from './components/ColumnHeader';
 import { ColumnRowHeader } from './components/ColumnRowHeader';
-import { ConfirmModal } from './components/ConfirmModal';
+import { ConfirmModal, ConfirmModalProps } from './components/ConfirmModal';
 import { STEP } from './const';
 import { useBoxApp } from './hooks/useBoxApp';
 import { useBoxConfirmModal } from './hooks/useBoxConfirmModal';
@@ -49,7 +49,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   const [isScrollMax, setIsScrollMax] = useState(false);
   const [isScrollLocked, setIsScrollLocked] = useState(false);
   const [undoBoxList, setUndoBoxList] = useState<BoxProps[]>([]);
-  const [confirmModalConfig, setConfirmModalConfig] = useState<{ onClose: (value: boolean) => void }>();
+  const [confirmModalConfig, setConfirmModalConfig] = useState<ConfirmModalProps>();
 
   const maxWidth = useMemo((): number => {
     return (
@@ -160,14 +160,15 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         return;
       }
 
+      console.log('handleUpdateBoxSizeEnd', resizedBox);
+
       const res = await new Promise<boolean>((resolve) => {
         showModal();
-        setConfirmModalConfig({ onClose: resolve });
+        setConfirmModalConfig({ onClose: resolve, box: resizedBox });
       });
       setConfirmModalConfig(undefined);
 
       if (res) {
-        console.log('handleUpdateBoxSizeEnd', resizedBox);
         const { boxList: modifiedBoxData, columnList: modifiedColumnList } = await modifyData(boxList, columnList, resizedBox);
         onUpdateBoxList(modifiedBoxData);
         onUpdateColumnList(modifiedColumnList);
@@ -189,14 +190,15 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         return;
       }
 
+      console.log('handleDropBox', droppedBox);
+
       const res = await new Promise<boolean>((resolve) => {
         showModal();
-        setConfirmModalConfig({ onClose: resolve });
+        setConfirmModalConfig({ onClose: resolve, box: droppedBox });
       });
       setConfirmModalConfig(undefined);
 
       if (res) {
-        console.log('handleDropBox', droppedBox);
         const newBoxList = _.cloneDeep(boxList);
 
         newBoxList[index] = {
@@ -259,7 +261,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
             </ColumnContainer>
           </div>
         </div>
-        <ConfirmModal onClose={confirmModalConfig?.onClose} />
+        <ConfirmModal {...confirmModalConfig} />
       </>
     );
   } else {
