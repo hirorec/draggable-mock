@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { STEP } from '@/features/BoxApplication/const';
 import { useBoxApp } from '@/features/BoxApplication/hooks/useBoxApp';
@@ -8,7 +8,7 @@ import { useBoxApp } from '@/features/BoxApplication/hooks/useBoxApp';
 import styles from './index.module.scss';
 import { Box } from '../Box';
 
-import type { BoxProps, ColumnProps, Position, Size } from '@/features/BoxApplication/types';
+import type { BoxProps, ColumnProps, Position, Size, Step } from '@/features/BoxApplication/types';
 
 type Props = {
   boxList: BoxProps[];
@@ -21,9 +21,10 @@ type Props = {
 };
 
 export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, maxHeight, onUpdateBox, onDropBox, onUpdateBoxSizeEnd }) => {
-  const { isWindowMouseDown } = useBoxApp();
+  const { isWindowMouseDown, rowScale } = useBoxApp();
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
+  const [step, setStep] = useState<Step>({ x: STEP.X, y: STEP.Y * rowScale });
 
   const getZIndex = (index: number) => {
     if (index === hoveredBoxIndex) {
@@ -32,6 +33,10 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
       return 0;
     }
   };
+
+  useEffect(() => {
+    setStep({ x: STEP.X, y: STEP.Y * rowScale });
+  }, [rowScale]);
 
   const handleUpdateBoxPosition = useCallback(
     (index: number, position: Position) => {
@@ -69,7 +74,6 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
       if (box) {
         box.size = size;
         onUpdateBox(box, index);
-        // onUpdateBoxSize(box, index);
       }
     },
     [boxList]
@@ -116,8 +120,8 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
         y: e.clientY - rect.y,
       };
       const stepBasePosition: Position = {
-        x: rectMousePosition.x / STEP.X,
-        y: rectMousePosition.y / STEP.Y,
+        x: rectMousePosition.x / step.x,
+        y: rectMousePosition.y / step.y,
       };
 
       boxList.forEach((box, index) => {
@@ -134,14 +138,14 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
         }
       });
     },
-    [containerRef.current, boxList, isWindowMouseDown]
+    [containerRef.current, boxList, isWindowMouseDown, step]
   );
 
   const containerWidth = useMemo(() => {
     return columnList.reduce((prev, current) => {
-      return prev + current.colDiv * STEP.X;
+      return prev + current.colDiv * step.x;
     }, 0);
-  }, [columnList]);
+  }, [columnList, step]);
 
   return (
     <div ref={containerRef} className={clsx(styles.container)} onMouseMove={handleMouseMove} style={{ width: `${containerWidth}px` }}>
@@ -153,7 +157,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
             label={box.label}
             backgroundColor={box.backgroundColor}
             borderColor={box.borderColor}
-            step={{ x: STEP.X, y: STEP.Y }}
+            step={step}
             stepBaseSize={box.size}
             stepBasePosition={box.position}
             localPosition={box.localPosition}

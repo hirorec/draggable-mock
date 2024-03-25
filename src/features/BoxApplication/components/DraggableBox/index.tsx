@@ -46,10 +46,10 @@ export const DraggableBox: React.FC<Props> = ({
   onDragLeave,
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
-  const { setSelectedBoxId, selectedBoxId, isBoxDragging, setIsBoxDragging } = useBoxApp();
+  const { setSelectedBoxId, selectedBoxId, isBoxDragging, setIsBoxDragging, rowScale } = useBoxApp();
   const [transform, setTransform] = useState<Transform>({
     x: step.x * (stepBasePosition.x + localPosition.x),
-    y: step.y * (stepBasePosition.y + localPosition.y),
+    y: step.y * rowScale * (stepBasePosition.y + localPosition.y),
     scaleX: 1,
     scaleY: 1,
   });
@@ -104,7 +104,7 @@ export const DraggableBox: React.FC<Props> = ({
       scaleX: 1,
       scaleY: 1,
     });
-  }, [stepBasePosition, localPosition, modifiedPosition]);
+  }, [localPosition, modifiedPosition]);
 
   useEffect(() => {
     if (resizeMode) {

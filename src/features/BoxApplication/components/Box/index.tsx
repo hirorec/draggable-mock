@@ -45,7 +45,7 @@ export const Box: React.FC<Props> = ({
   onDrop,
   onClick,
 }) => {
-  const { isAppModifying, isBoxDragging, selectedBoxId } = useBoxApp();
+  const { isAppModifying, isBoxDragging, selectedBoxId, rowScale } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
@@ -57,9 +57,14 @@ export const Box: React.FC<Props> = ({
   const boxSize: Size = useMemo(() => {
     return {
       width: stepBaseSize.width * STEP.X,
-      height: stepBaseSize.height * STEP.Y,
+      height: stepBaseSize.height * (STEP.Y * rowScale),
     };
-  }, [stepBaseSize]);
+  }, [stepBaseSize, rowScale]);
+
+  useEffect(() => {
+    setOverlayBoxHeight(stepBaseSize.height * STEP.Y * rowScale);
+    setOverlayPosition(stepBasePosition);
+  }, [rowScale, stepBaseSize.height]);
 
   useEffect(() => {
     if (!isAppModifying) {
@@ -97,7 +102,7 @@ export const Box: React.FC<Props> = ({
 
       onUpdateSize(newBoxSize);
     },
-    [stepBaseSize, maxHeight, stepBasePosition]
+    [stepBaseSize, maxHeight, stepBasePosition, rowScale]
   );
 
   const handleUpdateResizeMode = (resizeMode: boolean) => {
@@ -106,30 +111,30 @@ export const Box: React.FC<Props> = ({
 
   const handleDragStart = useCallback(
     (newStepBasePosition: Position) => {
-      setOverlayPosition({ ...newStepBasePosition });
+      setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
     },
-    [overlayPosition, stepBasePosition]
+    [overlayPosition, stepBasePosition, rowScale]
   );
 
   const handleDragEnd = useCallback(
     (newStepBasePosition: Position) => {
-      setOverlayPosition({ ...newStepBasePosition });
+      setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
       onDrop(newStepBasePosition);
     },
-    [overlayPosition, stepBasePosition]
+    [overlayPosition, stepBasePosition, rowScale]
   );
 
   const handleDragLeave = useCallback(
     (newStepBasePosition: Position) => {
-      setOverlayPosition({ ...newStepBasePosition });
+      setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
     },
-    [overlayPosition, stepBasePosition]
+    [overlayPosition, stepBasePosition, rowScale]
   );
 
   const handleResizeBoxEnd = useCallback(() => {
     onUpdateSizeEnd(stepBaseSize);
-    setOverlayBoxHeight(stepBaseSize.height * STEP.Y);
-  }, [stepBaseSize]);
+    setOverlayBoxHeight(stepBaseSize.height * STEP.Y * rowScale);
+  }, [stepBaseSize, rowScale]);
 
   return (
     <div className={clsx(styles.box)} style={{ zIndex }}>

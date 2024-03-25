@@ -150,7 +150,7 @@ const modifyBoxPositions = (boxList: BoxProps[], columnList: ColumnProps[]) => {
 
         let hasOverlap = false;
 
-        new Array(box.size.height).fill({}).forEach((_, boxRow) => {
+        new Array(Math.floor(box.size.height)).fill({}).forEach((_, boxRow) => {
           if (LOG_ENABLED) {
             console.group(`row ${boxRow}`);
           }
