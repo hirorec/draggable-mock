@@ -1,0 +1,48 @@
+.modal {
+  display: flex;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 10;
+  background-color: rgba(black, 0.5);
+}
+
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  position: relative;
+  border-radius: 10px;
+  background-color: #fff;
+  padding: 20px;
+  min-width: 300px;
+}
+
+.modalContainerFooter {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+
+.button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+
+  &.ok {
+    background-color: #000;
+  }
+
+  &.cancel {
+    background-color: red;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

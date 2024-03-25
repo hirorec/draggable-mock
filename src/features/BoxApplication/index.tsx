@@ -12,6 +12,7 @@ import { BoxContainer } from './components/BoxContainer';
 import { ColumnContainer } from './components/ColumnContainer';
 import { ColumnHeader } from './components/ColumnHeader';
 import { ColumnRowHeader } from './components/ColumnRowHeader';
+import { ConfirmModal } from './components/ConfirmModal';
 import { STEP } from './const';
 import { useBoxApp } from './hooks/useBoxApp';
 import styles from './index.module.scss';
@@ -206,24 +207,27 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
   if (initialized && boxList && columnList) {
     return (
-      <div className={clsx(styles.application)}>
-        <div ref={appInnerRef} className={clsx(styles.applicationInner)}>
-          <ColumnHeader columnList={columnList} onScroll={handleColScroll} isScrollMin={isScrollMin} isScrollMax={isScrollMax} />
-          <ColumnRowHeader columnList={columnList} />
-          <ColumnContainer columnList={columnList}>
-            <BoxContainer
-              boxList={boxList}
-              columnList={columnList}
-              maxWidth={maxWidth}
-              maxHeight={maxHeight}
-              onUpdateBox={onUpdateBox}
-              onDropBox={handleDropBox}
-              onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
-              onInteractionStart={handleInteractionStart}
-            />
-          </ColumnContainer>
+      <>
+        <div className={clsx(styles.application)}>
+          <div ref={appInnerRef} className={clsx(styles.applicationInner)}>
+            <ColumnHeader columnList={columnList} onScroll={handleColScroll} isScrollMin={isScrollMin} isScrollMax={isScrollMax} />
+            <ColumnRowHeader columnList={columnList} />
+            <ColumnContainer columnList={columnList}>
+              <BoxContainer
+                boxList={boxList}
+                columnList={columnList}
+                maxWidth={maxWidth}
+                maxHeight={maxHeight}
+                onUpdateBox={onUpdateBox}
+                onDropBox={handleDropBox}
+                onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
+                onInteractionStart={handleInteractionStart}
+              />
+            </ColumnContainer>
+          </div>
         </div>
-      </div>
+        <ConfirmModal />
+      </>
     );
   } else {
     return <></>;
