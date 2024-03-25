@@ -18,6 +18,8 @@ type Props = {
   children: React.ReactNode;
   stepBasePosition: Position;
   localPosition: Position;
+  isMouseDown: boolean;
+  setIsMouseDown: (value: boolean) => void;
   onUpdatePosition: (position: Position) => void;
   onDragStart: (position: Position) => void;
   onDragEnd: (position: Position) => void;
@@ -40,6 +42,8 @@ export const DraggableBox: React.FC<Props> = ({
   children,
   stepBasePosition,
   localPosition,
+  isMouseDown,
+  setIsMouseDown,
   onUpdatePosition,
   onDragStart,
   onDragEnd,
@@ -55,7 +59,6 @@ export const DraggableBox: React.FC<Props> = ({
   });
   const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
   const [mouseMoveAmount, setMouseMoveAmount] = useState<Position>({ x: 0, y: 0 });
-  const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
   const [cursor, setCursor] = useState<'unset' | 'grab' | 'all-scroll'>('unset');
 

@@ -14,6 +14,8 @@ type Props = {
   width: number;
   height: number;
   step: Step;
+  isMouseDown: boolean;
+  setIsMouseDown: (value: boolean) => void;
   onResizeHeight: (direction: boolean) => void;
   onResizeHeightEnd: () => void;
   onUpdateResizeMode: (resizeMode: boolean) => void;
@@ -27,6 +29,8 @@ export const ResizableBox: React.FC<Props> = ({
   width,
   height,
   step,
+  isMouseDown,
+  setIsMouseDown,
   onResizeHeight,
   onResizeHeightEnd,
   onUpdateResizeMode,
@@ -34,7 +38,6 @@ export const ResizableBox: React.FC<Props> = ({
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const [isEdge, setIsEdge] = useState(false);
-  const [isMouseDown, setIsMouseDown] = useState(false);
   const [resizeMode, setResizeMode] = useState(false);
   const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
 

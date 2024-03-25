@@ -52,6 +52,7 @@ export const Box: React.FC<Props> = ({
     x: stepBasePosition.x,
     y: stepBasePosition.y,
   });
+  const [isMouseDown, setIsMouseDown] = useState(false);
 
   const boxSize: Size = useMemo(() => {
     return {
@@ -162,6 +163,8 @@ export const Box: React.FC<Props> = ({
         stepBasePosition={stepBasePosition}
         localPosition={localPosition}
         resizeMode={resizeMode}
+        isMouseDown={isMouseDown}
+        setIsMouseDown={setIsMouseDown}
         onUpdatePosition={onUpdatePosition}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
@@ -174,6 +177,8 @@ export const Box: React.FC<Props> = ({
           width={boxSize.width}
           height={boxSize.height}
           step={step}
+          isMouseDown={isMouseDown}
+          setIsMouseDown={setIsMouseDown}
           onResizeHeight={handleResizeBox}
           onResizeHeightEnd={handleResizeBoxEnd}
           onUpdateResizeMode={handleUpdateResizeMode}
