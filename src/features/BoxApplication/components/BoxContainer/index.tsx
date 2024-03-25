@@ -18,7 +18,7 @@ type Props = {
   onUpdateBox: (box: BoxProps, index: number) => void;
   onDropBox: (box: BoxProps, index: number) => void;
   onUpdateBoxSizeEnd: (box: BoxProps, index: number) => void;
-  onInteractionStart: (box: BoxProps, index: number) => void;
+  onInteractionStart: () => void;
 };
 
 export const BoxContainer: React.FC<Props> = ({
@@ -158,14 +158,6 @@ export const BoxContainer: React.FC<Props> = ({
     [containerRef.current, boxList, isWindowMouseDown, step]
   );
 
-  const handleInteractionStart = (index: number) => {
-    const box = _.cloneDeep(boxList[index]);
-
-    if (box) {
-      onInteractionStart(box, index);
-    }
-  };
-
   return (
     <div ref={containerRef} className={clsx(styles.container)} onMouseMove={handleMouseMove} style={{ width: `${containerWidth}px` }}>
       {boxList.map((box, index) => {
@@ -187,7 +179,7 @@ export const BoxContainer: React.FC<Props> = ({
             onUpdateSizeEnd={(size: Size) => handleUpdateBoxSizeEnd(index, size)}
             onDrop={(position: Position) => handleDropBox(index, position)}
             onClick={() => handleClickBox(index)}
-            onInteractionStart={() => handleInteractionStart(index)}
+            onInteractionStart={onInteractionStart}
           />
         );
       })}

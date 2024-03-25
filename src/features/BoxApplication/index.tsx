@@ -45,6 +45,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   const [isScrollMin, setIsScrollMin] = useState(false);
   const [isScrollMax, setIsScrollMax] = useState(false);
   const [isScrollLocked, setIsScrollLocked] = useState(false);
+  const [undoBoxList, setUndoBoxList] = useState<BoxProps[]>([]);
 
   const maxWidth = useMemo((): number => {
     return (
@@ -164,6 +165,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       }
 
       console.log('handleDropBox', droppedBox);
+
       const newBoxList = _.cloneDeep(boxList);
 
       newBoxList[index] = {
@@ -178,7 +180,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       onUpdateBoxList(modifiedBoxList);
       onUpdateColumnList(modifiedColumnList);
     },
-    [boxList, columnList, isAppModifying, selectedBoxId, initialized]
+    [boxList, columnList, isAppModifying, selectedBoxId, initialized, undoBoxList]
   );
 
   const handleColScroll = useCallback(
@@ -192,17 +194,15 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     [appInnerRef.current, scrollX, scrollY, columnList, viewportWidth]
   );
 
-  const handleInteractionStart = useCallback(
-    async (box: BoxProps, index: number) => {
-      if (!boxList) {
-        return;
-      }
+  const handleInteractionStart = useCallback(async () => {
+    if (!boxList) {
+      return;
+    }
 
-      console.log('handleInteractionStart', box);
-      const newBoxList = _.cloneDeep(boxList);
-    },
-    [boxList, columnList, isAppModifying, selectedBoxId, initialized]
-  );
+    console.log('handleInteractionStart');
+    const undoBoxList = _.cloneDeep(boxList);
+    setUndoBoxList(undoBoxList);
+  }, [boxList]);
 
   if (initialized && boxList && columnList) {
     return (
