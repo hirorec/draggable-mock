@@ -6,14 +6,17 @@ import { BOX_LIST } from '@/const/boxList';
 import { BoxApplication } from '@/features/BoxApplication';
 import { DEFAULT_ROW_DIV, DEFAULT_ROW_INTERVAL } from '@/features/BoxApplication/const';
 import { useBoxAppOrigin } from '@/features/BoxApplication/hooks/useBoxApp';
-import { BoxAppProvider } from '@/features/BoxApplication/providers';
+import { useBoxConfirmModalOrigin } from '@/features/BoxApplication/hooks/useBoxConfirmModal';
+import { BoxAppProvider, BoxConfirmModalProvider } from '@/features/BoxApplication/providers';
 import { BoxProps, ColumnProps } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';
 
 export default function Page() {
-  const blockAppOrigin = useBoxAppOrigin();
-  const { rowInterval, rowDiv, rowScale, setRowInterval, setRowDiv, setRowScale } = blockAppOrigin;
+  const boxAppOrigin = useBoxAppOrigin();
+  const boxConfirmModalOrigin = useBoxConfirmModalOrigin();
+
+  const { rowInterval, rowDiv, rowScale, setRowInterval, setRowDiv, setRowScale } = boxAppOrigin;
   const [boxList, setBoxList] = useState<BoxProps[]>();
   const [columnList, setColumnList] = useState<ColumnProps[]>();
   const [selectedBoxListIndex, setSelectedBoxListIndex] = useState(0);
@@ -21,7 +24,7 @@ export default function Page() {
   const [rowScaleTmp, setRowScaleTmp] = useState(rowScale);
 
   useEffect(() => {
-    blockAppOrigin.setInitialized(false);
+    boxAppOrigin.setInitialized(false);
     setBoxList(BOX_LIST[selectedBoxListIndex]);
   }, [selectedBoxListIndex]);
 
@@ -114,36 +117,38 @@ export default function Page() {
   };
 
   return (
-    <BoxAppProvider value={blockAppOrigin}>
-      <div className={clsx(styles.container)}>
-        <BoxApplication
-          boxList={boxList}
-          columnList={columnList}
-          maxHeight={rowDiv}
-          onUpdateBox={handleUpdateBox}
-          onUpdateBoxList={handleUpdateBoxList}
-          onUpdateColumnList={handleUpdateColumnList}
-        />
-        <div className={styles.ui}>
-          <div className={styles.buttons}>
-            <button className={clsx(styles.button, selectedBoxListIndex === 0 && styles.selected)} onClick={() => handleBoxListButton(0)}>
-              boxList 1
-            </button>
-            <button className={clsx(styles.button, selectedBoxListIndex === 1 && styles.selected)} onClick={() => handleBoxListButton(1)}>
-              boxList 2
-            </button>
-            <button className={clsx(styles.button, selectedBoxListIndex === 2 && styles.selected)} onClick={() => handleBoxListButton(2)}>
-              boxList 3
-            </button>
+    <BoxAppProvider value={boxAppOrigin}>
+      <BoxConfirmModalProvider value={boxConfirmModalOrigin}>
+        <div className={clsx(styles.container)}>
+          <BoxApplication
+            boxList={boxList}
+            columnList={columnList}
+            maxHeight={rowDiv}
+            onUpdateBox={handleUpdateBox}
+            onUpdateBoxList={handleUpdateBoxList}
+            onUpdateColumnList={handleUpdateColumnList}
+          />
+          <div className={styles.ui}>
+            <div className={styles.buttons}>
+              <button className={clsx(styles.button, selectedBoxListIndex === 0 && styles.selected)} onClick={() => handleBoxListButton(0)}>
+                boxList 1
+              </button>
+              <button className={clsx(styles.button, selectedBoxListIndex === 1 && styles.selected)} onClick={() => handleBoxListButton(1)}>
+                boxList 2
+              </button>
+              <button className={clsx(styles.button, selectedBoxListIndex === 2 && styles.selected)} onClick={() => handleBoxListButton(2)}>
+                boxList 3
+              </button>
+            </div>
+            <select className={clsx(styles.select)} onChange={handleTimeDivValueChange}>
+              <option value={5}>5分</option>
+              <option value={10}>10分</option>
+              <option value={15}>15分</option>
+              <option value={20}>20分</option>
+            </select>
           </div>
-          <select className={clsx(styles.select)} onChange={handleTimeDivValueChange}>
-            <option value={5}>5分</option>
-            <option value={10}>10分</option>
-            <option value={15}>15分</option>
-            <option value={20}>20分</option>
-          </select>
         </div>
-      </div>
+      </BoxConfirmModalProvider>
     </BoxAppProvider>
   );
 }
