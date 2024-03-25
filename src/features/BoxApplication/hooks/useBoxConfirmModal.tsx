@@ -1,46 +1,31 @@
-import { createContext, useState, useContext, useCallback } from 'react';
+import { createContext, useState, useContext } from 'react';
 
 export type BoxConfirmModalContextType = {
   isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
-  showModal: (approveCallBack: () => void, rejectCallback: () => void) => void;
-  onApprove: () => void;
-  onReject: () => void;
+  showModal: () => void;
+  hideModal: () => void;
 } | null;
+
+export type ModalConfig = {
+  onClose: () => void;
+};
 
 export const useBoxConfirmModalOrigin = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [approveCallBack, setApproveCallBack] = useState<() => void>();
-  const [rejectCallback, setRejectCallback] = useState<() => void>();
+  const [modalConfig, setModalConfig] = useState<ModalConfig>();
 
-  const showModal = (approveCallBack: () => void, rejectCallback: () => void) => {
-    setApproveCallBack(approveCallBack);
-    setRejectCallback(rejectCallback);
+  const showModal = () => {
     setIsOpen(true);
   };
 
-  const onApprove = useCallback(() => {
-    if (approveCallBack) {
-      approveCallBack();
-    }
-
+  const hideModal = () => {
     setIsOpen(false);
-  }, []);
-
-  const onReject = useCallback(() => {
-    if (rejectCallback) {
-      rejectCallback();
-    }
-
-    setIsOpen(false);
-  }, []);
+  };
 
   return {
     isOpen,
-    setIsOpen,
     showModal,
-    onApprove,
-    onReject,
+    hideModal,
   };
 };
 

@@ -15,6 +15,7 @@ import { ColumnRowHeader } from './components/ColumnRowHeader';
 import { ConfirmModal } from './components/ConfirmModal';
 import { STEP } from './const';
 import { useBoxApp } from './hooks/useBoxApp';
+import { useBoxConfirmModal } from './hooks/useBoxConfirmModal';
 import styles from './index.module.scss';
 import { colsWidthTotal } from './utils';
 
@@ -40,6 +41,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     isBoxDragging,
     rowScale,
   } = useBoxApp();
+  const { showModal } = useBoxConfirmModal();
   const appInnerRef = useRef<HTMLDivElement>(null);
   const [scrollX, setScrollX] = useState(0);
   const [scrollY, setScrollY] = useState(0);
@@ -47,6 +49,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   const [isScrollMax, setIsScrollMax] = useState(false);
   const [isScrollLocked, setIsScrollLocked] = useState(false);
   const [undoBoxList, setUndoBoxList] = useState<BoxProps[]>([]);
+  const [confirmModalConfig, setConfirmModalConfig] = useState<{ onClose: (value: boolean) => void }>();
 
   const maxWidth = useMemo((): number => {
     return (
@@ -152,11 +155,22 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         return;
       }
       console.log('handleUpdateBoxSizeEnd', resizedBox);
-      const { boxList: modifiedBoxData, columnList: modifiedColumnList } = await modifyData(boxList, columnList, resizedBox);
-      onUpdateBoxList(modifiedBoxData);
-      onUpdateColumnList(modifiedColumnList);
+
+      const res = await new Promise<boolean>((resolve) => {
+        showModal();
+        setConfirmModalConfig({ onClose: resolve });
+      });
+      setConfirmModalConfig(undefined);
+
+      if (res) {
+        const { boxList: modifiedBoxData, columnList: modifiedColumnList } = await modifyData(boxList, columnList, resizedBox);
+        onUpdateBoxList(modifiedBoxData);
+        onUpdateColumnList(modifiedColumnList);
+      } else {
+        onUpdateBoxList(undoBoxList);
+      }
     },
-    [boxList, columnList, isAppModifying]
+    [boxList, columnList, isAppModifying, undoBoxList]
   );
 
   const handleDropBox = useCallback(
@@ -167,19 +181,29 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
       console.log('handleDropBox', droppedBox);
 
-      const newBoxList = _.cloneDeep(boxList);
+      const res = await new Promise<boolean>((resolve) => {
+        showModal();
+        setConfirmModalConfig({ onClose: resolve });
+      });
+      setConfirmModalConfig(undefined);
 
-      newBoxList[index] = {
-        ...newBoxList[index],
-        position: {
-          x: droppedBox.position.x + droppedBox.localPosition.x,
-          y: droppedBox.position.y,
-        },
-      };
+      if (res) {
+        const newBoxList = _.cloneDeep(boxList);
 
-      const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, columnList, droppedBox);
-      onUpdateBoxList(modifiedBoxList);
-      onUpdateColumnList(modifiedColumnList);
+        newBoxList[index] = {
+          ...newBoxList[index],
+          position: {
+            x: droppedBox.position.x + droppedBox.localPosition.x,
+            y: droppedBox.position.y,
+          },
+        };
+
+        const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, columnList, droppedBox);
+        onUpdateBoxList(modifiedBoxList);
+        onUpdateColumnList(modifiedColumnList);
+      } else {
+        onUpdateBoxList(undoBoxList);
+      }
     },
     [boxList, columnList, isAppModifying, selectedBoxId, initialized, undoBoxList]
   );
@@ -226,7 +250,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
             </ColumnContainer>
           </div>
         </div>
-        <ConfirmModal />
+        <ConfirmModal onClose={confirmModalConfig?.onClose} />
       </>
     );
   } else {
