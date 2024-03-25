@@ -1,9 +1,17 @@
-import { BoxProps, ColumnProps, Position } from '@/features/BoxApplication/types';
+import { BoxProps, ColumnProps, Position, Size } from '@/features/BoxApplication/types';
 
 import { STEP } from '../const';
 
 export const equalPosition = (positionA: Position, positionB: Position): boolean => {
   return positionA.x === positionB.x && positionA.y === positionB.y;
+};
+
+export const equalSize = (sizeA: Size, sizeB: Size): boolean => {
+  return sizeA.width === sizeB.width && sizeA.height === sizeB.height;
+};
+
+export const equalBoxPositionAndSize = (boxA: BoxProps, boxB: BoxProps): boolean => {
+  return equalPosition(boxA.position, boxB.position) && equalSize(boxA.size, boxB.size);
 };
 
 export const overlapBox = (boxA: BoxProps, boxB: BoxProps): boolean => {

@@ -17,7 +17,7 @@ import { STEP } from './const';
 import { useBoxApp } from './hooks/useBoxApp';
 import { useBoxConfirmModal } from './hooks/useBoxConfirmModal';
 import styles from './index.module.scss';
-import { colsWidthTotal } from './utils';
+import { colsWidthTotal, equalBoxPositionAndSize } from './utils';
 
 type Props = {
   boxList?: BoxProps[];
@@ -150,8 +150,13 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   }, [scrollX, columnList, windowWidth]);
 
   const handleUpdateBoxSizeEnd = useCallback(
-    async (resizedBox: BoxProps) => {
-      if (!boxList || !columnList) {
+    async (resizedBox: BoxProps, index: number) => {
+      if (!boxList || !columnList || !undoBoxList.length) {
+        return;
+      }
+
+      // ポジションとサイズに変更が無い
+      if (equalBoxPositionAndSize(boxList[index], undoBoxList[index])) {
         return;
       }
 
@@ -175,7 +180,12 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
   const handleDropBox = useCallback(
     async (droppedBox: BoxProps, index: number) => {
-      if (!boxList || !columnList) {
+      if (!boxList || !columnList || !undoBoxList.length) {
+        return;
+      }
+
+      // ポジションとサイズに変更が無い
+      if (equalBoxPositionAndSize(boxList[index], undoBoxList[index])) {
         return;
       }
 
