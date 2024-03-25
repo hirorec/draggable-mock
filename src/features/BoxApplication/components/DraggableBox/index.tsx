@@ -156,8 +156,9 @@ export const DraggableBox: React.FC<Props> = ({
         const dy = newMousePosition.y - mousePosition.y;
         const newMouseMoveAmount = { ...mouseMoveAmount };
         const newStepBasePosition = { ...stepBasePosition };
-        const y = newStepBasePosition.y + dy / STEP.Y;
+        const y = newStepBasePosition.y + dy / (STEP.Y * rowScale);
         newStepBasePosition.y = y;
+
         newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
         newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
 
@@ -177,7 +178,7 @@ export const DraggableBox: React.FC<Props> = ({
       setIsMouseOver(isMouseOver);
       setMousePosition(newMousePosition);
     },
-    [boxRef.current, isBoxDragging, transform, mousePosition, resizeMode]
+    [boxRef.current, isBoxDragging, transform, mousePosition, resizeMode, rowScale]
   );
 
   const handleMouseDown = useCallback(() => {

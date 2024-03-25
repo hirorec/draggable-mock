@@ -42,6 +42,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
     (index: number, position: Position) => {
       const newPosition = { ...position };
       const box = _.cloneDeep(boxList[index]);
+      const maxY = maxHeight * (1 / rowScale);
 
       if (newPosition.x + box.localPosition.x < 0) {
         newPosition.x = 0;
@@ -51,8 +52,8 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
         newPosition.y = 0;
       }
 
-      if (newPosition.y + box.size.height > maxHeight) {
-        newPosition.y = maxHeight - box.size.height;
+      if (newPosition.y + box.size.height > maxY) {
+        newPosition.y = maxY - box.size.height;
       }
 
       if (position.x + box.size.width > maxWidth) {
@@ -64,7 +65,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
         onUpdateBox(box, index);
       }
     },
-    [boxList, maxWidth, maxHeight]
+    [boxList, maxWidth, maxHeight, rowScale]
   );
 
   const handleUpdateBoxSize = useCallback(

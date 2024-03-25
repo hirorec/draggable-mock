@@ -27,8 +27,18 @@ type Props = {
 };
 
 export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
-  const { initialized, isAppModifying, setInitialized, selectedBoxId, modifyData, viewportWidth, viewportHeight, windowWidth, isBoxDragging } =
-    useBoxApp();
+  const {
+    initialized,
+    isAppModifying,
+    setInitialized,
+    selectedBoxId,
+    modifyData,
+    viewportWidth,
+    viewportHeight,
+    windowWidth,
+    isBoxDragging,
+    rowScale,
+  } = useBoxApp();
   const appInnerRef = useRef<HTMLDivElement>(null);
   const [scrollX, setScrollX] = useState(0);
   const [scrollY, setScrollY] = useState(0);
@@ -117,7 +127,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
     };
-  }, [isBoxDragging, appInnerRef, scrollX, scrollY, maxHeight, viewportWidth, viewportHeight, isScrollLocked]);
+  }, [isBoxDragging, appInnerRef, scrollX, scrollY, maxHeight, viewportWidth, viewportHeight, isScrollLocked, rowScale]);
 
   useEffect(() => {
     const colsWidth = colsWidthTotal(columnList || []);
@@ -133,6 +143,10 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       setIsScrollMax(true);
     }
   }, [scrollX, columnList, windowWidth]);
+
+  useEffect(() => {
+    console.log({ maxHeight });
+  }, [maxHeight]);
 
   const handleUpdateBoxSizeEnd = useCallback(
     async (resizedBox: BoxProps) => {

@@ -79,7 +79,6 @@ export default function Page() {
           };
         });
 
-        console.log({ rowScale });
         setRowScaleTmp(rowScale);
         setBoxList(newBoxList);
       }
