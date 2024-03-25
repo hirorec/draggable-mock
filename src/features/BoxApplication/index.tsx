@@ -192,6 +192,18 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     [appInnerRef.current, scrollX, scrollY, columnList, viewportWidth]
   );
 
+  const handleInteractionStart = useCallback(
+    async (box: BoxProps, index: number) => {
+      if (!boxList) {
+        return;
+      }
+
+      console.log('handleInteractionStart', box);
+      const newBoxList = _.cloneDeep(boxList);
+    },
+    [boxList, columnList, isAppModifying, selectedBoxId, initialized]
+  );
+
   if (initialized && boxList && columnList) {
     return (
       <div className={clsx(styles.application)}>
@@ -207,6 +219,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
               onUpdateBox={onUpdateBox}
               onDropBox={handleDropBox}
               onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
+              onInteractionStart={handleInteractionStart}
             />
           </ColumnContainer>
         </div>

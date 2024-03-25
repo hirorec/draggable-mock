@@ -25,6 +25,7 @@ type Props = {
   onUpdateSize: (size: Size) => void;
   onUpdateSizeEnd: (size: Size) => void;
   onDrop: (position: Position) => void;
+  onInteractionStart: () => void;
   onClick: () => void;
 };
 
@@ -44,6 +45,7 @@ export const Box: React.FC<Props> = ({
   onUpdateSizeEnd,
   onDrop,
   onClick,
+  onInteractionStart,
 }) => {
   const { isAppModifying, isBoxDragging, selectedBoxId, rowScale, resizeMode, setResizeMode } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
@@ -56,21 +58,34 @@ export const Box: React.FC<Props> = ({
 
   const boxSize: Size = useMemo(() => {
     return {
-      width: stepBaseSize.width * STEP.X,
-      height: stepBaseSize.height * (STEP.Y * rowScale),
+      width: stepBaseSize.width * step.x,
+      height: stepBaseSize.height * step.y,
     };
-  }, [stepBaseSize, rowScale]);
+  }, [stepBaseSize, step]);
 
   useEffect(() => {
-    setOverlayBoxHeight(stepBaseSize.height * STEP.Y * rowScale);
+    setOverlayBoxHeight(stepBaseSize.height * step.y);
     setOverlayPosition(stepBasePosition);
-  }, [rowScale, stepBaseSize.height]);
+  }, [stepBaseSize.height, step]);
 
   useEffect(() => {
     if (!isAppModifying) {
       setOverlayPosition(stepBasePosition);
     }
   }, [isAppModifying]);
+
+  // useEffect(() => {
+  //   if (id === selectedBoxId && resizeMode) {
+  //     // TODO
+  //     console.log('resize start');
+  //   }
+  // }, [resizeMode, selectedBoxId, id]);
+
+  useEffect(() => {
+    if (id === selectedBoxId && isBoxDragging) {
+      onInteractionStart();
+    }
+  }, [isBoxDragging, selectedBoxId, id]);
 
   useEffect(() => {
     if ((isBoxDragging || resizeMode) && selectedBoxId === id) {
@@ -105,10 +120,16 @@ export const Box: React.FC<Props> = ({
     [stepBaseSize, maxHeight, stepBasePosition, rowScale]
   );
 
-  const handleUpdateResizeMode = useCallback((resizeMode: boolean) => {
-    console.log({ resizeMode });
-    setResizeMode(resizeMode);
-  }, []);
+  const handleUpdateResizeMode = useCallback(
+    (resizeMode: boolean) => {
+      if (resizeMode && isMouseDown) {
+        setResizeMode(true);
+      } else {
+        setResizeMode(false);
+      }
+    },
+    [isMouseDown]
+  );
 
   const handleDragStart = useCallback(
     (newStepBasePosition: Position) => {

@@ -18,9 +18,19 @@ type Props = {
   onUpdateBox: (box: BoxProps, index: number) => void;
   onDropBox: (box: BoxProps, index: number) => void;
   onUpdateBoxSizeEnd: (box: BoxProps, index: number) => void;
+  onInteractionStart: (box: BoxProps, index: number) => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, maxHeight, onUpdateBox, onDropBox, onUpdateBoxSizeEnd }) => {
+export const BoxContainer: React.FC<Props> = ({
+  boxList,
+  columnList,
+  maxWidth,
+  maxHeight,
+  onUpdateBox,
+  onDropBox,
+  onUpdateBoxSizeEnd,
+  onInteractionStart,
+}) => {
   const { isWindowMouseDown, rowScale } = useBoxApp();
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
@@ -33,6 +43,12 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
       return 0;
     }
   };
+
+  const containerWidth = useMemo(() => {
+    return columnList.reduce((prev, current) => {
+      return prev + current.colDiv * step.x;
+    }, 0);
+  }, [columnList, step]);
 
   useEffect(() => {
     setStep({ x: STEP.X, y: STEP.Y * rowScale });
@@ -142,11 +158,13 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
     [containerRef.current, boxList, isWindowMouseDown, step]
   );
 
-  const containerWidth = useMemo(() => {
-    return columnList.reduce((prev, current) => {
-      return prev + current.colDiv * step.x;
-    }, 0);
-  }, [columnList, step]);
+  const handleInteractionStart = (index: number) => {
+    const box = _.cloneDeep(boxList[index]);
+
+    if (box) {
+      onInteractionStart(box, index);
+    }
+  };
 
   return (
     <div ref={containerRef} className={clsx(styles.container)} onMouseMove={handleMouseMove} style={{ width: `${containerWidth}px` }}>
@@ -169,6 +187,7 @@ export const BoxContainer: React.FC<Props> = ({ boxList, columnList, maxWidth, m
             onUpdateSizeEnd={(size: Size) => handleUpdateBoxSizeEnd(index, size)}
             onDrop={(position: Position) => handleDropBox(index, position)}
             onClick={() => handleClickBox(index)}
+            onInteractionStart={() => handleInteractionStart(index)}
           />
         );
       })}
