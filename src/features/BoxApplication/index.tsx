@@ -144,16 +144,12 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     }
   }, [scrollX, columnList, windowWidth]);
 
-  useEffect(() => {
-    console.log({ maxHeight });
-  }, [maxHeight]);
-
   const handleUpdateBoxSizeEnd = useCallback(
     async (resizedBox: BoxProps) => {
       if (!boxList || !columnList) {
         return;
       }
-
+      console.log('handleUpdateBoxSizeEnd', resizedBox);
       const { boxList: modifiedBoxData, columnList: modifiedColumnList } = await modifyData(boxList, columnList, resizedBox);
       onUpdateBoxList(modifiedBoxData);
       onUpdateColumnList(modifiedColumnList);
@@ -161,13 +157,14 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     [boxList, columnList, isAppModifying]
   );
 
+  // 操作完了タイミングで呼ばれる
   const handleDropBox = useCallback(
     async (droppedBox: BoxProps, index: number) => {
       if (!boxList || !columnList) {
         return;
       }
 
-      console.log('handleDropBox');
+      console.log('handleDropBox', droppedBox);
       const newBoxList = _.cloneDeep(boxList);
 
       newBoxList[index] = {

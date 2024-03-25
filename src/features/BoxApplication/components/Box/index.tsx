@@ -45,14 +45,13 @@ export const Box: React.FC<Props> = ({
   onDrop,
   onClick,
 }) => {
-  const { isAppModifying, isBoxDragging, selectedBoxId, rowScale } = useBoxApp();
+  const { isAppModifying, isBoxDragging, selectedBoxId, rowScale, resizeMode, setResizeMode } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
     x: stepBasePosition.x,
     y: stepBasePosition.y,
   });
-  const [resizeMode, setResizeMode] = useState(false);
 
   const boxSize: Size = useMemo(() => {
     return {
@@ -118,10 +117,14 @@ export const Box: React.FC<Props> = ({
 
   const handleDragEnd = useCallback(
     (newStepBasePosition: Position) => {
+      if (resizeMode) {
+        return;
+      }
+
       setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
       onDrop(newStepBasePosition);
     },
-    [overlayPosition, stepBasePosition, rowScale]
+    [overlayPosition, stepBasePosition, rowScale, resizeMode]
   );
 
   const handleDragLeave = useCallback(

@@ -18,6 +18,7 @@ export type BoxAppContextType = {
   rowInterval: number;
   rowDiv: number;
   rowScale: number;
+  resizeMode: boolean;
 
   setInitialized: (value: boolean) => void;
   setIsAppModifying: (value: boolean) => void;
@@ -26,6 +27,7 @@ export type BoxAppContextType = {
   setRowInterval: (value: number) => void;
   setRowDiv: (value: number) => void;
   setRowScale: (value: number) => void;
+  setResizeMode: (value: boolean) => void;
   modifyData: (
     boxList: BoxProps[],
     columnList: ColumnProps[],
@@ -49,6 +51,7 @@ export const useBoxAppOrigin = () => {
   const [rowDiv, setRowDiv] = useState(DEFAULT_ROW_DIV);
   const [rowScale, setRowScale] = useState(1);
   const [isBoxDragging, setIsBoxDragging] = useState(false);
+  const [resizeMode, setResizeMode] = useState(false);
 
   useEffect(() => {
     const onWindowMouseDown = () => {
@@ -116,6 +119,7 @@ export const useBoxAppOrigin = () => {
     rowInterval,
     rowDiv,
     rowScale,
+    resizeMode,
 
     setInitialized,
     setIsAppModifying,
@@ -125,6 +129,7 @@ export const useBoxAppOrigin = () => {
     setRowDiv,
     setRowScale,
     modifyData,
+    setResizeMode,
   };
 };
 
