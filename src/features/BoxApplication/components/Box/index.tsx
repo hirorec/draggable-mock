@@ -104,9 +104,10 @@ export const Box: React.FC<Props> = ({
     [stepBaseSize, maxHeight, stepBasePosition, rowScale]
   );
 
-  const handleUpdateResizeMode = (resizeMode: boolean) => {
+  const handleUpdateResizeMode = useCallback((resizeMode: boolean) => {
+    console.log({ resizeMode });
     setResizeMode(resizeMode);
-  };
+  }, []);
 
   const handleDragStart = useCallback(
     (newStepBasePosition: Position) => {

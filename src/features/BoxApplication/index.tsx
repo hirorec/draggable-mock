@@ -157,7 +157,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     [boxList, columnList, isAppModifying]
   );
 
-  // 操作完了タイミングで呼ばれる
   const handleDropBox = useCallback(
     async (droppedBox: BoxProps, index: number) => {
       if (!boxList || !columnList) {
