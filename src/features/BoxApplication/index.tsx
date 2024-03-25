@@ -154,7 +154,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       if (!boxList || !columnList) {
         return;
       }
-      console.log('handleUpdateBoxSizeEnd', resizedBox);
 
       const res = await new Promise<boolean>((resolve) => {
         showModal();
@@ -163,6 +162,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       setConfirmModalConfig(undefined);
 
       if (res) {
+        console.log('handleUpdateBoxSizeEnd', resizedBox);
         const { boxList: modifiedBoxData, columnList: modifiedColumnList } = await modifyData(boxList, columnList, resizedBox);
         onUpdateBoxList(modifiedBoxData);
         onUpdateColumnList(modifiedColumnList);
@@ -179,8 +179,6 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
         return;
       }
 
-      console.log('handleDropBox', droppedBox);
-
       const res = await new Promise<boolean>((resolve) => {
         showModal();
         setConfirmModalConfig({ onClose: resolve });
@@ -188,6 +186,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
       setConfirmModalConfig(undefined);
 
       if (res) {
+        console.log('handleDropBox', droppedBox);
         const newBoxList = _.cloneDeep(boxList);
 
         newBoxList[index] = {
