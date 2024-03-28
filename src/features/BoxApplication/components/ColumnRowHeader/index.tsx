@@ -6,6 +6,7 @@ import { ColumnProps } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';
 import { useBoxApp } from '../../hooks/useBoxApp';
+import { colsWidthTotal } from '../../utils';
 
 type Props = {
   columnList: ColumnProps[];
@@ -13,6 +14,11 @@ type Props = {
 
 export const ColumnRowHeader: React.FC<Props> = ({ columnList }) => {
   const { rowInterval } = useBoxApp();
+
+  const headerStyle = useMemo(() => {
+    const width = colsWidthTotal(columnList);
+    return { width: `${width}px` };
+  }, [columnList]);
 
   const rowDiv = useMemo(() => {
     if (columnList[0]) {
@@ -23,7 +29,7 @@ export const ColumnRowHeader: React.FC<Props> = ({ columnList }) => {
   }, [columnList]);
 
   return (
-    <div className={clsx(styles.header, `rowInterval--${rowInterval}`)}>
+    <div className={clsx(styles.header, `rowInterval--${rowInterval}`)} style={headerStyle}>
       <div className={clsx(styles.headerInner)}>
         {new Array(rowDiv).fill({}).map((_, index) => {
           return <div className={clsx(styles.headerRow)} key={index} style={{ height: `${STEP.Y}px` }}></div>;
