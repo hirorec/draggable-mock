@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+import { sleep } from '@/utils';
+
 import { BoxProps, ColumnProps } from '../types';
 
 import { yInBox, positionInBoxWithBoxLocalX } from '.';
@@ -53,6 +55,8 @@ export const modifyData = async (
 
   // Boxポジション設定
   modifyBoxPositions(boxList, columnList);
+
+  await sleep(100);
 
   return {
     boxList,

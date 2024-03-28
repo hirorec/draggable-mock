@@ -66,7 +66,7 @@ export const Box: React.FC<Props> = ({
   useEffect(() => {
     setOverlayBoxHeight(stepBaseSize.height * step.y);
     setOverlayPosition(stepBasePosition);
-  }, [stepBaseSize.height, step]);
+  }, [step]);
 
   useEffect(() => {
     if (!isAppModifying) {
@@ -133,6 +133,7 @@ export const Box: React.FC<Props> = ({
 
   const handleDragStart = useCallback(
     (newStepBasePosition: Position) => {
+      console.log('handleDragStart');
       setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
     },
     [overlayPosition, stepBasePosition, rowScale]

@@ -2,7 +2,6 @@ import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { STEP } from '@/features/BoxApplication/const';
 import { useBoxApp } from '@/features/BoxApplication/hooks/useBoxApp';
 
 import styles from './index.module.scss';
@@ -159,16 +158,16 @@ export const DraggableBox: React.FC<Props> = ({
         const dy = newMousePosition.y - mousePosition.y;
         const newMouseMoveAmount = { ...mouseMoveAmount };
         const newStepBasePosition = { ...stepBasePosition };
-        const y = newStepBasePosition.y + dy / (STEP.Y * rowScale);
+        const y = newStepBasePosition.y + dy / step.y;
         newStepBasePosition.y = y;
 
         newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
         newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
 
-        if (rectMousePosition.x >= rect.width) {
+        if (rectMousePosition.x >= rect.width && isBoxDragging) {
           newStepBasePosition.x = newStepBasePosition.x + 1;
           resetMouseMoveAmount();
-        } else if (rectMousePosition.x <= 0) {
+        } else if (rectMousePosition.x <= 0 && isBoxDragging) {
           newStepBasePosition.x = newStepBasePosition.x - 1;
           resetMouseMoveAmount();
         } else {
@@ -181,7 +180,7 @@ export const DraggableBox: React.FC<Props> = ({
       setIsMouseOver(isMouseOver);
       setMousePosition(newMousePosition);
     },
-    [boxRef.current, isBoxDragging, transform, mousePosition, resizeMode, rowScale]
+    [boxRef.current, isBoxDragging, transform, mousePosition, resizeMode, step]
   );
 
   const handleMouseDown = useCallback(() => {
