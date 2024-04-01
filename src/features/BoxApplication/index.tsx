@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/dist/ScrollToPlugin';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -13,7 +13,7 @@ import { ColumnContainer } from './components/ColumnContainer';
 import { ColumnHeader } from './components/ColumnHeader';
 import { ColumnRowHeader } from './components/ColumnRowHeader';
 import { ConfirmModal, ConfirmModalProps } from './components/ConfirmModal';
-import { STEP } from './const';
+import { BOX_ACTION_MODE, STEP } from './const';
 import { useBoxApp } from './hooks/useBoxApp';
 import { useBoxConfirmModal } from './hooks/useBoxConfirmModal';
 import styles from './index.module.scss';
@@ -22,13 +22,13 @@ import { colsWidthTotal, equalBoxPositionAndSize } from './utils';
 type Props = {
   boxList?: BoxProps[];
   columnList?: ColumnProps[];
-  maxHeight: number;
-  onUpdateBox: (box: BoxProps, index: number) => void;
+  // maxHeight: number;
+  // onUpdateBox: (box: BoxProps, index: number) => void;
   onUpdateBoxList: (boxList: BoxProps[]) => void;
   onUpdateColumnList: (columnList: ColumnProps[]) => void;
 };
 
-export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight, onUpdateBox, onUpdateBoxList, onUpdateColumnList }) => {
+export const BoxApplication: React.FC<Props> = ({ boxList, columnList, onUpdateBoxList, onUpdateColumnList }) => {
   const {
     initialized,
     isAppModifying,
@@ -38,9 +38,12 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     viewportWidth,
     viewportHeight,
     windowWidth,
-    isBoxDragging,
+    // isBoxDragging,
     rowScale,
     cursor,
+    boxActionMode,
+    maxHeight,
+    // maxWidth,
   } = useBoxApp();
   const { showModal } = useBoxConfirmModal();
   const appInnerRef = useRef<HTMLDivElement>(null);
@@ -52,13 +55,13 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
   const [undoBoxList, setUndoBoxList] = useState<BoxProps[]>([]);
   const [confirmModalConfig, setConfirmModalConfig] = useState<ConfirmModalProps>();
 
-  const maxWidth = useMemo((): number => {
-    return (
-      columnList?.reduce((prev, current) => {
-        return prev + current.colDiv;
-      }, 0) || 0
-    );
-  }, [columnList]);
+  // const maxWidth = useMemo((): number => {
+  //   return (
+  //     columnList?.reduce((prev, current) => {
+  //       return prev + current.colDiv;
+  //     }, 0) || 0
+  //   );
+  // }, [columnList]);
 
   useEffect(() => {
     if (!initialized && boxList && columnList) {
@@ -91,7 +94,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
-      if (isBoxDragging && appInnerRef.current && !isScrollLocked) {
+      if (boxActionMode === BOX_ACTION_MODE.DRAGGING && appInnerRef.current && !isScrollLocked) {
         const rect = appInnerRef.current.getBoundingClientRect();
         const rectMousePosition: Position = {
           x: e.clientX - rect.x - 65,
@@ -133,7 +136,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
     };
-  }, [isBoxDragging, appInnerRef, scrollX, scrollY, maxHeight, viewportWidth, viewportHeight, isScrollLocked, rowScale]);
+  }, [appInnerRef, scrollX, scrollY, maxHeight, viewportWidth, viewportHeight, isScrollLocked, rowScale]);
 
   useEffect(() => {
     const colsWidth = colsWidthTotal(columnList || []);
@@ -271,9 +274,9 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
               <BoxContainer
                 boxList={boxList}
                 columnList={columnList}
-                maxWidth={maxWidth}
-                maxHeight={maxHeight}
-                onUpdateBox={onUpdateBox}
+                // maxWidth={maxWidth}
+                // maxHeight={maxHeight}
+                // onUpdateBox={onUpdateBox}
                 onDropBox={handleDropBox}
                 onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
                 onInteractionStart={handleInteractionStart}

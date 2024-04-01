@@ -8,14 +8,14 @@ import { useBoxApp } from '@/features/BoxApplication/hooks/useBoxApp';
 import styles from './index.module.scss';
 import { BoxWrapper } from '../BoxWrapper';
 
-import type { BoxProps, ColumnProps, Position, Size, Step } from '@/features/BoxApplication/types';
+import type { BoxProps, ColumnProps, Position, Size } from '@/features/BoxApplication/types';
 
 type Props = {
   boxList: BoxProps[];
   columnList: ColumnProps[];
-  maxWidth: number;
-  maxHeight: number;
-  onUpdateBox: (box: BoxProps, index: number) => void;
+  // maxWidth: number;
+  // maxHeight: number;
+  // onUpdateBox: (box: BoxProps, index: number) => void;
   onDropBox: (box: BoxProps, index: number) => void;
   onUpdateBoxSizeEnd: (box: BoxProps, index: number) => void;
   onInteractionStart: () => void;
@@ -24,17 +24,17 @@ type Props = {
 export const BoxContainer: React.FC<Props> = ({
   boxList,
   columnList,
-  maxWidth,
-  maxHeight,
-  onUpdateBox,
+  // maxWidth,
+  // maxHeight,
+  // onUpdateBox,
   onDropBox,
   onUpdateBoxSizeEnd,
   onInteractionStart,
 }) => {
-  const { isWindowMouseDown, rowScale } = useBoxApp();
+  const { isWindowMouseDown, rowScale, step, setStep, maxWidth, maxHeight } = useBoxApp();
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
-  const [step, setStep] = useState<Step>({ x: STEP.X, y: STEP.Y * rowScale });
+  // const [step, setStep] = useState<Step>({ x: STEP.X, y: STEP.Y * rowScale });
 
   const getZIndex = (index: number) => {
     if (index === hoveredBoxIndex) {
@@ -78,7 +78,7 @@ export const BoxContainer: React.FC<Props> = ({
 
       if (box) {
         box.position = { ...newPosition };
-        onUpdateBox(box, index);
+        // onUpdateBox(box, index);
       }
     },
     [boxList, maxWidth, maxHeight, rowScale]
@@ -90,7 +90,7 @@ export const BoxContainer: React.FC<Props> = ({
 
       if (box) {
         box.size = size;
-        onUpdateBox(box, index);
+        // onUpdateBox(box, index);
       }
     },
     [boxList]
@@ -168,7 +168,7 @@ export const BoxContainer: React.FC<Props> = ({
             label={box.label}
             backgroundColor={box.backgroundColor}
             borderColor={box.borderColor}
-            step={step}
+            // step={step}
             stepBaseSize={box.size}
             stepBasePosition={box.position}
             localPosition={box.localPosition}

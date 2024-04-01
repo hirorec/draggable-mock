@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { STEP } from '@/features/BoxApplication/const';
-import { Position, Size, Step } from '@/features/BoxApplication/types';
+import { Position, Size } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';
 import { useBoxApp } from '../../hooks/useBoxApp';
@@ -14,7 +14,7 @@ type Props = {
   label: string;
   borderColor: string;
   backgroundColor: string;
-  step: Step;
+  // step: Step;
   stepBasePosition: Position;
   localPosition: Position;
   stepBaseSize: Size;
@@ -33,7 +33,7 @@ export const BoxWrapper: React.FC<Props> = ({
   label,
   borderColor,
   backgroundColor,
-  step,
+  // step,
   stepBaseSize,
   stepBasePosition,
   localPosition,
@@ -46,7 +46,7 @@ export const BoxWrapper: React.FC<Props> = ({
   onClick,
   onInteractionStart,
 }) => {
-  const { isAppModifying, selectedBoxId, rowScale } = useBoxApp();
+  const { isAppModifying, selectedBoxId, rowScale, step } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
@@ -181,7 +181,7 @@ export const BoxWrapper: React.FC<Props> = ({
         label={label}
         width={boxSize.width}
         height={boxSize.height}
-        step={step}
+        // step={step}
         stepBasePosition={stepBasePosition}
         localPosition={localPosition}
         // resizeMode={resizeMode}
