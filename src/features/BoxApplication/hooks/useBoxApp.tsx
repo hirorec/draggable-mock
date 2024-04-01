@@ -10,6 +10,7 @@ import type { BoxActionMode, BoxProps, ColumnProps, Cursor, Position, Size, Step
 export type BoxAppContextType = {
   initialized: boolean;
   boxList: BoxProps[] | undefined;
+  undoBoxList: BoxProps[] | undefined;
   columnList: ColumnProps[] | undefined;
   isAppModifying: boolean;
   isWindowMouseDown: boolean;
@@ -28,7 +29,7 @@ export type BoxAppContextType = {
   boxActionMode: BoxActionMode | undefined;
   maxWidth: number;
   maxHeight: number;
-  boxChanged: boolean;
+  changedBoxId: string | undefined;
 
   setInitialized: (value: boolean) => void;
   setBoxList: (value: BoxProps[]) => void;
@@ -80,7 +81,7 @@ export const useBoxAppOrigin = () => {
   const [step, setStep] = useState<Step>({ x: STEP.X, y: STEP.Y * rowScale });
   const [isBoxEdge, setIsBoxEdge] = useState(false);
   const [cursor, setCursor] = useState<Cursor>(CURSOR.UNSET);
-  const [boxChanged, setBoxChanged] = useState(false);
+  const [changedBoxId, setChangedBoxId] = useState<string>();
 
   //-------------------------
   // event handler
@@ -368,16 +369,14 @@ export const useBoxAppOrigin = () => {
       if (boxA && boxB) {
         const equal = equalBoxPositionAndSize(boxA, boxB);
         const changed = !equal;
-        setBoxChanged(changed);
-
-        setTimeout(() => {
-          setBoxChanged(false);
-        }, 1);
 
         if (changed) {
-          // console.log(boxA.position, boxB.position);
-          modifyData(boxList, columnList, boxA);
+          setChangedBoxId(boxA.id);
         }
+
+        setTimeout(() => {
+          setChangedBoxId(undefined);
+        }, 1);
       }
     },
     [boxList, undoBoxList, columnList]
@@ -386,6 +385,7 @@ export const useBoxAppOrigin = () => {
   return {
     initialized,
     boxList,
+    undoBoxList,
     columnList,
     isAppModifying,
     isWindowMouseDown,
@@ -404,7 +404,7 @@ export const useBoxAppOrigin = () => {
     boxActionMode,
     maxWidth,
     maxHeight,
-    boxChanged,
+    changedBoxId,
 
     setInitialized,
     setBoxList,

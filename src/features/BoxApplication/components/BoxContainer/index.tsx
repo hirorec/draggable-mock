@@ -12,28 +12,12 @@ import type { BoxProps, ColumnProps, Position } from '@/features/BoxApplication/
 type Props = {
   boxList: BoxProps[];
   columnList: ColumnProps[];
-  // maxWidth: number;
-  // maxHeight: number;
-  // onUpdateBox: (box: BoxProps, index: number) => void;
-  // onDropBox: (box: BoxProps, index: number) => void;
-  // onUpdateBoxSizeEnd: (box: BoxProps, index: number) => void;
-  // onInteractionStart: () => void;
 };
 
-export const BoxContainer: React.FC<Props> = ({
-  boxList,
-  columnList,
-  // maxWidth,
-  // maxHeight,
-  // onUpdateBox,
-  // onDropBox,
-  // onUpdateBoxSizeEnd,
-  // onInteractionStart,
-}) => {
-  const { isWindowMouseDown, rowScale, step, setStep, maxWidth, maxHeight } = useBoxApp();
+export const BoxContainer: React.FC<Props> = ({ boxList, columnList }) => {
+  const { isWindowMouseDown, rowScale, step, setStep } = useBoxApp();
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
-  // const [step, setStep] = useState<Step>({ x: STEP.X, y: STEP.Y * rowScale });
 
   const getZIndex = (index: number) => {
     if (index === hoveredBoxIndex) {
@@ -52,76 +36,6 @@ export const BoxContainer: React.FC<Props> = ({
   useEffect(() => {
     setStep({ x: STEP.X, y: STEP.Y * rowScale });
   }, [rowScale]);
-
-  // const handleUpdateBoxPosition = useCallback(
-  //   (index: number, position: Position) => {
-  //     const newPosition = { ...position };
-  //     const box = _.cloneDeep(boxList[index]);
-  //     const maxY = maxHeight * (1 / rowScale);
-
-  //     if (newPosition.x + box.localPosition.x < 0) {
-  //       newPosition.x = 0;
-  //     }
-
-  //     if (newPosition.y < 0) {
-  //       newPosition.y = 0;
-  //     }
-
-  //     if (newPosition.y + box.size.height > maxY) {
-  //       newPosition.y = maxY - box.size.height;
-  //     }
-
-  //     if (position.x + box.size.width > maxWidth) {
-  //       newPosition.x = maxWidth - box.size.width;
-  //     }
-
-  //     if (box) {
-  //       box.position = { ...newPosition };
-  //       // onUpdateBox(box, index);
-  //     }
-  //   },
-  //   [boxList, maxWidth, maxHeight, rowScale]
-  // );
-
-  // const handleUpdateBoxSize = useCallback(
-  //   (index: number, size: Size) => {
-  //     const box = _.cloneDeep(boxList[index]);
-
-  //     if (box) {
-  //       box.size = size;
-  //       // onUpdateBox(box, index);
-  //     }
-  //   },
-  //   [boxList]
-  // );
-
-  const handleClickBox = (index: number) => {
-    // console.log('click', index);
-  };
-
-  // const handleDropBox = useCallback(
-  //   (index: number, position: Position) => {
-  //     const box = _.cloneDeep(boxList[index]);
-
-  //     if (box) {
-  //       box.position = position;
-  //       onDropBox(box, index);
-  //     }
-  //   },
-  //   [boxList]
-  // );
-
-  // const handleUpdateBoxSizeEnd = useCallback(
-  //   (index: number, size: Size) => {
-  //     const box = _.cloneDeep(boxList[index]);
-
-  //     if (box) {
-  //       box.size = size;
-  //       onUpdateBoxSizeEnd(box, index);
-  //     }
-  //   },
-  //   [boxList]
-  // );
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -171,14 +85,6 @@ export const BoxContainer: React.FC<Props> = ({
             stepBasePosition={box.position}
             localPosition={box.localPosition}
             zIndex={getZIndex(index)}
-            // step={step}
-            // maxHeight={maxHeight}
-            // onUpdatePosition={(position: Position) => handleUpdateBoxPosition(index, position)}
-            // onUpdateSize={(size: Size) => handleUpdateBoxSize(index, size)}
-            // onUpdateSizeEnd={(size: Size) => handleUpdateBoxSizeEnd(index, size)}
-            // onDrop={(position: Position) => handleDropBox(index, position)}
-            // onClick={() => handleClickBox(index)}
-            // onInteractionStart={onInteractionStart}
           />
         );
       })}

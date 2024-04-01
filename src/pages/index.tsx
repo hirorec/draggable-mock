@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import { BOX_LIST } from '@/const/boxList';
 import { BoxApplication } from '@/features/BoxApplication';
@@ -94,10 +94,6 @@ export default function Page() {
 
           return {
             ...newBox,
-            // size: {
-            //   width: newBox.size.width,
-            //   height: newBox.size.height * rowScale,
-            // },
           };
         });
 
@@ -106,17 +102,6 @@ export default function Page() {
       }
     }
   }, [rowScale, boxList, rowScaleTmp, setRowDivTmp]);
-
-  const handleUpdateBox = useCallback(
-    (box: BoxProps, index: number) => {
-      if (boxList) {
-        const newBoxList = _.cloneDeep(boxList);
-        newBoxList[index] = box;
-        setBoxList(newBoxList);
-      }
-    },
-    [boxList]
-  );
 
   const handleUpdateBoxList = (boxList: BoxProps[]) => {
     setBoxList(boxList);
@@ -139,14 +124,7 @@ export default function Page() {
     <BoxAppProvider value={boxAppOrigin}>
       <BoxConfirmModalProvider value={boxConfirmModalOrigin}>
         <div className={clsx(styles.container)}>
-          <BoxApplication
-            boxList={boxList}
-            columnList={columnList}
-            // maxHeight={rowDiv}
-            // onUpdateBox={handleUpdateBox}
-            onUpdateBoxList={handleUpdateBoxList}
-            onUpdateColumnList={handleUpdateColumnList}
-          />
+          <BoxApplication onUpdateBoxList={handleUpdateBoxList} onUpdateColumnList={handleUpdateColumnList} />
           <div className={styles.ui}>
             <div className={styles.buttons}>
               <button className={clsx(styles.button, selectedBoxListIndex === 0 && styles.selected)} onClick={() => handleBoxListButton(0)}>
