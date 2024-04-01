@@ -30,6 +30,7 @@ export type BoxAppContextType = {
   maxWidth: number;
   maxHeight: number;
   changedBoxId: string | undefined;
+  clickedBoxId: string | undefined;
 
   setInitialized: (value: boolean) => void;
   setBoxList: (value: BoxProps[]) => void;
@@ -82,6 +83,7 @@ export const useBoxAppOrigin = () => {
   const [isBoxEdge, setIsBoxEdge] = useState(false);
   const [cursor, setCursor] = useState<Cursor>(CURSOR.UNSET);
   const [changedBoxId, setChangedBoxId] = useState<string>();
+  const [clickedBoxId, setClickedBoxId] = useState<string>();
 
   //-------------------------
   // event handler
@@ -296,8 +298,6 @@ export const useBoxAppOrigin = () => {
       };
     }
 
-    console.log('modifyData');
-
     setIsAppModifying(true);
     const modifiedData = await modifier.modifyData(_.cloneDeep(boxList), _.cloneDeep(columnList), updatedBox, selectedBoxId);
     setIsAppModifying(false);
@@ -347,6 +347,7 @@ export const useBoxAppOrigin = () => {
 
   const onActionStart = useCallback(
     (boxId: string) => {
+      resetMouseMoveAmount();
       // console.log('onActionStart', { boxId });
 
       if (boxList) {
@@ -367,6 +368,14 @@ export const useBoxAppOrigin = () => {
       const boxB = undoBoxList?.find((b) => b.id === boxId);
 
       if (boxA && boxB) {
+        if (mouseMoveAmount.x <= 0 && mouseMoveAmount.y <= 0) {
+          setClickedBoxId(boxA.id);
+
+          setTimeout(() => {
+            setClickedBoxId(undefined);
+          }, 1);
+        }
+
         const equal = equalBoxPositionAndSize(boxA, boxB);
         const changed = !equal;
 
@@ -405,6 +414,7 @@ export const useBoxAppOrigin = () => {
     maxWidth,
     maxHeight,
     changedBoxId,
+    clickedBoxId,
 
     setInitialized,
     setBoxList,

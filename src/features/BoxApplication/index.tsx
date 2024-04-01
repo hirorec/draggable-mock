@@ -38,6 +38,7 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
     boxActionMode,
     maxHeight,
     changedBoxId,
+    clickedBoxId,
     boxList,
     columnList,
     undoBoxList,
@@ -58,6 +59,12 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
       onBoxChange(changedBoxId);
     }
   }, [changedBoxId]);
+
+  useEffect(() => {
+    if (clickedBoxId) {
+      console.log({ clickedBoxId });
+    }
+  }, [clickedBoxId]);
 
   useEffect(() => {
     if (!initialized && boxList && columnList) {
