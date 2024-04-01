@@ -193,6 +193,12 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
       return;
     }
 
+    if (updatedBox.position.y < 0) {
+      return;
+    }
+
+    console.log(updatedBox.position);
+
     const newBoxList = _.cloneDeep(boxList);
 
     const res = await new Promise<boolean>((resolve) => {

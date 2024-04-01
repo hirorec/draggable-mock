@@ -25,6 +25,7 @@ export type BoxAppContextType = {
   cursor: Cursor;
   isBoxEdge: boolean;
   currentBoxElement: HTMLDivElement | null;
+  columnContainerElement: HTMLDivElement | null;
   step: Step;
   boxActionMode: BoxActionMode | undefined;
   maxWidth: number;
@@ -44,6 +45,7 @@ export type BoxAppContextType = {
   setCursor: (value: Cursor) => void;
   setIsBoxEdge: (value: boolean) => void;
   setCurrentBoxElement: (value: HTMLDivElement | null) => void;
+  setColumnContainerElement: (value: HTMLDivElement | null) => void;
   setStep: (value: Step) => void;
 
   onActionStart: (boxId: string) => void;
@@ -69,6 +71,7 @@ export const useBoxAppOrigin = () => {
   const [selectedBoxId, setSelectedBoxId] = useState<string>();
   const [hoveredBoxId, setHoveredBoxId] = useState<string>();
   const [currentBoxElement, setCurrentBoxElement] = useState<HTMLDivElement | null>(null);
+  const [columnContainerElement, setColumnContainerElement] = useState<HTMLDivElement | null>(null);
   const [windowWidth, setWindowWidth] = useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
@@ -92,7 +95,7 @@ export const useBoxAppOrigin = () => {
   const handleWindowMouseMove = useCallback(
     (event: MouseEvent) => {
       // console.log(currentBoxElement);
-      if (!currentBoxElement) {
+      if (!currentBoxElement || !columnContainerElement) {
         return;
       }
 
@@ -108,6 +111,8 @@ export const useBoxAppOrigin = () => {
         }
 
         const rect = currentBoxElement.getBoundingClientRect();
+        const columnContainerRect = columnContainerElement.getBoundingClientRect();
+
         const EDGE_OFFSET_Y = 10;
         const isEdge = newMousePosition.y >= rect.y + rect.height - EDGE_OFFSET_Y && newMousePosition.y < rect.y + rect.height;
         setIsBoxEdge(isEdge);
@@ -142,18 +147,25 @@ export const useBoxAppOrigin = () => {
             y: event.clientY - rect.y,
           };
 
-          const y = newPosition.y + dy / step.y;
-          newPosition.y = y;
+          const columnContainerMousePosition = {
+            x: event.clientX - columnContainerRect.x,
+            y: event.clientY - columnContainerRect.y,
+          };
 
-          if (rectMousePosition.x >= rect.width) {
-            newPosition.x = newPosition.x + 1;
-            resetMouseMoveAmount();
-          } else if (rectMousePosition.x <= 0) {
-            newPosition.x = newPosition.x - 1;
-            resetMouseMoveAmount();
+          if (columnContainerMousePosition.y >= STEP.Y && columnContainerMousePosition.x >= 0) {
+            const y = newPosition.y + dy / step.y;
+            newPosition.y = y;
+
+            if (rectMousePosition.x >= rect.width) {
+              newPosition.x = newPosition.x + 1;
+              resetMouseMoveAmount();
+            } else if (rectMousePosition.x <= 0) {
+              newPosition.x = newPosition.x - 1;
+              resetMouseMoveAmount();
+            }
+
+            updateBoxPosition(_.cloneDeep(box), newPosition);
           }
-
-          updateBoxPosition(_.cloneDeep(box), newPosition);
         }
 
         // リサイズ
@@ -175,7 +187,7 @@ export const useBoxAppOrigin = () => {
         setMousePosition(newMousePosition);
       }
     },
-    [isWindowMouseDown, selectedBoxId, boxActionMode, currentBoxElement, mousePosition, hoveredBoxId, step, boxList]
+    [isWindowMouseDown, selectedBoxId, boxActionMode, currentBoxElement, mousePosition, hoveredBoxId, step, boxList, columnContainerElement]
   );
 
   const handleWindowMouseDown = () => {
@@ -307,6 +319,7 @@ export const useBoxAppOrigin = () => {
   const updateBoxPosition = (box: BoxProps, position: Position) => {
     const newPosition = { ...position };
     const maxY = maxHeight * (1 / rowScale);
+    const maxX = maxWidth;
 
     if (newPosition.x + box.localPosition.x < 0) {
       newPosition.x = 0;
@@ -320,8 +333,8 @@ export const useBoxAppOrigin = () => {
       newPosition.y = maxY - box.size.height;
     }
 
-    if (position.x + box.size.width > maxWidth) {
-      newPosition.x = maxWidth - box.size.width;
+    if (position.x + box.size.width >= maxX) {
+      newPosition.x = position.x - box.size.width;
     }
 
     box.position = { ...newPosition };
@@ -409,6 +422,7 @@ export const useBoxAppOrigin = () => {
     cursor,
     isBoxEdge,
     currentBoxElement,
+    columnContainerElement,
     step,
     boxActionMode,
     maxWidth,
@@ -429,6 +443,7 @@ export const useBoxAppOrigin = () => {
     setCursor,
     setIsBoxEdge,
     setCurrentBoxElement,
+    setColumnContainerElement,
     setStep,
 
     onActionStart,
