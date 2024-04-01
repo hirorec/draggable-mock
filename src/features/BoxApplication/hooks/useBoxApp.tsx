@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { createContext, useState, useContext, useEffect, useMemo } from 'react';
+import { createContext, useState, useContext, useEffect, useMemo, useCallback } from 'react';
 
 import { BOX_ACTION_MODE, CURSOR, DEFAULT_ROW_DIV, DEFAULT_ROW_INTERVAL, STEP } from '../const';
 import * as modifier from '../utils/modifier';
@@ -20,13 +20,11 @@ export type BoxAppContextType = {
   rowInterval: number;
   rowDiv: number;
   rowScale: number;
-  // isBoxDragging: boolean;
-  // resizeMode: boolean;
   cursor: Cursor;
   isBoxEdge: boolean;
   currentBoxElement: HTMLDivElement | null;
   step: Step;
-  boxActionMode: BoxActionMode;
+  boxActionMode: BoxActionMode | undefined;
   maxWidth: number;
   maxHeight: number;
 
@@ -39,12 +37,11 @@ export type BoxAppContextType = {
   setRowInterval: (value: number) => void;
   setRowDiv: (value: number) => void;
   setRowScale: (value: number) => void;
-  // setIsBoxDragging: (value: boolean) => void;
-  // setResizeMode: (value: boolean) => void;
   setCursor: (value: Cursor) => void;
   setIsBoxEdge: (value: boolean) => void;
   setCurrentBoxElement: (value: HTMLDivElement | null) => void;
   setStep: (value: Step) => void;
+  // onAppMouseMove: React.MouseEventHandler<HTMLDivElement>;
 
   modifyData: (
     boxList: BoxProps[],
@@ -123,7 +120,7 @@ export const useBoxAppOrigin = () => {
     return () => {
       window.removeEventListener('mousemove', onWindowMouseMove);
     };
-  }, [isWindowMouseDown, selectedBoxId, boxActionMode, currentBoxElement, mousePosition, boxList]);
+  }, [isWindowMouseDown, selectedBoxId, boxActionMode, currentBoxElement, mousePosition, boxList, hoveredBoxId]);
 
   useEffect(() => {
     const viewportWidth = windowWidth - 40 - 65;
@@ -134,6 +131,8 @@ export const useBoxAppOrigin = () => {
 
   useEffect(() => {
     if (isWindowMouseDown && selectedBoxId) {
+      setMousePosition(undefined);
+
       if (isBoxEdge) {
         setBoxActionMode(BOX_ACTION_MODE.RESIZE);
       } else {
@@ -143,11 +142,12 @@ export const useBoxAppOrigin = () => {
     }
 
     if (!isWindowMouseDown) {
-      setCurrentBoxElement(null);
       setBoxActionMode(undefined);
       setSelectedBoxId(undefined);
     }
   }, [isWindowMouseDown]);
+
+  useEffect(() => {}, [isBoxEdge]);
 
   useEffect(() => {
     if (boxActionMode) {
@@ -156,7 +156,6 @@ export const useBoxAppOrigin = () => {
       } else if (boxActionMode === BOX_ACTION_MODE.RESIZE) {
         setCursor(CURSOR.RESIZE);
       }
-
       return;
     }
 
@@ -171,67 +170,88 @@ export const useBoxAppOrigin = () => {
     }
   }, [hoveredBoxId, isBoxEdge, boxActionMode]);
 
-  useEffect(() => {
-    console.log({ hoveredBoxId });
-  }, [hoveredBoxId]);
+  //-------------------------
+  // event handler
+  //-------------------------
 
-  // useEffect(() => {
-  //   console.log({ currentBoxElement, selectedBoxId });
-  // }, [currentBoxElement, selectedBoxId]);
-
-  const onWindowMouseMove = (e: MouseEvent) => {
-    if (boxActionMode && boxList) {
-      const box = boxList.find((b) => b.id === selectedBoxId);
-
-      if (!box || !currentBoxElement) {
+  // const onAppMouseMove = useCallback(
+  const onWindowMouseMove = useCallback(
+    (event: MouseEvent) => {
+      // console.log(currentBoxElement);
+      if (!currentBoxElement) {
         return;
       }
 
-      const newMousePosition = {
-        x: e.clientX,
-        y: e.clientY,
-      };
-
-      if (!mousePosition) {
-        setMousePosition(newMousePosition);
-        return;
-      }
-
-      if (boxActionMode === BOX_ACTION_MODE.DRAGGING) {
-        const dx = newMousePosition.x - mousePosition.x;
-        const dy = newMousePosition.y - mousePosition.y;
-        // console.log({ dx, dy });
-        const newMouseMoveAmount = { ...mouseMoveAmount };
-        newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
-        newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
-
-        const rect = currentBoxElement.getBoundingClientRect();
-        const rectMousePosition = {
-          x: e.clientX - rect.x,
-          y: e.clientY - rect.y,
+      if (boxList) {
+        const newMousePosition = {
+          x: event.clientX,
+          y: event.clientY,
         };
 
-        const newPosition = { ...box.position };
-        const y = newPosition.y + dy / step.y;
-        newPosition.y = y;
-
-        if (rectMousePosition.x >= rect.width && boxActionMode === BOX_ACTION_MODE.DRAGGING) {
-          newPosition.x = newPosition.x + 1;
-          resetMouseMoveAmount();
-        } else if (rectMousePosition.x <= 0 && boxActionMode === BOX_ACTION_MODE.DRAGGING) {
-          newPosition.x = newPosition.x - 1;
-          resetMouseMoveAmount();
-        } else {
-          setMouseMoveAmount(newMouseMoveAmount);
+        if (!mousePosition) {
+          setMousePosition(newMousePosition);
+          return;
         }
 
-        updateBoxPosition(_.cloneDeep(box), newPosition);
-        // onUpdateBoxPosition(box, newPosition);
-      }
+        const rect = currentBoxElement.getBoundingClientRect();
+        const EDGE_OFFSET_Y = 10;
+        const isEdge = newMousePosition.y >= rect.y + rect.height - EDGE_OFFSET_Y && newMousePosition.y < rect.y + rect.height;
+        setIsBoxEdge(isEdge);
 
-      setMousePosition(newMousePosition);
-    }
-  };
+        if (isEdge) {
+          setCursor(CURSOR.RESIZE);
+        } else if (!boxActionMode && hoveredBoxId) {
+          setCursor(CURSOR.POINTER);
+        }
+
+        if (!boxActionMode) {
+          return;
+        }
+
+        const box = boxList.find((b) => b.id === selectedBoxId);
+
+        if (!box) {
+          return;
+        }
+
+        if (boxActionMode === BOX_ACTION_MODE.DRAGGING) {
+          const dx = newMousePosition.x - mousePosition.x;
+          const dy = newMousePosition.y - mousePosition.y;
+          const newMouseMoveAmount = { ...mouseMoveAmount };
+          newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
+          newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
+
+          const rectMousePosition = {
+            x: event.clientX - rect.x,
+            y: event.clientY - rect.y,
+          };
+
+          const newPosition = { ...box.position };
+          const y = newPosition.y + dy / step.y;
+          newPosition.y = y;
+
+          if (rectMousePosition.x >= rect.width && boxActionMode === BOX_ACTION_MODE.DRAGGING) {
+            newPosition.x = newPosition.x + 1;
+            resetMouseMoveAmount();
+          } else if (rectMousePosition.x <= 0 && boxActionMode === BOX_ACTION_MODE.DRAGGING) {
+            newPosition.x = newPosition.x - 1;
+            resetMouseMoveAmount();
+          } else {
+            setMouseMoveAmount(newMouseMoveAmount);
+          }
+
+          updateBoxPosition(_.cloneDeep(box), newPosition);
+        }
+
+        setMousePosition(newMousePosition);
+      }
+    },
+    [isWindowMouseDown, selectedBoxId, boxActionMode, currentBoxElement, mousePosition, boxList, hoveredBoxId]
+  );
+
+  //-------------------------
+  // methods
+  //-------------------------
 
   const resetMouseMoveAmount = () => {
     setMouseMoveAmount({ x: 0, y: 0 });
@@ -280,7 +300,6 @@ export const useBoxAppOrigin = () => {
 
     if (box) {
       box.position = { ...newPosition };
-      // onUpdateBox(box, index);
 
       if (boxList) {
         const index = boxList.findIndex((b) => b.id === box.id);
@@ -305,11 +324,9 @@ export const useBoxAppOrigin = () => {
     viewportHeight,
     selectedBoxId,
     hoveredBoxId,
-    // isBoxDragging,
     rowInterval,
     rowDiv,
     rowScale,
-    // resizeMode,
     cursor,
     isBoxEdge,
     currentBoxElement,
@@ -324,16 +341,16 @@ export const useBoxAppOrigin = () => {
     setIsAppModifying,
     setSelectedBoxId,
     setHoveredBoxId,
-    // setIsBoxDragging,
     setRowInterval,
     setRowDiv,
     setRowScale,
     modifyData,
-    // setResizeMode,
     setCursor,
     setIsBoxEdge,
     setCurrentBoxElement,
     setStep,
+
+    // onAppMouseMove,
   };
 };
 

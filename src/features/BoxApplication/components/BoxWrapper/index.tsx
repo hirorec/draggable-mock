@@ -46,14 +46,14 @@ export const BoxWrapper: React.FC<Props> = ({
   onClick,
   onInteractionStart,
 }) => {
-  const { isAppModifying, selectedBoxId, rowScale, step } = useBoxApp();
+  const { isAppModifying, rowScale, step } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
     x: stepBasePosition.x,
     y: stepBasePosition.y,
   });
-  const [isMouseDown, setIsMouseDown] = useState(false);
+  // const [isMouseDown, setIsMouseDown] = useState(false);
 
   const boxSize: Size = useMemo(() => {
     return {
@@ -175,56 +175,16 @@ export const BoxWrapper: React.FC<Props> = ({
           localPosition={localPosition}
         />
       )}
-
       <Box
         id={id}
         label={label}
         width={boxSize.width}
         height={boxSize.height}
-        // step={step}
         stepBasePosition={stepBasePosition}
         localPosition={localPosition}
-        // resizeMode={resizeMode}
         backgroundColor={backgroundColor}
         borderColor={borderColor}
-        // isMouseDown={isMouseDown}
-        // setIsMouseDown={setIsMouseDown}
-        // onUpdatePosition={onUpdatePosition}
-        // onDragStart={handleDragStart}
-        // onDragEnd={handleDragEnd}
-        // onDragLeave={handleDragLeave}
       />
-
-      {/* <DraggableBox
-        id={id}
-        width={boxSize.width}
-        height={boxSize.height}
-        step={step}
-        stepBasePosition={stepBasePosition}
-        localPosition={localPosition}
-        resizeMode={resizeMode}
-        isMouseDown={isMouseDown}
-        setIsMouseDown={setIsMouseDown}
-        onUpdatePosition={onUpdatePosition}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-        onDragLeave={handleDragLeave}
-      >
-        <ResizableBox
-          label={label}
-          backgroundColor={backgroundColor}
-          borderColor={borderColor}
-          width={boxSize.width}
-          height={boxSize.height}
-          step={step}
-          isMouseDown={isMouseDown}
-          setIsMouseDown={setIsMouseDown}
-          onResizeHeight={handleResizeBox}
-          onResizeHeightEnd={handleResizeBoxEnd}
-          onUpdateResizeMode={handleUpdateResizeMode}
-          onClick={onClick}
-        />
-      </DraggableBox> */}
     </div>
   );
 };

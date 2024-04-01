@@ -238,25 +238,27 @@ export const Box: React.FC<Props> = ({
     // }
   }, [id, boxRef]);
 
-  const handleMouseUp = useCallback(() => {
-    // setIsMouseDown(false);
-    resetMouseMoveAmount();
-  }, []);
+  // const handleMouseUp = useCallback(() => {
+  //   // setIsMouseDown(false);
+  //   resetMouseMoveAmount();
+  // }, []);
 
   const handleMouseEnter = useCallback(() => {
     if (boxActionMode) {
       return;
     }
 
+    if (boxRef.current) {
+      setCurrentBoxElement(boxRef.current);
+    }
+
     setHoveredBoxId(id);
-  }, [id, boxActionMode]);
+  }, [id, boxActionMode, boxRef]);
 
   const handleMouseLeave = useCallback(() => {
-    if (boxActionMode) {
-      return;
-    }
+    // setCurrentBoxElement(null);
     setHoveredBoxId(undefined);
-  }, [boxActionMode]);
+  }, []);
 
   return (
     <div
