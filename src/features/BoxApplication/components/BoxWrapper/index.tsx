@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { STEP } from '@/features/BoxApplication/const';
 import { Position, Size } from '@/features/BoxApplication/types';
@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const BoxWrapper: React.FC<Props> = ({ id, label, borderColor, backgroundColor, stepBaseSize, stepBasePosition, localPosition, zIndex }) => {
-  const { rowScale, step, boxActionMode, selectedBoxId, isWindowMouseDown, onActionStart, onActionEnd } = useBoxApp();
+  const { step, boxActionMode, selectedBoxId, isWindowMouseDown, onActionStart, onActionEnd } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
@@ -57,21 +57,6 @@ export const BoxWrapper: React.FC<Props> = ({ id, label, borderColor, background
       }
     }
   }, [isWindowMouseDown]);
-
-  const handleDragStart = useCallback(
-    (newStepBasePosition: Position) => {
-      console.log('handleDragStart');
-      setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
-    },
-    [overlayPosition, stepBasePosition, rowScale]
-  );
-
-  const handleDragLeave = useCallback(
-    (newStepBasePosition: Position) => {
-      setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
-    },
-    [overlayPosition, stepBasePosition, rowScale]
-  );
 
   return (
     <div className={clsx(styles.box)} style={{ zIndex }}>
