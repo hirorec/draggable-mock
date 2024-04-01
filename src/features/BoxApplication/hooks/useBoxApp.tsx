@@ -214,6 +214,7 @@ export const useBoxAppOrigin = () => {
           return;
         }
 
+        // 移動
         if (boxActionMode === BOX_ACTION_MODE.DRAGGING) {
           const dx = newMousePosition.x - mousePosition.x;
           const dy = newMousePosition.y - mousePosition.y;
@@ -241,6 +242,10 @@ export const useBoxAppOrigin = () => {
           }
 
           updateBoxPosition(_.cloneDeep(box), newPosition);
+        }
+
+        // リサイズ
+        else if (boxActionMode === BOX_ACTION_MODE.RESIZE) {
         }
 
         setMousePosition(newMousePosition);
