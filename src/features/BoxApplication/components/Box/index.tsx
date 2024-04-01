@@ -1,13 +1,12 @@
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { DraggableBox } from '@/features/BoxApplication/components/DraggableBox';
-import { ResizableBox } from '@/features/BoxApplication/components/ResizableBox';
 import { STEP } from '@/features/BoxApplication/const';
 import { Position, Size, Step } from '@/features/BoxApplication/types';
 
 import styles from './index.module.scss';
 import { useBoxApp } from '../../hooks/useBoxApp';
+import { BoxContent } from '../BoxContent';
 import { BoxOverlay } from '../BoxOverlay';
 
 type Props = {
@@ -177,7 +176,26 @@ export const Box: React.FC<Props> = ({
         />
       )}
 
-      <DraggableBox
+      <BoxContent
+        id={id}
+        label={label}
+        width={boxSize.width}
+        height={boxSize.height}
+        step={step}
+        stepBasePosition={stepBasePosition}
+        localPosition={localPosition}
+        resizeMode={resizeMode}
+        isMouseDown={isMouseDown}
+        backgroundColor={backgroundColor}
+        borderColor={borderColor}
+        setIsMouseDown={setIsMouseDown}
+        onUpdatePosition={onUpdatePosition}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragLeave={handleDragLeave}
+      />
+
+      {/* <DraggableBox
         id={id}
         width={boxSize.width}
         height={boxSize.height}
@@ -206,7 +224,7 @@ export const Box: React.FC<Props> = ({
           onUpdateResizeMode={handleUpdateResizeMode}
           onClick={onClick}
         />
-      </DraggableBox>
+      </DraggableBox> */}
     </div>
   );
 };
