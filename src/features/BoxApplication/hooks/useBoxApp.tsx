@@ -4,7 +4,7 @@ import { createContext, useState, useContext, useEffect, useMemo, useCallback } 
 import { BOX_ACTION_MODE, CURSOR, DEFAULT_ROW_DIV, DEFAULT_ROW_INTERVAL, STEP } from '../const';
 import * as modifier from '../utils/modifier';
 
-import type { BoxActionMode, BoxProps, ColumnProps, Cursor, Position, Step } from '../types';
+import type { BoxActionMode, BoxProps, ColumnProps, Cursor, Position, Size, Step } from '../types';
 
 export type BoxAppContextType = {
   initialized: boolean;
@@ -214,6 +214,8 @@ export const useBoxAppOrigin = () => {
           return;
         }
 
+        const newPosition = { ...box.position };
+
         // 移動
         if (boxActionMode === BOX_ACTION_MODE.DRAGGING) {
           const dx = newMousePosition.x - mousePosition.x;
@@ -227,7 +229,6 @@ export const useBoxAppOrigin = () => {
             y: event.clientY - rect.y,
           };
 
-          const newPosition = { ...box.position };
           const y = newPosition.y + dy / step.y;
           newPosition.y = y;
 
@@ -246,6 +247,29 @@ export const useBoxAppOrigin = () => {
 
         // リサイズ
         else if (boxActionMode === BOX_ACTION_MODE.RESIZE) {
+          const newBoxSize: Size = { ...box.size };
+
+          if (newMousePosition.y >= rect.height + step.y) {
+            if (newPosition.y + newBoxSize.height < maxHeight) {
+              newBoxSize.height = box.size.height + 1;
+            }
+          } else if (newMousePosition.y <= rect.height - step.y) {
+            newBoxSize.height = box.size.height - 1;
+          }
+
+          // if (newMousePosition.y >= rect.height + step.y) {
+          //   if (newPosition.y + newBoxSize.height < maxHeight) {
+          //     newBoxSize.height = box.size.height + 1;
+          //   }
+          // } else {
+          //   newBoxSize.height = box.size.height - 1;
+          // }
+
+          // if (newBoxSize.height <= 1) {
+          //   newBoxSize.height = 1;
+          // }
+
+          updateBoxSize(_.cloneDeep(box), newBoxSize);
         }
 
         setMousePosition(newMousePosition);
@@ -317,6 +341,8 @@ export const useBoxAppOrigin = () => {
       }
     }
   };
+
+  const updateBoxSize = (box: BoxProps, size: Size) => {};
 
   return {
     initialized,
