@@ -366,8 +366,6 @@ export const useBoxAppOrigin = () => {
     setIsBoxEdge,
     setCurrentBoxElement,
     setStep,
-
-    // onAppMouseMove,
   };
 };
 
