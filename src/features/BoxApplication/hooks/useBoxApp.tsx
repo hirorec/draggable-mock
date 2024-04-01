@@ -76,6 +76,99 @@ export const useBoxAppOrigin = () => {
   const [isBoxEdge, setIsBoxEdge] = useState(false);
   const [cursor, setCursor] = useState<Cursor>(CURSOR.UNSET);
 
+  //-------------------------
+  // event handler
+  //-------------------------
+
+  const handleWindowMouseMove = useCallback(
+    (event: MouseEvent) => {
+      // console.log(currentBoxElement);
+      if (!currentBoxElement) {
+        return;
+      }
+
+      if (boxList) {
+        const newMousePosition = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+
+        if (!mousePosition) {
+          setMousePosition(newMousePosition);
+          return;
+        }
+
+        const rect = currentBoxElement.getBoundingClientRect();
+        const EDGE_OFFSET_Y = 10;
+        const isEdge = newMousePosition.y >= rect.y + rect.height - EDGE_OFFSET_Y && newMousePosition.y < rect.y + rect.height;
+        setIsBoxEdge(isEdge);
+
+        if (isEdge) {
+          setCursor(CURSOR.RESIZE);
+        } else if (!boxActionMode && hoveredBoxId) {
+          setCursor(CURSOR.POINTER);
+        }
+
+        if (!boxActionMode) {
+          return;
+        }
+
+        const box = boxList.find((b) => b.id === selectedBoxId);
+
+        if (!box) {
+          return;
+        }
+
+        const newPosition = { ...box.position };
+        const newMouseMoveAmount = { ...mouseMoveAmount };
+        const dx = newMousePosition.x - mousePosition.x;
+        const dy = newMousePosition.y - mousePosition.y;
+        newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
+        newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
+
+        // 移動
+        if (boxActionMode === BOX_ACTION_MODE.DRAGGING) {
+          const rectMousePosition = {
+            x: event.clientX - rect.x,
+            y: event.clientY - rect.y,
+          };
+
+          const y = newPosition.y + dy / step.y;
+          newPosition.y = y;
+
+          if (rectMousePosition.x >= rect.width) {
+            newPosition.x = newPosition.x + 1;
+            resetMouseMoveAmount();
+          } else if (rectMousePosition.x <= 0) {
+            newPosition.x = newPosition.x - 1;
+            resetMouseMoveAmount();
+          }
+
+          updateBoxPosition(_.cloneDeep(box), newPosition);
+        }
+
+        // リサイズ
+        else if (boxActionMode === BOX_ACTION_MODE.RESIZE) {
+          const newSize = { ...box.size };
+          const mouseY = newMousePosition.y - rect.y;
+          const height = mouseY / step.y;
+          let modifiedHeight = Math.round(height);
+
+          if (modifiedHeight < 1) {
+            modifiedHeight = 1;
+          }
+
+          newSize.height = modifiedHeight;
+          updateBoxSize(_.cloneDeep(box), newSize);
+        }
+
+        setMouseMoveAmount(newMouseMoveAmount);
+        setMousePosition(newMousePosition);
+      }
+    },
+    [isWindowMouseDown, selectedBoxId, boxActionMode, currentBoxElement, mousePosition, hoveredBoxId, step, boxList]
+  );
+
   const maxWidth = useMemo((): number => {
     return (
       columnList?.reduce((prev, current) => {
@@ -115,12 +208,9 @@ export const useBoxAppOrigin = () => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('mousemove', onWindowMouseMove);
-
-    return () => {
-      window.removeEventListener('mousemove', onWindowMouseMove);
-    };
-  }, [isWindowMouseDown, selectedBoxId, boxActionMode, currentBoxElement, mousePosition, boxList, hoveredBoxId]);
+    window.addEventListener('mousemove', handleWindowMouseMove);
+    return () => window.removeEventListener('mousemove', handleWindowMouseMove);
+  }, [handleWindowMouseMove]);
 
   useEffect(() => {
     const viewportWidth = windowWidth - 40 - 65;
@@ -171,114 +261,6 @@ export const useBoxAppOrigin = () => {
   }, [hoveredBoxId, isBoxEdge, boxActionMode]);
 
   //-------------------------
-  // event handler
-  //-------------------------
-
-  // const onAppMouseMove = useCallback(
-  const onWindowMouseMove = useCallback(
-    (event: MouseEvent) => {
-      // console.log(currentBoxElement);
-      if (!currentBoxElement) {
-        return;
-      }
-
-      if (boxList) {
-        const newMousePosition = {
-          x: event.clientX,
-          y: event.clientY,
-        };
-
-        if (!mousePosition) {
-          setMousePosition(newMousePosition);
-          return;
-        }
-
-        const rect = currentBoxElement.getBoundingClientRect();
-        const EDGE_OFFSET_Y = 10;
-        const isEdge = newMousePosition.y >= rect.y + rect.height - EDGE_OFFSET_Y && newMousePosition.y < rect.y + rect.height;
-        setIsBoxEdge(isEdge);
-
-        if (isEdge) {
-          setCursor(CURSOR.RESIZE);
-        } else if (!boxActionMode && hoveredBoxId) {
-          setCursor(CURSOR.POINTER);
-        }
-
-        if (!boxActionMode) {
-          return;
-        }
-
-        const box = boxList.find((b) => b.id === selectedBoxId);
-
-        if (!box) {
-          return;
-        }
-
-        const newPosition = { ...box.position };
-
-        // 移動
-        if (boxActionMode === BOX_ACTION_MODE.DRAGGING) {
-          const dx = newMousePosition.x - mousePosition.x;
-          const dy = newMousePosition.y - mousePosition.y;
-          const newMouseMoveAmount = { ...mouseMoveAmount };
-          newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
-          newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
-
-          const rectMousePosition = {
-            x: event.clientX - rect.x,
-            y: event.clientY - rect.y,
-          };
-
-          const y = newPosition.y + dy / step.y;
-          newPosition.y = y;
-
-          if (rectMousePosition.x >= rect.width && boxActionMode === BOX_ACTION_MODE.DRAGGING) {
-            newPosition.x = newPosition.x + 1;
-            resetMouseMoveAmount();
-          } else if (rectMousePosition.x <= 0 && boxActionMode === BOX_ACTION_MODE.DRAGGING) {
-            newPosition.x = newPosition.x - 1;
-            resetMouseMoveAmount();
-          } else {
-            setMouseMoveAmount(newMouseMoveAmount);
-          }
-
-          updateBoxPosition(_.cloneDeep(box), newPosition);
-        }
-
-        // リサイズ
-        else if (boxActionMode === BOX_ACTION_MODE.RESIZE) {
-          const newBoxSize: Size = { ...box.size };
-
-          if (newMousePosition.y >= rect.height + step.y) {
-            if (newPosition.y + newBoxSize.height < maxHeight) {
-              newBoxSize.height = box.size.height + 1;
-            }
-          } else if (newMousePosition.y <= rect.height - step.y) {
-            newBoxSize.height = box.size.height - 1;
-          }
-
-          // if (newMousePosition.y >= rect.height + step.y) {
-          //   if (newPosition.y + newBoxSize.height < maxHeight) {
-          //     newBoxSize.height = box.size.height + 1;
-          //   }
-          // } else {
-          //   newBoxSize.height = box.size.height - 1;
-          // }
-
-          // if (newBoxSize.height <= 1) {
-          //   newBoxSize.height = 1;
-          // }
-
-          updateBoxSize(_.cloneDeep(box), newBoxSize);
-        }
-
-        setMousePosition(newMousePosition);
-      }
-    },
-    [isWindowMouseDown, selectedBoxId, boxActionMode, currentBoxElement, mousePosition, boxList, hoveredBoxId]
-  );
-
-  //-------------------------
   // methods
   //-------------------------
 
@@ -327,22 +309,26 @@ export const useBoxAppOrigin = () => {
       newPosition.x = maxWidth - box.size.width;
     }
 
-    if (box) {
-      box.position = { ...newPosition };
+    box.position = { ...newPosition };
+    updateBox(box);
+  };
 
-      if (boxList) {
-        const index = boxList.findIndex((b) => b.id === box.id);
+  const updateBoxSize = (box: BoxProps, size: Size) => {
+    box.size = { ...size };
+    updateBox(box);
+  };
 
-        if (index >= 0) {
-          const newBoxList = _.cloneDeep(boxList);
-          newBoxList[index] = box;
-          setBoxList(newBoxList);
-        }
+  const updateBox = (box: BoxProps) => {
+    if (boxList) {
+      const index = boxList.findIndex((b) => b.id === box.id);
+
+      if (index >= 0) {
+        const newBoxList = _.cloneDeep(boxList);
+        newBoxList[index] = box;
+        setBoxList(newBoxList);
       }
     }
   };
-
-  const updateBoxSize = (box: BoxProps, size: Size) => {};
 
   return {
     initialized,

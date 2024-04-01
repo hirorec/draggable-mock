@@ -17,8 +17,6 @@ export default function Page() {
   const boxConfirmModalOrigin = useBoxConfirmModalOrigin();
 
   const { rowInterval, rowDiv, rowScale, setRowInterval, setRowDiv, setRowScale, boxList, setBoxList, columnList, setColumnList } = boxAppOrigin;
-  // const [boxList, setBoxList] = useState<BoxProps[]>();
-  // const [columnList, setColumnList] = useState<ColumnProps[]>();
   const [selectedBoxListIndex, setSelectedBoxListIndex] = useState(0);
   const [rowDivTmp, setRowDivTmp] = useState(rowDiv);
   const [rowScaleTmp, setRowScaleTmp] = useState(rowScale);

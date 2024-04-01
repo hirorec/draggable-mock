@@ -272,7 +272,7 @@ export const Box: React.FC<Props> = ({
       // onMouseUp={handleMouseUp}
     >
       <div className={clsx(styles.boxInner)} style={innerStyle}>
-        {label}
+        <label className={clsx(styles.label)}>{label}</label>
       </div>
     </div>
   );
