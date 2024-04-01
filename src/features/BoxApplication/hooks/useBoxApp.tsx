@@ -95,7 +95,6 @@ export const useBoxAppOrigin = () => {
 
   const handleWindowMouseMove = useCallback(
     (event: MouseEvent) => {
-      // console.log(currentBoxElement);
       if (!currentBoxElement || !columnContainerElement) {
         return;
       }
@@ -159,10 +158,10 @@ export const useBoxAppOrigin = () => {
 
             if (rectMousePosition.x >= rect.width) {
               newPosition.x = newPosition.x + 1;
-              resetMouseMoveAmount();
+              // resetMouseMoveAmount();
             } else if (rectMousePosition.x <= 0) {
               newPosition.x = newPosition.x - 1;
-              resetMouseMoveAmount();
+              // resetMouseMoveAmount();
             }
 
             updateBoxPosition(box, newPosition);
@@ -390,7 +389,7 @@ export const useBoxAppOrigin = () => {
       const boxB = undoBoxList?.find((b) => b.id === boxId);
 
       if (boxA && boxB) {
-        if (mouseMoveAmount.x <= 0 && mouseMoveAmount.y <= 0) {
+        if (mouseMoveAmount.x === 0 && mouseMoveAmount.y === 0) {
           setClickedBoxId(boxA.id);
 
           setTimeout(() => {
