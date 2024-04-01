@@ -50,6 +50,7 @@ export type BoxAppContextType = {
 
   onActionStart: (boxId: string) => void;
   onActionEnd: (boxId: string) => void;
+  updateBoxPosition: (box: BoxProps, position: Position) => void;
 
   modifyData: (
     boxList: BoxProps[],
@@ -164,7 +165,7 @@ export const useBoxAppOrigin = () => {
               resetMouseMoveAmount();
             }
 
-            updateBoxPosition(_.cloneDeep(box), newPosition);
+            updateBoxPosition(box, newPosition);
           }
         }
 
@@ -317,11 +318,12 @@ export const useBoxAppOrigin = () => {
   };
 
   const updateBoxPosition = (box: BoxProps, position: Position) => {
+    const newBox = _.cloneDeep(box);
     const newPosition = { ...position };
     const maxY = maxHeight * (1 / rowScale);
     const maxX = maxWidth;
 
-    if (newPosition.x + box.localPosition.x < 0) {
+    if (newPosition.x + newBox.localPosition.x < 0) {
       newPosition.x = 0;
     }
 
@@ -329,16 +331,16 @@ export const useBoxAppOrigin = () => {
       newPosition.y = 0;
     }
 
-    if (newPosition.y + box.size.height > maxY) {
-      newPosition.y = maxY - box.size.height;
+    if (newPosition.y + newBox.size.height > maxY) {
+      newPosition.y = maxY - newBox.size.height;
     }
 
-    if (position.x + box.size.width >= maxX) {
-      newPosition.x = position.x - box.size.width;
+    if (position.x + newBox.size.width >= maxX) {
+      newPosition.x = position.x - newBox.size.width;
     }
 
-    box.position = { ...newPosition };
-    updateBox(box);
+    newBox.position = { ...newPosition };
+    updateBox(newBox);
   };
 
   const updateBoxSize = (box: BoxProps, size: Size) => {
@@ -448,6 +450,7 @@ export const useBoxAppOrigin = () => {
 
     onActionStart,
     onActionEnd,
+    updateBoxPosition,
   };
 };
 

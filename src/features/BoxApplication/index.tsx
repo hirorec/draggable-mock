@@ -44,6 +44,7 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
     undoBoxList,
     selectedBoxId,
     step,
+    updateBoxPosition,
   } = useBoxApp();
   const { showModal } = useBoxConfirmModal();
   const appInnerRef = useRef<HTMLDivElement>(null);
@@ -123,13 +124,14 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
             const index = boxList?.findIndex((b) => b.id === selectedBoxId);
 
             if (index > 0) {
+              const box = boxList[index];
               let y = Math.round((rectMousePosition.y + scrollY) / step.y);
 
               if (!direction) {
                 y = y - boxList[index].size.height;
               }
 
-              boxList[index].position.y = y;
+              updateBoxPosition(box, { x: box.position.x, y });
             }
           }
         };
@@ -196,8 +198,6 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
     if (updatedBox.position.y < 0) {
       return;
     }
-
-    console.log(updatedBox.position);
 
     const newBoxList = _.cloneDeep(boxList);
 
