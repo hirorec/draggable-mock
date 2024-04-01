@@ -38,12 +38,11 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, onUpdateB
     viewportWidth,
     viewportHeight,
     windowWidth,
-    // isBoxDragging,
     rowScale,
     cursor,
     boxActionMode,
     maxHeight,
-    // maxWidth,
+    boxChanged,
   } = useBoxApp();
   const { showModal } = useBoxConfirmModal();
   const appInnerRef = useRef<HTMLDivElement>(null);
@@ -55,13 +54,12 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, onUpdateB
   const [undoBoxList, setUndoBoxList] = useState<BoxProps[]>([]);
   const [confirmModalConfig, setConfirmModalConfig] = useState<ConfirmModalProps>();
 
-  // const maxWidth = useMemo((): number => {
-  //   return (
-  //     columnList?.reduce((prev, current) => {
-  //       return prev + current.colDiv;
-  //     }, 0) || 0
-  //   );
-  // }, [columnList]);
+  useEffect(() => {
+    if (boxChanged) {
+      console.log({ boxChanged });
+      onBoxChange();
+    }
+  }, [boxChanged]);
 
   useEffect(() => {
     if (!initialized && boxList && columnList) {
@@ -263,6 +261,32 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, onUpdateB
   //   console.log({ cursor });
   // }, [cursor]);
 
+  const onBoxChange = async () => {
+    const res = await new Promise<boolean>((resolve) => {
+      showModal();
+      setConfirmModalConfig({ onClose: resolve, box: droppedBox });
+    });
+    setConfirmModalConfig(undefined);
+
+    if (res) {
+      const newBoxList = _.cloneDeep(boxList);
+
+      newBoxList[index] = {
+        ...newBoxList[index],
+        position: {
+          x: droppedBox.position.x + droppedBox.localPosition.x,
+          y: droppedBox.position.y,
+        },
+      };
+
+      const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, columnList, droppedBox);
+      onUpdateBoxList(modifiedBoxList);
+      onUpdateColumnList(modifiedColumnList);
+    } else {
+      onUpdateBoxList(undoBoxList);
+    }
+  };
+
   if (initialized && boxList && columnList) {
     return (
       <>
@@ -277,9 +301,9 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, onUpdateB
                 // maxWidth={maxWidth}
                 // maxHeight={maxHeight}
                 // onUpdateBox={onUpdateBox}
-                onDropBox={handleDropBox}
-                onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
-                onInteractionStart={handleInteractionStart}
+                // onDropBox={handleDropBox}
+                // onUpdateBoxSizeEnd={handleUpdateBoxSizeEnd}
+                // onInteractionStart={handleInteractionStart}
               />
             </ColumnContainer>
           </div>

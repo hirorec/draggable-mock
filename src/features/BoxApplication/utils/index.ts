@@ -3,7 +3,7 @@ import { BoxProps, ColumnProps, Position, Size } from '@/features/BoxApplication
 import { STEP } from '../const';
 
 export const equalPosition = (positionA: Position, positionB: Position): boolean => {
-  return positionA.x === positionB.x && positionA.y === positionB.y;
+  return Math.round(positionA.x) === Math.round(positionB.x) && Math.round(positionA.y) === Math.round(positionB.y);
 };
 
 export const equalSize = (sizeA: Size, sizeB: Size): boolean => {

@@ -18,13 +18,13 @@ type Props = {
   localPosition: Position;
   stepBaseSize: Size;
   zIndex: number;
-  maxHeight: number;
-  onUpdatePosition: (position: Position) => void;
-  onUpdateSize: (size: Size) => void;
-  onUpdateSizeEnd: (size: Size) => void;
-  onDrop: (position: Position) => void;
-  onInteractionStart: () => void;
-  onClick: () => void;
+  // maxHeight: number;
+  // onUpdatePosition: (position: Position) => void;
+  // onUpdateSize: (size: Size) => void;
+  // onUpdateSizeEnd: (size: Size) => void;
+  // onDrop: (position: Position) => void;
+  // onInteractionStart: () => void;
+  // onClick: () => void;
 };
 
 export const BoxWrapper: React.FC<Props> = ({
@@ -36,11 +36,11 @@ export const BoxWrapper: React.FC<Props> = ({
   stepBasePosition,
   localPosition,
   zIndex,
-  maxHeight,
-  onUpdateSize,
-  onUpdateSizeEnd,
+  // maxHeight,
+  // onUpdateSize,
+  // onUpdateSizeEnd,
 }) => {
-  const { isAppModifying, rowScale, step, boxActionMode, selectedBoxId, isWindowMouseDown } = useBoxApp();
+  const { rowScale, step, boxActionMode, selectedBoxId, isWindowMouseDown, onActionStart, onActionEnd } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
@@ -77,14 +77,13 @@ export const BoxWrapper: React.FC<Props> = ({
   useEffect(() => {
     if (selectedBoxId === id) {
       if (isWindowMouseDown && selectedBoxId) {
-        console.log('onActionStart', id);
         setOverlayBoxHeight(boxSize.height);
         setOverlayPosition(stepBasePosition);
+        onActionStart(id);
       }
 
       if (!isWindowMouseDown && selectedBoxId) {
-        console.log('onActionEnd', id);
-        // setOverlayPosition(stepBasePosition);
+        onActionEnd(id);
       }
     }
   }, [isWindowMouseDown]);
@@ -173,10 +172,10 @@ export const BoxWrapper: React.FC<Props> = ({
     [overlayPosition, stepBasePosition, rowScale]
   );
 
-  const handleResizeBoxEnd = useCallback(() => {
-    onUpdateSizeEnd(stepBaseSize);
-    setOverlayBoxHeight(stepBaseSize.height * STEP.Y * rowScale);
-  }, [stepBaseSize, rowScale]);
+  // const handleResizeBoxEnd = useCallback(() => {
+  //   onUpdateSizeEnd(stepBaseSize);
+  //   setOverlayBoxHeight(stepBaseSize.height * STEP.Y * rowScale);
+  // }, [stepBaseSize, rowScale]);
 
   return (
     <div className={clsx(styles.box)} style={{ zIndex }}>

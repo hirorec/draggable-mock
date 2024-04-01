@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { createContext, useState, useContext, useEffect, useMemo, useCallback } from 'react';
 
 import { BOX_ACTION_MODE, CURSOR, DEFAULT_ROW_DIV, DEFAULT_ROW_INTERVAL, STEP } from '../const';
+import { equalBoxPositionAndSize } from '../utils';
 import * as modifier from '../utils/modifier';
 
 import type { BoxActionMode, BoxProps, ColumnProps, Cursor, Position, Size, Step } from '../types';
@@ -27,6 +28,7 @@ export type BoxAppContextType = {
   boxActionMode: BoxActionMode | undefined;
   maxWidth: number;
   maxHeight: number;
+  boxChanged: boolean;
 
   setInitialized: (value: boolean) => void;
   setBoxList: (value: BoxProps[]) => void;
@@ -42,6 +44,9 @@ export type BoxAppContextType = {
   setCurrentBoxElement: (value: HTMLDivElement | null) => void;
   setStep: (value: Step) => void;
 
+  onActionStart: (boxId: string) => void;
+  onActionEnd: (boxId: string) => void;
+
   modifyData: (
     boxList: BoxProps[],
     columnList: ColumnProps[],
@@ -55,6 +60,7 @@ export type BoxAppContextType = {
 export const useBoxAppOrigin = () => {
   const [initialized, setInitialized] = useState(false);
   const [boxList, setBoxList] = useState<BoxProps[]>();
+  const [undoBoxList, setUndoBoxList] = useState<BoxProps[]>();
   const [columnList, setColumnList] = useState<ColumnProps[]>();
   const [isAppModifying, setIsAppModifying] = useState<boolean>(false);
   const [isWindowMouseDown, setIsWindowMouseDown] = useState<boolean>(false);
@@ -74,6 +80,7 @@ export const useBoxAppOrigin = () => {
   const [step, setStep] = useState<Step>({ x: STEP.X, y: STEP.Y * rowScale });
   const [isBoxEdge, setIsBoxEdge] = useState(false);
   const [cursor, setCursor] = useState<Cursor>(CURSOR.UNSET);
+  const [boxChanged, setBoxChanged] = useState(false);
 
   //-------------------------
   // event handler
@@ -288,6 +295,8 @@ export const useBoxAppOrigin = () => {
       };
     }
 
+    console.log('modifyData');
+
     setIsAppModifying(true);
     const modifiedData = await modifier.modifyData(_.cloneDeep(boxList), _.cloneDeep(columnList), updatedBox, selectedBoxId);
     setIsAppModifying(false);
@@ -335,6 +344,45 @@ export const useBoxAppOrigin = () => {
     }
   };
 
+  const onActionStart = useCallback(
+    (boxId: string) => {
+      console.log('onActionStart', { boxId });
+
+      if (boxList) {
+        setUndoBoxList(_.cloneDeep(boxList));
+      }
+    },
+    [boxList]
+  );
+
+  const onActionEnd = useCallback(
+    (boxId: string) => {
+      if (!boxList || !columnList) {
+        return;
+      }
+
+      console.log('onActionEnd', { boxId });
+      const boxA = boxList?.find((b) => b.id === boxId);
+      const boxB = undoBoxList?.find((b) => b.id === boxId);
+
+      if (boxA && boxB) {
+        const equal = equalBoxPositionAndSize(boxA, boxB);
+        const changed = !equal;
+        setBoxChanged(changed);
+
+        setTimeout(() => {
+          setBoxChanged(false);
+        }, 1);
+
+        if (changed) {
+          // console.log(boxA.position, boxB.position);
+          modifyData(boxList, columnList, boxA);
+        }
+      }
+    },
+    [boxList, undoBoxList, columnList]
+  );
+
   return {
     initialized,
     boxList,
@@ -356,6 +404,7 @@ export const useBoxAppOrigin = () => {
     boxActionMode,
     maxWidth,
     maxHeight,
+    boxChanged,
 
     setInitialized,
     setBoxList,
@@ -371,6 +420,9 @@ export const useBoxAppOrigin = () => {
     setIsBoxEdge,
     setCurrentBoxElement,
     setStep,
+
+    onActionStart,
+    onActionEnd,
   };
 };
 
