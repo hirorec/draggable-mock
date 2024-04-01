@@ -41,6 +41,8 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
     boxList,
     columnList,
     undoBoxList,
+    selectedBoxId,
+    step,
   } = useBoxApp();
   const { showModal } = useBoxConfirmModal();
   const appInnerRef = useRef<HTMLDivElement>(null);
@@ -94,8 +96,6 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
           x: e.clientX - rect.x - 65,
           y: e.clientY - rect.y,
         };
-        const colsHeight = maxHeight * STEP.Y;
-        const maxScrollY = colsHeight - viewportHeight;
 
         const scrollTo = (x: number, y: number, duration: number) => {
           setIsScrollLocked(true);
@@ -109,28 +109,43 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
           });
         };
 
-        const offset = 50;
+        const OFFSET_Y = 100;
 
-        if (rectMousePosition.y + offset >= rect.height && scrollY <= 0) {
-          scrollTo(scrollX, maxScrollY, 0.3);
-        } else if (rectMousePosition.y - offset <= 0) {
-          scrollTo(scrollX, 0, 0.3);
+        const setBoxY = (direction: boolean) => {
+          if (boxList) {
+            const index = boxList?.findIndex((b) => b.id === selectedBoxId);
+
+            if (index > 0) {
+              let y = Math.round((rectMousePosition.y + scrollY) / step.y);
+
+              if (!direction) {
+                y = y - boxList[index].size.height;
+              }
+
+              boxList[index].position.y = y;
+            }
+          }
+        };
+
+        if (rectMousePosition.y + OFFSET_Y >= rect.height) {
+          scrollTo(scrollX, scrollY + STEP.Y * 2, 0.1);
+          setBoxY(true);
+        } else if (rectMousePosition.y - OFFSET_Y <= 0) {
+          scrollTo(scrollX, scrollY - STEP.Y * 2, 0.1);
+          setBoxY(false);
         }
 
-        if (rectMousePosition.x + offset > viewportWidth) {
+        if (rectMousePosition.x + OFFSET_Y > viewportWidth) {
           scrollTo(scrollX + STEP.X, scrollY, 0.2);
-        } else if (rectMousePosition.x - offset <= 0) {
+        } else if (rectMousePosition.x - OFFSET_Y <= 0) {
           scrollTo(scrollX - STEP.X, scrollY, 0.2);
         }
       }
     };
 
     window.addEventListener('mousemove', onMouseMove);
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-    };
-  }, [appInnerRef, scrollX, scrollY, maxHeight, viewportWidth, viewportHeight, isScrollLocked, rowScale]);
+    return () => window.removeEventListener('mousemove', onMouseMove);
+  }, [appInnerRef, scrollX, scrollY, maxHeight, viewportWidth, viewportHeight, isScrollLocked, rowScale, boxActionMode]);
 
   useEffect(() => {
     const colsWidth = colsWidthTotal(columnList || []);
