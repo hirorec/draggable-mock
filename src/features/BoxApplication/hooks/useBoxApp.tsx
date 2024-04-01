@@ -347,7 +347,7 @@ export const useBoxAppOrigin = () => {
 
   const onActionStart = useCallback(
     (boxId: string) => {
-      console.log('onActionStart', { boxId });
+      // console.log('onActionStart', { boxId });
 
       if (boxList) {
         setUndoBoxList(_.cloneDeep(boxList));
@@ -362,7 +362,7 @@ export const useBoxAppOrigin = () => {
         return;
       }
 
-      console.log('onActionEnd', { boxId });
+      // console.log('onActionEnd', { boxId });
       const boxA = boxList?.find((b) => b.id === boxId);
       const boxB = undoBoxList?.find((b) => b.id === boxId);
 

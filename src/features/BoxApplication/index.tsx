@@ -159,7 +159,6 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
   );
 
   const onBoxChange = async (changedBoxId: string) => {
-    console.log('onBoxChange', { changedBoxId });
     const index = boxList?.findIndex((box) => box.id === changedBoxId);
 
     if (!index || !boxList || !columnList || !undoBoxList) {
