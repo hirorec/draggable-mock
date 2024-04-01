@@ -6,32 +6,25 @@ import { useBoxApp } from '@/features/BoxApplication/hooks/useBoxApp';
 
 import styles from './index.module.scss';
 
-import type { Position } from '@/features/BoxApplication/types';
+import type { Position, Transform } from '@/features/BoxApplication/types';
 
 type Props = {
   id: string;
   label: string;
   width: number;
   height: number;
-  stepBasePosition: Position;
+  position: Position;
   localPosition: Position;
   borderColor: string;
   backgroundColor: string;
 };
 
-type Transform = {
-  x: number;
-  y: number;
-  scaleX: number;
-  scaleY: number;
-};
-
-export const Box: React.FC<Props> = ({ id, label, width, height, stepBasePosition, localPosition, borderColor, backgroundColor }) => {
+export const Box: React.FC<Props> = ({ id, label, width, height, position, localPosition, borderColor, backgroundColor }) => {
   const boxRef = useRef<HTMLDivElement>(null);
-  const { setSelectedBoxId, setHoveredBoxId, selectedBoxId, rowScale, setIsBoxEdge, setCurrentBoxElement, step, boxActionMode } = useBoxApp();
+  const { setSelectedBoxId, setHoveredBoxId, rowScale, setCurrentBoxElement, step, boxActionMode } = useBoxApp();
   const [transform, setTransform] = useState<Transform>({
-    x: step.x * (stepBasePosition.x + localPosition.x),
-    y: step.y * rowScale * (stepBasePosition.y + localPosition.y),
+    x: step.x * (position.x + localPosition.x),
+    y: step.y * rowScale * (position.y + localPosition.y),
     scaleX: 1,
     scaleY: 1,
   });
@@ -52,11 +45,11 @@ export const Box: React.FC<Props> = ({ id, label, width, height, stepBasePositio
   }, [borderColor, backgroundColor]);
 
   const modifiedPosition = useMemo((): Position => {
-    const position = { ...stepBasePosition };
-    position.x = Math.round(position.x);
-    position.y = Math.round(position.y);
-    return position;
-  }, [stepBasePosition]);
+    const newPosition = { ...position };
+    newPosition.x = Math.round(position.x);
+    newPosition.y = Math.round(position.y);
+    return newPosition;
+  }, [position]);
 
   useEffect(() => {
     setTransform({

@@ -34,5 +34,12 @@ export type ColumnProps = {
   rowDiv: number;
 };
 
+type Transform = {
+  x: number;
+  y: number;
+  scaleX: number;
+  scaleY: number;
+};
+
 export type BoxActionMode = (typeof BOX_ACTION_MODE)[keyof typeof BOX_ACTION_MODE];
 export type Cursor = (typeof CURSOR)[keyof typeof CURSOR];

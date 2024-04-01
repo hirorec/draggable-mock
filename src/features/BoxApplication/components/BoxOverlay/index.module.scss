@@ -1,20 +1,19 @@
 .boxWrapper {
   position: absolute;
-  width: 100px;
+  inset: 0;
   opacity: 0.6;
-  padding: 5px;
+  padding: 2px 4px;
   // background-color: rgba(red, 0.2);
 }
 
 .box {
-  position: relative;
-  padding: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   border-radius: 5px;
   width: 100%;
+  height: 100%;
   border: solid 1px;
   font-size: 12px;
   line-height: 16px;

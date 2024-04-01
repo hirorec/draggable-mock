@@ -1,11 +1,11 @@
+import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
-import React, { useMemo, useRef } from 'react';
-
-import { RESIZABLE_BOX_WRAPPER_OFFSET, STEP } from '@/features/BoxApplication/const';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import styles from './index.module.scss';
+import { useBoxApp } from '../../hooks/useBoxApp';
 
-import type { Position } from '@/features/BoxApplication/types';
+import type { Position, Transform } from '@/features/BoxApplication/types';
 
 type Props = {
   text: string;
@@ -19,28 +19,47 @@ type Props = {
 
 export const BoxOverlay: React.FC<Props> = ({ text, borderColor, backgroundColor, width, height, position, localPosition }) => {
   const boxRef = useRef<HTMLDivElement>(null);
+  const { rowScale, step } = useBoxApp();
+  const [transform, setTransform] = useState<Transform>({
+    x: step.x * (position.x + localPosition.x),
+    y: step.y * rowScale * (position.y + localPosition.y),
+    scaleX: 1,
+    scaleY: 1,
+  });
 
-  const wrapperStyle: React.CSSProperties = useMemo(() => {
+  const modifiedPosition = useMemo((): Position => {
+    const newPosition = { ...position };
+    newPosition.x = Math.round(position.x);
+    newPosition.y = Math.round(position.y);
+    return newPosition;
+  }, [position]);
+
+  useEffect(() => {
+    setTransform({
+      x: step.x * (modifiedPosition.x + localPosition.x),
+      y: step.y * (modifiedPosition.y + localPosition.y),
+      scaleX: 1,
+      scaleY: 1,
+    });
+  }, [localPosition, modifiedPosition]);
+
+  const wrapperStyle = useMemo(() => {
     return {
       width: `${width}px`,
-      height: `${height + RESIZABLE_BOX_WRAPPER_OFFSET.Y * 2}px`,
-      top: `${-RESIZABLE_BOX_WRAPPER_OFFSET.Y + (position.y + localPosition.y) * STEP.Y}px`,
-      left: `${-RESIZABLE_BOX_WRAPPER_OFFSET.X + (position.x + localPosition.x) * STEP.X}px`,
+      height: `${height}px`,
+      transform: CSS.Translate.toString(transform),
     };
-  }, [width, height, position]);
+  }, [transform]);
 
-  const style: React.CSSProperties = useMemo(() => {
+  const style = useMemo(() => {
     return {
-      top: `${RESIZABLE_BOX_WRAPPER_OFFSET.Y}px`,
-      left: `${RESIZABLE_BOX_WRAPPER_OFFSET.X}px`,
-      height: `calc(100% - ${RESIZABLE_BOX_WRAPPER_OFFSET.Y * 2}px)`,
       backgroundColor,
       borderColor,
     };
-  }, [borderColor, backgroundColor]);
+  }, [transform, borderColor, backgroundColor]);
 
   return (
-    <div style={wrapperStyle} className={clsx(styles.boxWrapper)}>
+    <div ref={boxRef} className={clsx(styles.boxWrapper)} style={wrapperStyle}>
       <div ref={boxRef} className={clsx(styles.box)} style={style}>
         {text}
       </div>

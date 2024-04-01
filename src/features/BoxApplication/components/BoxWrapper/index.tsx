@@ -14,7 +14,6 @@ type Props = {
   label: string;
   borderColor: string;
   backgroundColor: string;
-  // step: Step;
   stepBasePosition: Position;
   localPosition: Position;
   stepBaseSize: Size;
@@ -33,27 +32,21 @@ export const BoxWrapper: React.FC<Props> = ({
   label,
   borderColor,
   backgroundColor,
-  // step,
   stepBaseSize,
   stepBasePosition,
   localPosition,
   zIndex,
   maxHeight,
-  onUpdatePosition,
   onUpdateSize,
   onUpdateSizeEnd,
-  onDrop,
-  onClick,
-  onInteractionStart,
 }) => {
-  const { isAppModifying, rowScale, step } = useBoxApp();
+  const { isAppModifying, rowScale, step, boxActionMode, selectedBoxId, isWindowMouseDown } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
     x: stepBasePosition.x,
     y: stepBasePosition.y,
   });
-  // const [isMouseDown, setIsMouseDown] = useState(false);
 
   const boxSize: Size = useMemo(() => {
     return {
@@ -62,16 +55,39 @@ export const BoxWrapper: React.FC<Props> = ({
     };
   }, [stepBaseSize, step]);
 
-  useEffect(() => {
-    setOverlayBoxHeight(stepBaseSize.height * step.y);
-    setOverlayPosition(stepBasePosition);
-  }, [step]);
+  // useEffect(() => {
+  //   setOverlayBoxHeight(stepBaseSize.height * step.y);
+  //   setOverlayPosition(stepBasePosition);
+  // }, [step]);
+
+  // useEffect(() => {
+  //   if (!isAppModifying) {
+  //     setOverlayPosition(stepBasePosition);
+  //   }
+  // }, [isAppModifying]);
 
   useEffect(() => {
-    if (!isAppModifying) {
-      setOverlayPosition(stepBasePosition);
+    if (boxActionMode && selectedBoxId === id) {
+      setOverlayVisible(true);
+    } else {
+      setOverlayVisible(false);
     }
-  }, [isAppModifying]);
+  }, [selectedBoxId, boxActionMode]);
+
+  useEffect(() => {
+    if (selectedBoxId === id) {
+      if (isWindowMouseDown && selectedBoxId) {
+        console.log('onActionStart', id);
+        setOverlayBoxHeight(boxSize.height);
+        setOverlayPosition(stepBasePosition);
+      }
+
+      if (!isWindowMouseDown && selectedBoxId) {
+        console.log('onActionEnd', id);
+        // setOverlayPosition(stepBasePosition);
+      }
+    }
+  }, [isWindowMouseDown]);
 
   // useEffect(() => {
   //   if (id === selectedBoxId && resizeMode) {
@@ -98,26 +114,26 @@ export const BoxWrapper: React.FC<Props> = ({
   //   }
   // }, [isBoxDragging, resizeMode, boxSize, selectedBoxId]);
 
-  const handleResizeBox = useCallback(
-    (direction: boolean) => {
-      const newBoxSize: Size = { ...stepBaseSize };
+  // const handleResizeBox = useCallback(
+  //   (direction: boolean) => {
+  //     const newBoxSize: Size = { ...stepBaseSize };
 
-      if (direction) {
-        if (stepBasePosition.y + newBoxSize.height < maxHeight) {
-          newBoxSize.height = stepBaseSize.height + 1;
-        }
-      } else {
-        newBoxSize.height = stepBaseSize.height - 1;
-      }
+  //     if (direction) {
+  //       if (stepBasePosition.y + newBoxSize.height < maxHeight) {
+  //         newBoxSize.height = stepBaseSize.height + 1;
+  //       }
+  //     } else {
+  //       newBoxSize.height = stepBaseSize.height - 1;
+  //     }
 
-      if (newBoxSize.height <= 1) {
-        newBoxSize.height = 1;
-      }
+  //     if (newBoxSize.height <= 1) {
+  //       newBoxSize.height = 1;
+  //     }
 
-      onUpdateSize(newBoxSize);
-    },
-    [stepBaseSize, maxHeight, stepBasePosition, rowScale]
-  );
+  //     onUpdateSize(newBoxSize);
+  //   },
+  //   [stepBaseSize, maxHeight, stepBasePosition, rowScale]
+  // );
 
   // const handleUpdateResizeMode = useCallback(
   //   (resizeMode: boolean) => {
@@ -180,7 +196,7 @@ export const BoxWrapper: React.FC<Props> = ({
         label={label}
         width={boxSize.width}
         height={boxSize.height}
-        stepBasePosition={stepBasePosition}
+        position={stepBasePosition}
         localPosition={localPosition}
         backgroundColor={backgroundColor}
         borderColor={borderColor}

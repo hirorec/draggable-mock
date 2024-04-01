@@ -41,7 +41,6 @@ export type BoxAppContextType = {
   setIsBoxEdge: (value: boolean) => void;
   setCurrentBoxElement: (value: HTMLDivElement | null) => void;
   setStep: (value: Step) => void;
-  // onAppMouseMove: React.MouseEventHandler<HTMLDivElement>;
 
   modifyData: (
     boxList: BoxProps[],
@@ -169,6 +168,23 @@ export const useBoxAppOrigin = () => {
     [isWindowMouseDown, selectedBoxId, boxActionMode, currentBoxElement, mousePosition, hoveredBoxId, step, boxList]
   );
 
+  const handleWindowMouseDown = () => {
+    setIsWindowMouseDown(true);
+  };
+
+  const handleWindowMouseUp = () => {
+    setIsWindowMouseDown(false);
+  };
+
+  const handleWindowResize = () => {
+    setWindowWidth(window.innerWidth);
+    setWindowHeight(window.innerHeight);
+  };
+
+  //-------------------------
+  // useMemo
+  //-------------------------
+
   const maxWidth = useMemo((): number => {
     return (
       columnList?.reduce((prev, current) => {
@@ -181,29 +197,20 @@ export const useBoxAppOrigin = () => {
     return rowDiv;
   }, [rowDiv]);
 
+  //-------------------------
+  // useEffect
+  //-------------------------
+
   useEffect(() => {
-    const onWindowMouseDown = () => {
-      setIsWindowMouseDown(true);
-    };
-
-    const onWindowMouseUp = () => {
-      setIsWindowMouseDown(false);
-    };
-
-    const onWindowResize = () => {
-      setWindowWidth(window.innerWidth);
-      setWindowHeight(window.innerHeight);
-    };
-
-    window.addEventListener('mousedown', onWindowMouseDown);
-    window.addEventListener('mouseup', onWindowMouseUp);
-    window.addEventListener('resize', onWindowResize);
-    onWindowResize();
+    window.addEventListener('mousedown', handleWindowMouseDown);
+    window.addEventListener('mouseup', handleWindowMouseUp);
+    window.addEventListener('resize', handleWindowResize);
+    handleWindowResize();
 
     return () => {
-      window.removeEventListener('mousedown', onWindowMouseDown);
-      window.removeEventListener('mouseup', onWindowMouseUp);
-      window.removeEventListener('resize', onWindowResize);
+      window.removeEventListener('mousedown', handleWindowMouseDown);
+      window.removeEventListener('mouseup', handleWindowMouseUp);
+      window.removeEventListener('resize', handleWindowResize);
     };
   }, []);
 
@@ -236,8 +243,6 @@ export const useBoxAppOrigin = () => {
       setSelectedBoxId(undefined);
     }
   }, [isWindowMouseDown]);
-
-  useEffect(() => {}, [isBoxEdge]);
 
   useEffect(() => {
     if (boxActionMode) {
