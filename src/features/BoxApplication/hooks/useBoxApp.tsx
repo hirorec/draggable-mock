@@ -80,6 +80,16 @@ export const useBoxAppOrigin = () => {
   }, []);
 
   useEffect(() => {
+    const onWindowMouseMove = () => {};
+
+    window.addEventListener('mousemove', onWindowMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', onWindowMouseMove);
+    };
+  }, [isWindowMouseDown, selectedBoxId]);
+
+  useEffect(() => {
     const viewportWidth = windowWidth - 40 - 65;
     const viewportHeight = windowHeight - 100 - 40 - 20;
     setViewportWidth(viewportWidth);

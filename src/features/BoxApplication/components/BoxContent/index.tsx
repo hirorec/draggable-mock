@@ -17,14 +17,15 @@ type Props = {
   resizeMode: boolean;
   stepBasePosition: Position;
   localPosition: Position;
-  isMouseDown: boolean;
   borderColor: string;
   backgroundColor: string;
-  setIsMouseDown: (value: boolean) => void;
-  onUpdatePosition: (position: Position) => void;
-  onDragStart: (position: Position) => void;
-  onDragEnd: (position: Position) => void;
-  onDragLeave: (position: Position) => void;
+
+  // isMouseDown: boolean;
+  // setIsMouseDown: (value: boolean) => void;
+  // onUpdatePosition: (position: Position) => void;
+  // onDragStart: (position: Position) => void;
+  // onDragEnd: (position: Position) => void;
+  // onDragLeave: (position: Position) => void;
 };
 
 type Transform = {
@@ -43,14 +44,15 @@ export const BoxContent: React.FC<Props> = ({
   resizeMode,
   stepBasePosition,
   localPosition,
-  isMouseDown,
-  setIsMouseDown,
   borderColor,
   backgroundColor,
-  onUpdatePosition,
-  onDragStart,
-  onDragEnd,
-  onDragLeave,
+
+  // isMouseDown,
+  // setIsMouseDown,
+  // onUpdatePosition,
+  // onDragStart,
+  // onDragEnd,
+  // onDragLeave,
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const { setSelectedBoxId, selectedBoxId, isBoxDragging, setIsBoxDragging, rowScale } = useBoxApp();
@@ -92,23 +94,23 @@ export const BoxContent: React.FC<Props> = ({
     return position;
   }, [stepBasePosition]);
 
-  useEffect(() => {
-    const onWindowMouseUp = () => {
-      if (selectedBoxId === id) {
-        onDragEnd(modifiedPosition);
-        onDragLeave(modifiedPosition);
-        setIsMouseDown(false);
-        setIsBoxDragging(false);
-        setSelectedBoxId(undefined);
-      }
-    };
+  // useEffect(() => {
+  //   const onWindowMouseUp = () => {
+  //     if (selectedBoxId === id) {
+  //       onDragEnd(modifiedPosition);
+  //       onDragLeave(modifiedPosition);
+  //       setIsMouseDown(false);
+  //       setIsBoxDragging(false);
+  //       setSelectedBoxId(undefined);
+  //     }
+  //   };
 
-    window.addEventListener('mouseup', onWindowMouseUp);
+  //   window.addEventListener('mouseup', onWindowMouseUp);
 
-    return () => {
-      window.removeEventListener('mouseup', onWindowMouseUp);
-    };
-  }, [modifiedPosition, isMouseOver, selectedBoxId, isBoxDragging]);
+  //   return () => {
+  //     window.removeEventListener('mouseup', onWindowMouseUp);
+  //   };
+  // }, [modifiedPosition, isMouseOver, selectedBoxId, isBoxDragging]);
 
   useEffect(() => {
     setTransform({
@@ -119,29 +121,29 @@ export const BoxContent: React.FC<Props> = ({
     });
   }, [localPosition, modifiedPosition]);
 
-  useEffect(() => {
-    if (resizeMode) {
-      setCursor('unset');
-      return;
-    }
+  // useEffect(() => {
+  //   if (resizeMode) {
+  //     setCursor('unset');
+  //     return;
+  //   }
 
-    if (isMouseDown) {
-      setCursor('all-scroll');
-      setIsBoxDragging(true);
-    } else if (isMouseOver) {
-      setCursor('grab');
-      setIsBoxDragging(false);
-    } else {
-      setCursor('unset');
-      setIsBoxDragging(false);
-    }
-  }, [isMouseDown, isMouseOver, resizeMode]);
+  //   if (isMouseDown) {
+  //     setCursor('all-scroll');
+  //     setIsBoxDragging(true);
+  //   } else if (isMouseOver) {
+  //     setCursor('grab');
+  //     setIsBoxDragging(false);
+  //   } else {
+  //     setCursor('unset');
+  //     setIsBoxDragging(false);
+  //   }
+  // }, [isMouseDown, isMouseOver, resizeMode]);
 
-  useEffect(() => {
-    if (!resizeMode && isMouseDown && !isBoxDragging) {
-      onDragStart(modifiedPosition);
-    }
-  }, [isMouseDown, resizeMode, modifiedPosition, isBoxDragging]);
+  // useEffect(() => {
+  //   if (!resizeMode && isMouseDown && !isBoxDragging) {
+  //     onDragStart(modifiedPosition);
+  //   }
+  // }, [isMouseDown, resizeMode, modifiedPosition, isBoxDragging]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -185,7 +187,7 @@ export const BoxContent: React.FC<Props> = ({
           setMouseMoveAmount(newMouseMoveAmount);
         }
 
-        onUpdatePosition(newStepBasePosition);
+        // onUpdatePosition(newStepBasePosition);
       }
 
       setIsMouseOver(isMouseOver);
@@ -197,12 +199,12 @@ export const BoxContent: React.FC<Props> = ({
   const handleMouseDown = useCallback(() => {
     if (isMouseOver) {
       setSelectedBoxId(id);
-      setIsMouseDown(true);
+      // setIsMouseDown(true);
     }
   }, [id, isMouseOver]);
 
   const handleMouseUp = useCallback(() => {
-    setIsMouseDown(false);
+    // setIsMouseDown(false);
     resetMouseMoveAmount();
   }, []);
 
@@ -211,9 +213,9 @@ export const BoxContent: React.FC<Props> = ({
       ref={boxRef}
       style={style}
       className={clsx(styles.box)}
-      onMouseMove={handleMouseMove}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
+      // onMouseMove={handleMouseMove}
+      // onMouseDown={handleMouseDown}
+      // onMouseUp={handleMouseUp}
     >
       <div className={clsx(styles.boxInner)} style={innerStyle}>
         {label}

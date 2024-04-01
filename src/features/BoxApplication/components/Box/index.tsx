@@ -185,14 +185,14 @@ export const Box: React.FC<Props> = ({
         stepBasePosition={stepBasePosition}
         localPosition={localPosition}
         resizeMode={resizeMode}
-        isMouseDown={isMouseDown}
         backgroundColor={backgroundColor}
         borderColor={borderColor}
-        setIsMouseDown={setIsMouseDown}
-        onUpdatePosition={onUpdatePosition}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-        onDragLeave={handleDragLeave}
+        // isMouseDown={isMouseDown}
+        // setIsMouseDown={setIsMouseDown}
+        // onUpdatePosition={onUpdatePosition}
+        // onDragStart={handleDragStart}
+        // onDragEnd={handleDragEnd}
+        // onDragLeave={handleDragLeave}
       />
 
       {/* <DraggableBox

@@ -192,6 +192,21 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
 
       console.log('handleDropBox', droppedBox);
 
+      const newBoxList = _.cloneDeep(boxList);
+
+      newBoxList[index] = {
+        ...newBoxList[index],
+        position: {
+          x: droppedBox.position.x + droppedBox.localPosition.x,
+          y: droppedBox.position.y,
+        },
+      };
+
+      const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, columnList, droppedBox);
+      onUpdateBoxList(modifiedBoxList);
+      onUpdateColumnList(modifiedColumnList);
+      return;
+
       const res = await new Promise<boolean>((resolve) => {
         showModal();
         setConfirmModalConfig({ onClose: resolve, box: droppedBox });
