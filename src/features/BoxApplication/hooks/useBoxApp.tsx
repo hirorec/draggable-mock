@@ -345,6 +345,13 @@ export const useBoxAppOrigin = () => {
 
   const updateBoxSize = (box: BoxProps, size: Size) => {
     box.size = { ...size };
+    const { position } = box;
+    const maxY = maxHeight * (1 / rowScale);
+
+    if (position.y + box.size.height > maxY) {
+      box.size.height = maxY - position.y;
+    }
+
     updateBox(box);
   };
 
