@@ -14,7 +14,7 @@ type Props = {
   width: number;
   height: number;
   step: Step;
-  resizeMode: boolean;
+  // resizeMode: boolean;
   stepBasePosition: Position;
   localPosition: Position;
   borderColor: string;
@@ -41,7 +41,7 @@ export const Box: React.FC<Props> = ({
   width,
   height,
   step,
-  resizeMode,
+  // resizeMode,
   stepBasePosition,
   localPosition,
   borderColor,
@@ -146,56 +146,56 @@ export const Box: React.FC<Props> = ({
   //   }
   // }, [isMouseDown, resizeMode, modifiedPosition, isBoxDragging]);
 
-  const _handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!boxRef.current || resizeMode) {
-        return;
-      }
+  // const _handleMouseMove = useCallback(
+  //   (e: React.MouseEvent<HTMLDivElement>) => {
+  //     if (!boxRef.current || resizeMode) {
+  //       return;
+  //     }
 
-      const box: HTMLDivElement = boxRef.current;
-      const rect = box.getBoundingClientRect();
-      const rectMousePosition = {
-        x: e.clientX - rect.x,
-        y: e.clientY - rect.y,
-      };
+  //     const box: HTMLDivElement = boxRef.current;
+  //     const rect = box.getBoundingClientRect();
+  //     const rectMousePosition = {
+  //       x: e.clientX - rect.x,
+  //       y: e.clientY - rect.y,
+  //     };
 
-      const newMousePosition = {
-        x: e.clientX,
-        y: e.clientY,
-      };
+  //     const newMousePosition = {
+  //       x: e.clientX,
+  //       y: e.clientY,
+  //     };
 
-      const isMouseOver =
-        rectMousePosition.x > 0 && rectMousePosition.x <= rect.width && rectMousePosition.y <= rect.height && rectMousePosition.y > 0;
+  //     const isMouseOver =
+  //       rectMousePosition.x > 0 && rectMousePosition.x <= rect.width && rectMousePosition.y <= rect.height && rectMousePosition.y > 0;
 
-      // if (isBoxDragging) {
-      //   const dx = newMousePosition.x - mousePosition.x;
-      //   const dy = newMousePosition.y - mousePosition.y;
-      //   const newMouseMoveAmount = { ...mouseMoveAmount };
-      //   const newStepBasePosition = { ...stepBasePosition };
-      //   const y = newStepBasePosition.y + dy / step.y;
-      //   newStepBasePosition.y = y;
+  //     // if (isBoxDragging) {
+  //     //   const dx = newMousePosition.x - mousePosition.x;
+  //     //   const dy = newMousePosition.y - mousePosition.y;
+  //     //   const newMouseMoveAmount = { ...mouseMoveAmount };
+  //     //   const newStepBasePosition = { ...stepBasePosition };
+  //     //   const y = newStepBasePosition.y + dy / step.y;
+  //     //   newStepBasePosition.y = y;
 
-      //   newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
-      //   newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
+  //     //   newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
+  //     //   newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
 
-      //   if (rectMousePosition.x >= rect.width && isBoxDragging) {
-      //     newStepBasePosition.x = newStepBasePosition.x + 1;
-      //     resetMouseMoveAmount();
-      //   } else if (rectMousePosition.x <= 0 && isBoxDragging) {
-      //     newStepBasePosition.x = newStepBasePosition.x - 1;
-      //     resetMouseMoveAmount();
-      //   } else {
-      //     setMouseMoveAmount(newMouseMoveAmount);
-      //   }
+  //     //   if (rectMousePosition.x >= rect.width && isBoxDragging) {
+  //     //     newStepBasePosition.x = newStepBasePosition.x + 1;
+  //     //     resetMouseMoveAmount();
+  //     //   } else if (rectMousePosition.x <= 0 && isBoxDragging) {
+  //     //     newStepBasePosition.x = newStepBasePosition.x - 1;
+  //     //     resetMouseMoveAmount();
+  //     //   } else {
+  //     //     setMouseMoveAmount(newMouseMoveAmount);
+  //     //   }
 
-      //   // onUpdatePosition(newStepBasePosition);
-      // }
+  //     //   // onUpdatePosition(newStepBasePosition);
+  //     // }
 
-      // setIsMouseOver(isMouseOver);
-      setMousePosition(newMousePosition);
-    },
-    [boxRef.current, transform, mousePosition, resizeMode, step]
-  );
+  //     // setIsMouseOver(isMouseOver);
+  //     setMousePosition(newMousePosition);
+  //   },
+  //   [boxRef.current, transform, mousePosition, resizeMode, step]
+  // );
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -223,7 +223,7 @@ export const Box: React.FC<Props> = ({
       //   }
       // }
     },
-    [boxRef.current, mousePosition, resizeMode, step]
+    [boxRef.current, mousePosition, step]
   );
 
   const handleMouseDown = useCallback(() => {

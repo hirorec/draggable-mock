@@ -256,9 +256,9 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     setUndoBoxList(undoBoxList);
   }, [boxList]);
 
-  useEffect(() => {
-    console.log({ cursor });
-  }, [cursor]);
+  // useEffect(() => {
+  //   console.log({ cursor });
+  // }, [cursor]);
 
   if (initialized && boxList && columnList) {
     return (

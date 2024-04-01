@@ -46,7 +46,7 @@ export const BoxWrapper: React.FC<Props> = ({
   onClick,
   onInteractionStart,
 }) => {
-  const { isAppModifying, isBoxDragging, selectedBoxId, rowScale, resizeMode, setResizeMode } = useBoxApp();
+  const { isAppModifying, selectedBoxId, rowScale } = useBoxApp();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
   const [overlayPosition, setOverlayPosition] = useState<Position>({
@@ -80,23 +80,23 @@ export const BoxWrapper: React.FC<Props> = ({
   //   }
   // }, [resizeMode, selectedBoxId, id]);
 
-  useEffect(() => {
-    if (id === selectedBoxId && isBoxDragging) {
-      onInteractionStart();
-    }
-  }, [isBoxDragging, selectedBoxId, id]);
+  // useEffect(() => {
+  //   if (id === selectedBoxId && isBoxDragging) {
+  //     onInteractionStart();
+  //   }
+  // }, [isBoxDragging, selectedBoxId, id]);
 
-  useEffect(() => {
-    if ((isBoxDragging || resizeMode) && selectedBoxId === id) {
-      setOverlayVisible(true);
-    } else {
-      setOverlayVisible(false);
-    }
+  // useEffect(() => {
+  //   if ((isBoxDragging || resizeMode) && selectedBoxId === id) {
+  //     setOverlayVisible(true);
+  //   } else {
+  //     setOverlayVisible(false);
+  //   }
 
-    if (isBoxDragging) {
-      setOverlayBoxHeight(boxSize.height);
-    }
-  }, [isBoxDragging, resizeMode, boxSize, selectedBoxId]);
+  //   if (isBoxDragging) {
+  //     setOverlayBoxHeight(boxSize.height);
+  //   }
+  // }, [isBoxDragging, resizeMode, boxSize, selectedBoxId]);
 
   const handleResizeBox = useCallback(
     (direction: boolean) => {
@@ -119,16 +119,16 @@ export const BoxWrapper: React.FC<Props> = ({
     [stepBaseSize, maxHeight, stepBasePosition, rowScale]
   );
 
-  const handleUpdateResizeMode = useCallback(
-    (resizeMode: boolean) => {
-      if (resizeMode && isMouseDown) {
-        setResizeMode(true);
-      } else {
-        setResizeMode(false);
-      }
-    },
-    [isMouseDown]
-  );
+  // const handleUpdateResizeMode = useCallback(
+  //   (resizeMode: boolean) => {
+  //     if (resizeMode && isMouseDown) {
+  //       setResizeMode(true);
+  //     } else {
+  //       setResizeMode(false);
+  //     }
+  //   },
+  //   [isMouseDown]
+  // );
 
   const handleDragStart = useCallback(
     (newStepBasePosition: Position) => {
@@ -138,17 +138,17 @@ export const BoxWrapper: React.FC<Props> = ({
     [overlayPosition, stepBasePosition, rowScale]
   );
 
-  const handleDragEnd = useCallback(
-    (newStepBasePosition: Position) => {
-      if (resizeMode) {
-        return;
-      }
+  // const handleDragEnd = useCallback(
+  //   (newStepBasePosition: Position) => {
+  //     if (resizeMode) {
+  //       return;
+  //     }
 
-      setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
-      onDrop(newStepBasePosition);
-    },
-    [overlayPosition, stepBasePosition, rowScale, resizeMode]
-  );
+  //     setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
+  //     onDrop(newStepBasePosition);
+  //   },
+  //   [overlayPosition, stepBasePosition, rowScale, resizeMode]
+  // );
 
   const handleDragLeave = useCallback(
     (newStepBasePosition: Position) => {
@@ -184,7 +184,7 @@ export const BoxWrapper: React.FC<Props> = ({
         step={step}
         stepBasePosition={stepBasePosition}
         localPosition={localPosition}
-        resizeMode={resizeMode}
+        // resizeMode={resizeMode}
         backgroundColor={backgroundColor}
         borderColor={borderColor}
         // isMouseDown={isMouseDown}
