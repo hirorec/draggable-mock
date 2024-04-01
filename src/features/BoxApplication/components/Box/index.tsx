@@ -1,230 +1,225 @@
+import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { STEP } from '@/features/BoxApplication/const';
-import { Position, Size, Step } from '@/features/BoxApplication/types';
+import { useBoxApp } from '@/features/BoxApplication/hooks/useBoxApp';
 
 import styles from './index.module.scss';
-import { useBoxApp } from '../../hooks/useBoxApp';
-import { BoxContent } from '../BoxContent';
-import { BoxOverlay } from '../BoxOverlay';
+
+import type { Position, Step } from '@/features/BoxApplication/types';
 
 type Props = {
   id: string;
   label: string;
-  borderColor: string;
-  backgroundColor: string;
+  width: number;
+  height: number;
   step: Step;
+  resizeMode: boolean;
   stepBasePosition: Position;
   localPosition: Position;
-  stepBaseSize: Size;
-  zIndex: number;
-  maxHeight: number;
-  onUpdatePosition: (position: Position) => void;
-  onUpdateSize: (size: Size) => void;
-  onUpdateSizeEnd: (size: Size) => void;
-  onDrop: (position: Position) => void;
-  onInteractionStart: () => void;
-  onClick: () => void;
+  borderColor: string;
+  backgroundColor: string;
+
+  // isMouseDown: boolean;
+  // setIsMouseDown: (value: boolean) => void;
+  // onUpdatePosition: (position: Position) => void;
+  // onDragStart: (position: Position) => void;
+  // onDragEnd: (position: Position) => void;
+  // onDragLeave: (position: Position) => void;
+};
+
+type Transform = {
+  x: number;
+  y: number;
+  scaleX: number;
+  scaleY: number;
 };
 
 export const Box: React.FC<Props> = ({
   id,
   label,
-  borderColor,
-  backgroundColor,
+  width,
+  height,
   step,
-  stepBaseSize,
+  resizeMode,
   stepBasePosition,
   localPosition,
-  zIndex,
-  maxHeight,
-  onUpdatePosition,
-  onUpdateSize,
-  onUpdateSizeEnd,
-  onDrop,
-  onClick,
-  onInteractionStart,
+  borderColor,
+  backgroundColor,
+
+  // isMouseDown,
+  // setIsMouseDown,
+  // onUpdatePosition,
+  // onDragStart,
+  // onDragEnd,
+  // onDragLeave,
 }) => {
-  const { isAppModifying, isBoxDragging, selectedBoxId, rowScale, resizeMode, setResizeMode } = useBoxApp();
-  const [overlayVisible, setOverlayVisible] = useState(false);
-  const [overlayBoxHeight, setOverlayBoxHeight] = useState(stepBaseSize.height * STEP.Y);
-  const [overlayPosition, setOverlayPosition] = useState<Position>({
-    x: stepBasePosition.x,
-    y: stepBasePosition.y,
+  const boxRef = useRef<HTMLDivElement>(null);
+  const { setSelectedBoxId, selectedBoxId, isBoxDragging, setIsBoxDragging, rowScale } = useBoxApp();
+  const [transform, setTransform] = useState<Transform>({
+    x: step.x * (stepBasePosition.x + localPosition.x),
+    y: step.y * rowScale * (stepBasePosition.y + localPosition.y),
+    scaleX: 1,
+    scaleY: 1,
   });
-  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
+  const [mouseMoveAmount, setMouseMoveAmount] = useState<Position>({ x: 0, y: 0 });
+  const [isMouseOver, setIsMouseOver] = useState(false);
+  const [cursor, setCursor] = useState<'unset' | 'grab' | 'all-scroll'>('unset');
 
-  const boxSize: Size = useMemo(() => {
+  const style = useMemo(() => {
     return {
-      width: stepBaseSize.width * step.x,
-      height: stepBaseSize.height * step.y,
+      width: `${width}px`,
+      height: `${height}px`,
+      transform: CSS.Translate.toString(transform),
+      cursor,
     };
-  }, [stepBaseSize, step]);
+  }, [transform, cursor, isBoxDragging]);
 
-  useEffect(() => {
-    setOverlayBoxHeight(stepBaseSize.height * step.y);
-    setOverlayPosition(stepBasePosition);
-  }, [step]);
+  const innerStyle: React.CSSProperties = useMemo(() => {
+    return {
+      backgroundColor,
+      borderColor,
+    };
+  }, [borderColor, backgroundColor]);
 
-  useEffect(() => {
-    if (!isAppModifying) {
-      setOverlayPosition(stepBasePosition);
-    }
-  }, [isAppModifying]);
+  const resetMouseMoveAmount = () => {
+    setMouseMoveAmount({ x: 0, y: 0 });
+  };
+
+  const modifiedPosition = useMemo((): Position => {
+    const position = { ...stepBasePosition };
+    position.x = Math.round(position.x);
+    position.y = Math.round(position.y);
+    return position;
+  }, [stepBasePosition]);
 
   // useEffect(() => {
-  //   if (id === selectedBoxId && resizeMode) {
-  //     // TODO
-  //     console.log('resize start');
+  //   const onWindowMouseUp = () => {
+  //     if (selectedBoxId === id) {
+  //       onDragEnd(modifiedPosition);
+  //       onDragLeave(modifiedPosition);
+  //       setIsMouseDown(false);
+  //       setIsBoxDragging(false);
+  //       setSelectedBoxId(undefined);
+  //     }
+  //   };
+
+  //   window.addEventListener('mouseup', onWindowMouseUp);
+
+  //   return () => {
+  //     window.removeEventListener('mouseup', onWindowMouseUp);
+  //   };
+  // }, [modifiedPosition, isMouseOver, selectedBoxId, isBoxDragging]);
+
+  useEffect(() => {
+    setTransform({
+      x: step.x * (modifiedPosition.x + localPosition.x),
+      y: step.y * (modifiedPosition.y + localPosition.y),
+      scaleX: 1,
+      scaleY: 1,
+    });
+  }, [localPosition, modifiedPosition]);
+
+  // useEffect(() => {
+  //   if (resizeMode) {
+  //     setCursor('unset');
+  //     return;
   //   }
-  // }, [resizeMode, selectedBoxId, id]);
 
-  useEffect(() => {
-    if (id === selectedBoxId && isBoxDragging) {
-      onInteractionStart();
-    }
-  }, [isBoxDragging, selectedBoxId, id]);
+  //   if (isMouseDown) {
+  //     setCursor('all-scroll');
+  //     setIsBoxDragging(true);
+  //   } else if (isMouseOver) {
+  //     setCursor('grab');
+  //     setIsBoxDragging(false);
+  //   } else {
+  //     setCursor('unset');
+  //     setIsBoxDragging(false);
+  //   }
+  // }, [isMouseDown, isMouseOver, resizeMode]);
 
-  useEffect(() => {
-    if ((isBoxDragging || resizeMode) && selectedBoxId === id) {
-      setOverlayVisible(true);
-    } else {
-      setOverlayVisible(false);
-    }
+  // useEffect(() => {
+  //   if (!resizeMode && isMouseDown && !isBoxDragging) {
+  //     onDragStart(modifiedPosition);
+  //   }
+  // }, [isMouseDown, resizeMode, modifiedPosition, isBoxDragging]);
 
-    if (isBoxDragging) {
-      setOverlayBoxHeight(boxSize.height);
-    }
-  }, [isBoxDragging, resizeMode, boxSize, selectedBoxId]);
-
-  const handleResizeBox = useCallback(
-    (direction: boolean) => {
-      const newBoxSize: Size = { ...stepBaseSize };
-
-      if (direction) {
-        if (stepBasePosition.y + newBoxSize.height < maxHeight) {
-          newBoxSize.height = stepBaseSize.height + 1;
-        }
-      } else {
-        newBoxSize.height = stepBaseSize.height - 1;
-      }
-
-      if (newBoxSize.height <= 1) {
-        newBoxSize.height = 1;
-      }
-
-      onUpdateSize(newBoxSize);
-    },
-    [stepBaseSize, maxHeight, stepBasePosition, rowScale]
-  );
-
-  const handleUpdateResizeMode = useCallback(
-    (resizeMode: boolean) => {
-      if (resizeMode && isMouseDown) {
-        setResizeMode(true);
-      } else {
-        setResizeMode(false);
-      }
-    },
-    [isMouseDown]
-  );
-
-  const handleDragStart = useCallback(
-    (newStepBasePosition: Position) => {
-      console.log('handleDragStart');
-      setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
-    },
-    [overlayPosition, stepBasePosition, rowScale]
-  );
-
-  const handleDragEnd = useCallback(
-    (newStepBasePosition: Position) => {
-      if (resizeMode) {
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!boxRef.current || resizeMode) {
         return;
       }
 
-      setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
-      onDrop(newStepBasePosition);
+      const box: HTMLDivElement = boxRef.current;
+      const rect = box.getBoundingClientRect();
+      const rectMousePosition = {
+        x: e.clientX - rect.x,
+        y: e.clientY - rect.y,
+      };
+
+      const newMousePosition = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+
+      const isMouseOver =
+        rectMousePosition.x > 0 && rectMousePosition.x <= rect.width && rectMousePosition.y <= rect.height && rectMousePosition.y > 0;
+
+      if (isBoxDragging) {
+        const dx = newMousePosition.x - mousePosition.x;
+        const dy = newMousePosition.y - mousePosition.y;
+        const newMouseMoveAmount = { ...mouseMoveAmount };
+        const newStepBasePosition = { ...stepBasePosition };
+        const y = newStepBasePosition.y + dy / step.y;
+        newStepBasePosition.y = y;
+
+        newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
+        newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
+
+        if (rectMousePosition.x >= rect.width && isBoxDragging) {
+          newStepBasePosition.x = newStepBasePosition.x + 1;
+          resetMouseMoveAmount();
+        } else if (rectMousePosition.x <= 0 && isBoxDragging) {
+          newStepBasePosition.x = newStepBasePosition.x - 1;
+          resetMouseMoveAmount();
+        } else {
+          setMouseMoveAmount(newMouseMoveAmount);
+        }
+
+        // onUpdatePosition(newStepBasePosition);
+      }
+
+      setIsMouseOver(isMouseOver);
+      setMousePosition(newMousePosition);
     },
-    [overlayPosition, stepBasePosition, rowScale, resizeMode]
+    [boxRef.current, isBoxDragging, transform, mousePosition, resizeMode, step]
   );
 
-  const handleDragLeave = useCallback(
-    (newStepBasePosition: Position) => {
-      setOverlayPosition({ x: newStepBasePosition.x, y: newStepBasePosition.y * rowScale });
-    },
-    [overlayPosition, stepBasePosition, rowScale]
-  );
+  const handleMouseDown = useCallback(() => {
+    if (isMouseOver) {
+      setSelectedBoxId(id);
+      // setIsMouseDown(true);
+    }
+  }, [id, isMouseOver]);
 
-  const handleResizeBoxEnd = useCallback(() => {
-    onUpdateSizeEnd(stepBaseSize);
-    setOverlayBoxHeight(stepBaseSize.height * STEP.Y * rowScale);
-  }, [stepBaseSize, rowScale]);
+  const handleMouseUp = useCallback(() => {
+    // setIsMouseDown(false);
+    resetMouseMoveAmount();
+  }, []);
 
   return (
-    <div className={clsx(styles.box)} style={{ zIndex }}>
-      {overlayVisible && (
-        <BoxOverlay
-          text={label}
-          backgroundColor={backgroundColor}
-          borderColor={borderColor}
-          width={boxSize.width}
-          height={overlayBoxHeight}
-          position={overlayPosition}
-          localPosition={localPosition}
-        />
-      )}
-
-      <BoxContent
-        id={id}
-        label={label}
-        width={boxSize.width}
-        height={boxSize.height}
-        step={step}
-        stepBasePosition={stepBasePosition}
-        localPosition={localPosition}
-        resizeMode={resizeMode}
-        backgroundColor={backgroundColor}
-        borderColor={borderColor}
-        // isMouseDown={isMouseDown}
-        // setIsMouseDown={setIsMouseDown}
-        // onUpdatePosition={onUpdatePosition}
-        // onDragStart={handleDragStart}
-        // onDragEnd={handleDragEnd}
-        // onDragLeave={handleDragLeave}
-      />
-
-      {/* <DraggableBox
-        id={id}
-        width={boxSize.width}
-        height={boxSize.height}
-        step={step}
-        stepBasePosition={stepBasePosition}
-        localPosition={localPosition}
-        resizeMode={resizeMode}
-        isMouseDown={isMouseDown}
-        setIsMouseDown={setIsMouseDown}
-        onUpdatePosition={onUpdatePosition}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-        onDragLeave={handleDragLeave}
-      >
-        <ResizableBox
-          label={label}
-          backgroundColor={backgroundColor}
-          borderColor={borderColor}
-          width={boxSize.width}
-          height={boxSize.height}
-          step={step}
-          isMouseDown={isMouseDown}
-          setIsMouseDown={setIsMouseDown}
-          onResizeHeight={handleResizeBox}
-          onResizeHeightEnd={handleResizeBoxEnd}
-          onUpdateResizeMode={handleUpdateResizeMode}
-          onClick={onClick}
-        />
-      </DraggableBox> */}
+    <div
+      ref={boxRef}
+      style={style}
+      className={clsx(styles.box)}
+      // onMouseMove={handleMouseMove}
+      // onMouseDown={handleMouseDown}
+      // onMouseUp={handleMouseUp}
+    >
+      <div className={clsx(styles.boxInner)} style={innerStyle}>
+        {label}
+      </div>
     </div>
   );
 };

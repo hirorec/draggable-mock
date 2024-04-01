@@ -6,7 +6,7 @@ import { STEP } from '@/features/BoxApplication/const';
 import { useBoxApp } from '@/features/BoxApplication/hooks/useBoxApp';
 
 import styles from './index.module.scss';
-import { Box } from '../Box';
+import { BoxWrapper } from '../BoxWrapper';
 
 import type { BoxProps, ColumnProps, Position, Size, Step } from '@/features/BoxApplication/types';
 
@@ -162,7 +162,7 @@ export const BoxContainer: React.FC<Props> = ({
     <div ref={containerRef} className={clsx(styles.container)} onMouseMove={handleMouseMove} style={{ width: `${containerWidth}px` }}>
       {boxList.map((box, index) => {
         return (
-          <Box
+          <BoxWrapper
             key={index}
             id={box.id}
             label={box.label}
