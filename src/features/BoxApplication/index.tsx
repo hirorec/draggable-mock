@@ -159,6 +159,7 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
   );
 
   const onBoxChange = async (changedBoxId: string) => {
+    console.log('onBoxChange', { changedBoxId });
     const index = boxList?.findIndex((box) => box.id === changedBoxId);
 
     if (!index || !boxList || !columnList || !undoBoxList) {
@@ -173,23 +174,6 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
 
     const newBoxList = _.cloneDeep(boxList);
 
-    newBoxList[index] = {
-      ...newBoxList[index],
-      position: {
-        x: updatedBox.position.x + updatedBox.localPosition.x,
-        y: updatedBox.position.y,
-      },
-    };
-
-    newBoxList[index].position.x = Math.round(newBoxList[index].position.x);
-    newBoxList[index].position.y = Math.round(newBoxList[index].position.y);
-
-    // const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, columnList, updatedBox);
-    // onUpdateBoxList(modifiedBoxList);
-    // onUpdateColumnList(modifiedColumnList);
-
-    // return;
-
     const res = await new Promise<boolean>((resolve) => {
       showModal();
       setConfirmModalConfig({ onClose: resolve, box: newBoxList[index] });
@@ -197,8 +181,6 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
     setConfirmModalConfig(undefined);
 
     if (res) {
-      const newBoxList = _.cloneDeep(boxList);
-
       newBoxList[index] = {
         ...newBoxList[index],
         position: {
@@ -206,6 +188,9 @@ export const BoxApplication: React.FC<Props> = ({ onUpdateBoxList, onUpdateColum
           y: updatedBox.position.y,
         },
       };
+
+      newBoxList[index].position.x = Math.round(newBoxList[index].position.x);
+      newBoxList[index].position.y = Math.round(newBoxList[index].position.y);
 
       const { boxList: modifiedBoxList, columnList: modifiedColumnList } = await modifyData(newBoxList, columnList, updatedBox);
       onUpdateBoxList(modifiedBoxList);
