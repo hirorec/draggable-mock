@@ -34,7 +34,7 @@ export type ColumnProps = {
   rowDiv: number;
 };
 
-type Transform = {
+export type Transform = {
   x: number;
   y: number;
   scaleX: number;
