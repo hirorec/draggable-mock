@@ -55,7 +55,7 @@ export const Box: React.FC<Props> = ({
   // onDragLeave,
 }) => {
   const boxRef = useRef<HTMLDivElement>(null);
-  const { setSelectedBoxId, selectedBoxId, isBoxDragging, setIsBoxDragging, rowScale } = useBoxApp();
+  const { setSelectedBoxId, setHoveredBoxId, selectedBoxId, rowScale, setIsBoxEdge, setCurrentBoxElement } = useBoxApp();
   const [transform, setTransform] = useState<Transform>({
     x: step.x * (stepBasePosition.x + localPosition.x),
     y: step.y * rowScale * (stepBasePosition.y + localPosition.y),
@@ -64,17 +64,18 @@ export const Box: React.FC<Props> = ({
   });
   const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
   const [mouseMoveAmount, setMouseMoveAmount] = useState<Position>({ x: 0, y: 0 });
-  const [isMouseOver, setIsMouseOver] = useState(false);
-  const [cursor, setCursor] = useState<'unset' | 'grab' | 'all-scroll'>('unset');
+  // const [isMouseOver, setIsMouseOver] = useState(false);
+  // const [isEdge, setIsEdge] = useState(false);
+  // const [cursor, setCursor] = useState<'unset' | 'pointer' | 'all-scroll'>('unset');
 
   const style = useMemo(() => {
     return {
       width: `${width}px`,
       height: `${height}px`,
       transform: CSS.Translate.toString(transform),
-      cursor,
+      // cursor,
     };
-  }, [transform, cursor, isBoxDragging]);
+  }, [transform]);
 
   const innerStyle: React.CSSProperties = useMemo(() => {
     return {
@@ -131,7 +132,7 @@ export const Box: React.FC<Props> = ({
   //     setCursor('all-scroll');
   //     setIsBoxDragging(true);
   //   } else if (isMouseOver) {
-  //     setCursor('grab');
+  //     setCursor('pointer');
   //     setIsBoxDragging(false);
   //   } else {
   //     setCursor('unset');
@@ -145,7 +146,7 @@ export const Box: React.FC<Props> = ({
   //   }
   // }, [isMouseDown, resizeMode, modifiedPosition, isBoxDragging]);
 
-  const handleMouseMove = useCallback(
+  const _handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (!boxRef.current || resizeMode) {
         return;
@@ -166,55 +167,99 @@ export const Box: React.FC<Props> = ({
       const isMouseOver =
         rectMousePosition.x > 0 && rectMousePosition.x <= rect.width && rectMousePosition.y <= rect.height && rectMousePosition.y > 0;
 
-      if (isBoxDragging) {
-        const dx = newMousePosition.x - mousePosition.x;
-        const dy = newMousePosition.y - mousePosition.y;
-        const newMouseMoveAmount = { ...mouseMoveAmount };
-        const newStepBasePosition = { ...stepBasePosition };
-        const y = newStepBasePosition.y + dy / step.y;
-        newStepBasePosition.y = y;
+      // if (isBoxDragging) {
+      //   const dx = newMousePosition.x - mousePosition.x;
+      //   const dy = newMousePosition.y - mousePosition.y;
+      //   const newMouseMoveAmount = { ...mouseMoveAmount };
+      //   const newStepBasePosition = { ...stepBasePosition };
+      //   const y = newStepBasePosition.y + dy / step.y;
+      //   newStepBasePosition.y = y;
 
-        newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
-        newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
+      //   newMouseMoveAmount.x = newMouseMoveAmount.x + dx;
+      //   newMouseMoveAmount.y = newMouseMoveAmount.y + dy;
 
-        if (rectMousePosition.x >= rect.width && isBoxDragging) {
-          newStepBasePosition.x = newStepBasePosition.x + 1;
-          resetMouseMoveAmount();
-        } else if (rectMousePosition.x <= 0 && isBoxDragging) {
-          newStepBasePosition.x = newStepBasePosition.x - 1;
-          resetMouseMoveAmount();
-        } else {
-          setMouseMoveAmount(newMouseMoveAmount);
-        }
+      //   if (rectMousePosition.x >= rect.width && isBoxDragging) {
+      //     newStepBasePosition.x = newStepBasePosition.x + 1;
+      //     resetMouseMoveAmount();
+      //   } else if (rectMousePosition.x <= 0 && isBoxDragging) {
+      //     newStepBasePosition.x = newStepBasePosition.x - 1;
+      //     resetMouseMoveAmount();
+      //   } else {
+      //     setMouseMoveAmount(newMouseMoveAmount);
+      //   }
 
-        // onUpdatePosition(newStepBasePosition);
-      }
+      //   // onUpdatePosition(newStepBasePosition);
+      // }
 
-      setIsMouseOver(isMouseOver);
+      // setIsMouseOver(isMouseOver);
       setMousePosition(newMousePosition);
     },
-    [boxRef.current, isBoxDragging, transform, mousePosition, resizeMode, step]
+    [boxRef.current, transform, mousePosition, resizeMode, step]
+  );
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!boxRef.current) {
+        return;
+      }
+
+      const box: HTMLDivElement = boxRef.current;
+      const rect = box.getBoundingClientRect();
+      const newMousePosition = {
+        x: e.clientX - rect.x,
+        y: e.clientY - rect.y,
+      };
+      const offset = 10;
+      const isEdge = newMousePosition.y >= rect.height - offset && newMousePosition.y < rect.height;
+
+      setIsBoxEdge(isEdge);
+      setMousePosition(newMousePosition);
+
+      // if (resizeMode) {
+      //   if (newMousePosition.y >= rect.height + step.y) {
+      //     onResizeHeight(true);
+      //   } else if (newMousePosition.y <= rect.height - step.y) {
+      //     onResizeHeight(false);
+      //   }
+      // }
+    },
+    [boxRef.current, mousePosition, resizeMode, step]
   );
 
   const handleMouseDown = useCallback(() => {
-    if (isMouseOver) {
-      setSelectedBoxId(id);
-      // setIsMouseDown(true);
+    // if (isMouseOver) {
+    if (boxRef.current) {
+      setCurrentBoxElement(boxRef.current);
     }
-  }, [id, isMouseOver]);
+
+    setSelectedBoxId(id);
+
+    // setIsMouseDown(true);
+    // }
+  }, [id, boxRef]);
 
   const handleMouseUp = useCallback(() => {
     // setIsMouseDown(false);
     resetMouseMoveAmount();
   }, []);
 
+  const handleMouseEnter = useCallback(() => {
+    setHoveredBoxId(id);
+  }, [id]);
+
+  const handleMouseLeave = () => {
+    setHoveredBoxId(undefined);
+  };
+
   return (
     <div
       ref={boxRef}
       style={style}
       className={clsx(styles.box)}
-      // onMouseMove={handleMouseMove}
-      // onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseDown={handleMouseDown}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       // onMouseUp={handleMouseUp}
     >
       <div className={clsx(styles.boxInner)} style={innerStyle}>

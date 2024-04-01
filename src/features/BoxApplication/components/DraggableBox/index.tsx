@@ -59,7 +59,7 @@ export const DraggableBox: React.FC<Props> = ({
   const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
   const [mouseMoveAmount, setMouseMoveAmount] = useState<Position>({ x: 0, y: 0 });
   const [isMouseOver, setIsMouseOver] = useState(false);
-  const [cursor, setCursor] = useState<'unset' | 'grab' | 'all-scroll'>('unset');
+  const [cursor, setCursor] = useState<'unset' | 'pointer' | 'all-scroll'>('unset');
 
   const style = useMemo(() => {
     return {
@@ -118,7 +118,7 @@ export const DraggableBox: React.FC<Props> = ({
       setCursor('all-scroll');
       setIsBoxDragging(true);
     } else if (isMouseOver) {
-      setCursor('grab');
+      setCursor('pointer');
       setIsBoxDragging(false);
     } else {
       setCursor('unset');

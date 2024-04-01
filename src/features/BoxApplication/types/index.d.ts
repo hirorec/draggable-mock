@@ -1,3 +1,5 @@
+import { CURSOR, BOX_ACTION_MODE } from '../const';
+
 export type Position = {
   x: number;
   y: number;
@@ -31,3 +33,6 @@ export type ColumnProps = {
   colDiv: number;
   rowDiv: number;
 };
+
+export type BoxActionMode = (typeof BOX_ACTION_MODE)[keyof typeof BOX_ACTION_MODE];
+export type Cursor = (typeof CURSOR)[keyof typeof CURSOR];

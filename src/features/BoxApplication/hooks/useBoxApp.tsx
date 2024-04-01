@@ -1,33 +1,41 @@
 import _ from 'lodash';
 import { createContext, useState, useContext, useEffect } from 'react';
 
-import { DEFAULT_ROW_DIV, DEFAULT_ROW_INTERVAL } from '../const';
+import { BOX_ACTION_MODE, CURSOR, DEFAULT_ROW_DIV, DEFAULT_ROW_INTERVAL } from '../const';
 import * as modifier from '../utils/modifier';
 
-import type { BoxProps, ColumnProps } from '../types';
+import type { BoxActionMode, BoxProps, ColumnProps, Cursor } from '../types';
 
 export type BoxAppContextType = {
   initialized: boolean;
   isAppModifying: boolean;
   isWindowMouseDown: boolean;
   selectedBoxId: string | undefined;
+  hoveredBoxId: string | undefined;
   windowWidth: number;
   viewportWidth: number;
   viewportHeight: number;
-  isBoxDragging: boolean;
   rowInterval: number;
   rowDiv: number;
   rowScale: number;
-  resizeMode: boolean;
+  // isBoxDragging: boolean;
+  // resizeMode: boolean;
+  cursor: Cursor;
+  isBoxEdge: boolean;
+  currentBoxElement: HTMLDivElement;
 
   setInitialized: (value: boolean) => void;
   setIsAppModifying: (value: boolean) => void;
   setSelectedBoxId: (value: string | undefined) => void;
-  setIsBoxDragging: (value: boolean) => void;
+  setHoveredBoxId: (value: string | undefined) => void;
   setRowInterval: (value: number) => void;
   setRowDiv: (value: number) => void;
   setRowScale: (value: number) => void;
-  setResizeMode: (value: boolean) => void;
+  // setIsBoxDragging: (value: boolean) => void;
+  // setResizeMode: (value: boolean) => void;
+  setCursor: (value: Cursor) => void;
+  setIsBoxEdge: (value: boolean) => void;
+  setCurrentBoxElement: (value: HTMLDivElement) => void;
   modifyData: (
     boxList: BoxProps[],
     columnList: ColumnProps[],
@@ -43,6 +51,8 @@ export const useBoxAppOrigin = () => {
   const [isAppModifying, setIsAppModifying] = useState<boolean>(false);
   const [isWindowMouseDown, setIsWindowMouseDown] = useState<boolean>(false);
   const [selectedBoxId, setSelectedBoxId] = useState<string>();
+  const [hoveredBoxId, setHoveredBoxId] = useState<string>();
+  const [currentBoxElement, setCurrentBoxElement] = useState<HTMLDivElement | null>(null);
   const [windowWidth, setWindowWidth] = useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
@@ -50,8 +60,12 @@ export const useBoxAppOrigin = () => {
   const [rowInterval, setRowInterval] = useState(DEFAULT_ROW_INTERVAL);
   const [rowDiv, setRowDiv] = useState(DEFAULT_ROW_DIV);
   const [rowScale, setRowScale] = useState(1);
-  const [isBoxDragging, setIsBoxDragging] = useState(false);
-  const [resizeMode, setResizeMode] = useState(false);
+  const [boxActionMode, setBoxActionMode] = useState<BoxActionMode>();
+
+  // const [isBoxDragging, setIsBoxDragging] = useState(false);
+  // const [resizeMode, setResizeMode] = useState(false);
+  const [isBoxEdge, setIsBoxEdge] = useState(false);
+  const [cursor, setCursor] = useState<Cursor>(CURSOR.UNSET);
 
   useEffect(() => {
     const onWindowMouseDown = () => {
@@ -80,14 +94,12 @@ export const useBoxAppOrigin = () => {
   }, []);
 
   useEffect(() => {
-    const onWindowMouseMove = () => {};
-
     window.addEventListener('mousemove', onWindowMouseMove);
 
     return () => {
       window.removeEventListener('mousemove', onWindowMouseMove);
     };
-  }, [isWindowMouseDown, selectedBoxId]);
+  }, [isWindowMouseDown, selectedBoxId, boxActionMode, currentBoxElement]);
 
   useEffect(() => {
     const viewportWidth = windowWidth - 40 - 65;
@@ -95,6 +107,55 @@ export const useBoxAppOrigin = () => {
     setViewportWidth(viewportWidth);
     setViewportHeight(viewportHeight);
   }, [windowWidth, windowHeight]);
+
+  useEffect(() => {
+    if (isWindowMouseDown && selectedBoxId) {
+      if (isBoxEdge) {
+        setBoxActionMode(BOX_ACTION_MODE.RESIZE);
+      } else {
+        setCursor(CURSOR.MOVE);
+        setBoxActionMode(BOX_ACTION_MODE.DRAGGING);
+      }
+    }
+
+    if (!isWindowMouseDown) {
+      setCurrentBoxElement(null);
+      setBoxActionMode(undefined);
+      setSelectedBoxId(undefined);
+    }
+  }, [isWindowMouseDown]);
+
+  useEffect(() => {
+    if (boxActionMode) {
+      if (boxActionMode === BOX_ACTION_MODE.DRAGGING) {
+        setCursor(CURSOR.MOVE);
+      } else if (boxActionMode === BOX_ACTION_MODE.RESIZE) {
+        setCursor(CURSOR.RESIZE);
+      }
+
+      return;
+    }
+
+    if (hoveredBoxId) {
+      if (isBoxEdge) {
+        setCursor(CURSOR.RESIZE);
+      } else {
+        setCursor(CURSOR.POINTER);
+      }
+    } else {
+      setCursor(CURSOR.UNSET);
+    }
+  }, [hoveredBoxId, isBoxEdge, boxActionMode]);
+
+  // useEffect(() => {
+  //   console.log({ currentBoxElement, selectedBoxId });
+  // }, [currentBoxElement, selectedBoxId]);
+
+  const onWindowMouseMove = () => {
+    if (boxActionMode) {
+      // console.log({ boxActionMode, currentBoxElement });
+    }
+  };
 
   const modifyData = async (
     boxList: BoxProps[],
@@ -125,21 +186,29 @@ export const useBoxAppOrigin = () => {
     viewportWidth,
     viewportHeight,
     selectedBoxId,
-    isBoxDragging,
+    hoveredBoxId,
+    // isBoxDragging,
     rowInterval,
     rowDiv,
     rowScale,
-    resizeMode,
+    // resizeMode,
+    cursor,
+    isBoxEdge,
+    currentBoxElement,
 
     setInitialized,
     setIsAppModifying,
     setSelectedBoxId,
-    setIsBoxDragging,
+    setHoveredBoxId,
+    // setIsBoxDragging,
     setRowInterval,
     setRowDiv,
     setRowScale,
     modifyData,
-    setResizeMode,
+    // setResizeMode,
+    setCursor,
+    setIsBoxEdge,
+    setCurrentBoxElement,
   };
 };
 

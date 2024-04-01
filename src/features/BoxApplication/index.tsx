@@ -40,6 +40,7 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     windowWidth,
     isBoxDragging,
     rowScale,
+    cursor,
   } = useBoxApp();
   const { showModal } = useBoxConfirmModal();
   const appInnerRef = useRef<HTMLDivElement>(null);
@@ -255,10 +256,14 @@ export const BoxApplication: React.FC<Props> = ({ boxList, columnList, maxHeight
     setUndoBoxList(undoBoxList);
   }, [boxList]);
 
+  useEffect(() => {
+    console.log({ cursor });
+  }, [cursor]);
+
   if (initialized && boxList && columnList) {
     return (
       <>
-        <div className={clsx(styles.application)}>
+        <div className={clsx(styles.application)} style={{ cursor }}>
           <div ref={appInnerRef} className={clsx(styles.applicationInner)}>
             <ColumnHeader columnList={columnList} onScroll={handleColScroll} isScrollMin={isScrollMin} isScrollMax={isScrollMax} />
             <ColumnRowHeader columnList={columnList} />
